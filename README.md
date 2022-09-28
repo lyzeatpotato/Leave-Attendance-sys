@@ -4,7 +4,7 @@
 请注意拉取代码后在github上创建自己的分支，命名规则：姓名首字母缩写
 
 
-# Spring-boot后端接口编写流程
+## Spring-boot后端接口编写流程
 Step1.根据数据库表格创建实体类(entity文件夹下)  
 请注意java后端数据类型与SQLServer数据库字段类型的对应关系：  
   **java**----------->**sqlServer**  
