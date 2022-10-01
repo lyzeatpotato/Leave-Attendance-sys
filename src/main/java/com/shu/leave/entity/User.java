@@ -25,14 +25,8 @@ public class User {
     // 人员状态
     private String pStatus;
 
-    // 当前用户的密码
-    private String password;
-
-    // 当前用户的邮箱
-    private String email;
-
-    // 当前用户的电话号码
-    private String telephone;
+    // 当前用户的性别
+    private String gender;
 
     // 用户权限
     private String role;

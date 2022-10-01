@@ -23,14 +23,13 @@ public class UserController {
     @Resource
     UserService userService;
 
-    @ApiOperation(value = "新增用户", notes = "要求完整输入全部用户信息 [userid, username, yuanxi, ptype, pstatus, password, email, telephone]")
+    @ApiOperation(value = "新增用户", notes = "要求完整输入全部用户信息 [userid, username, yuanxi, ptype, pstatus, gender]")
     @ApiOperationSupport(order = 1)
     @GetMapping("addUser")
     public ResultEntity addUser(@RequestParam("userid") String userid, @RequestParam("username") String username,
                                 @RequestParam("yuanxi") String yuanxi, @RequestParam("ptype") String ptype,
-                                @RequestParam("pstatus") String pstatus,  @RequestParam("password") String password,
-                                @RequestParam("email") String email, @RequestParam("telephone") String telephone){
-        String[] param = new String[]{userid, username, yuanxi, ptype, pstatus, password, email, telephone};
+                                @RequestParam("pstatus") String pstatus,  @RequestParam("gender") String gender){
+        String[] param = new String[]{userid, username, yuanxi, ptype, pstatus, gender};
         return BasicResponseUtils.success(userService.addUser(param));
     }
 

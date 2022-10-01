@@ -17,10 +17,10 @@ public interface UserMapper {
      */
     @Insert({
             "insert into user_info",
-            "(userid, username, yuanxi, ptype, pstatus, password, email, telephone, role, is_deleted, gmt_create, gmt_modified)",
+            "(userid, username, yuanxi, ptype, pstatus, gender, role, is_deleted, gmt_create, gmt_modified)",
             "values (#{userId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{yuanXi,jdbcType=VARCHAR}, #{pType,jdbcType=VARCHAR},",
-            "#{pStatus,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{telephone,jdbcType=VARCHAR},",
-            "#{role,jdbcType=CHAR}, #{isDeleted,jdbcType=CHAR}, #{gmtCreate,jdbcType=DATE}, #{gmtModified,jdbcType=DATE})"
+            "#{pStatus,jdbcType=VARCHAR}, #{gender,jdbcType=VARCHAR}, #{role,jdbcType=CHAR},",
+            "#{isDeleted,jdbcType=CHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP})"
     })
     @SelectKey(statement = "SELECT SCOPE_IDENTITY();", keyProperty = "id", before = false, resultType = Long.class)
     int insert(User user);
@@ -55,13 +55,13 @@ public interface UserMapper {
      */
     @Update({
             "update user_info",
-            "set name = #{name,jdbcType=VARCHAR},",
-            "title = #{title,jdbcType=VARCHAR},",
-            "label = #{label,jdbcType=VARCHAR},",
-            "avatar = #{avatar,jdbcType=LONGVARCHAR},",
-            "introduction = #{introduction,jdbcType=LONGVARCHAR},",
-            "story = #{story,jdbcType=LONGVARCHAR},",
-            "video = #{video,jdbcType=LONGVARCHAR}",
+            "set userid = #{userId,jdbcType=VARCHAR},",
+            "username = #{userName,jdbcType=VARCHAR},",
+            "yuanxi = #{yuanXi,jdbcType=VARCHAR},",
+            "ptype = #{pType,jdbcType=VARCHAR},",
+            "pstatus = #{pStatus,jdbcType=VARCHAR},",
+            "gender = #{gender,jdbcType=VARCHAR},",
+            "role = #{role,jdbcType=CHAR}",
             "where id = #{id,jdbcType=BIGINT}"
     })
     int updateUserById(User id);
@@ -80,13 +80,11 @@ public interface UserMapper {
             @Result(column="yuanxi", property="yuanXi", jdbcType=JdbcType.LONGVARCHAR),
             @Result(column="ptype", property="pType", jdbcType=JdbcType.VARCHAR),
             @Result(column="pstatus", property="pStatus", jdbcType=JdbcType.VARCHAR),
-            @Result(column="password", property="password", jdbcType=JdbcType.VARCHAR),
-            @Result(column="email", property="email", jdbcType=JdbcType.VARCHAR),
-            @Result(column="telephone", property="telephone", jdbcType=JdbcType.VARCHAR),
+            @Result(column="gender", property="gender", jdbcType=JdbcType.VARCHAR),
             @Result(column="role", property="role", jdbcType=JdbcType.CHAR),
             @Result(column="is_deleted", property="isDeleted", jdbcType=JdbcType.CHAR),
-            @Result(column="gmt_create", property="gmtCreate", jdbcType=JdbcType.DATE),
-            @Result(column="gmt_modified", property="gmtModified", jdbcType=JdbcType.DATE),
+            @Result(column="gmt_create", property="gmtCreate", jdbcType=JdbcType.TIMESTAMP),
+            @Result(column="gmt_modified", property="gmtModified", jdbcType=JdbcType.TIMESTAMP),
     })
     List<User> selectAll(UserExample User);
 
@@ -97,7 +95,7 @@ public interface UserMapper {
      */
     @Select({
             "select",
-            "userid, username, yuanxi, ptype, pstatus, password, email, telephone, role, is_deleted, gmt_create, gmt_modified",
+            "userid, username, yuanxi, ptype, pstatus, gender, role, is_deleted, gmt_create, gmt_modified",
             "from user_info",
             "where id = #{id,jdbcType=BIGINT}"
     })
@@ -108,13 +106,11 @@ public interface UserMapper {
             @Result(column="yuanxi", property="yuanXi", jdbcType=JdbcType.LONGVARCHAR),
             @Result(column="ptype", property="pType", jdbcType=JdbcType.VARCHAR),
             @Result(column="pstatus", property="pStatus", jdbcType=JdbcType.VARCHAR),
-            @Result(column="password", property="password", jdbcType=JdbcType.VARCHAR),
-            @Result(column="email", property="email", jdbcType=JdbcType.VARCHAR),
-            @Result(column="telephone", property="telephone", jdbcType=JdbcType.VARCHAR),
+            @Result(column="gender", property="gender", jdbcType=JdbcType.VARCHAR),
             @Result(column="role", property="role", jdbcType=JdbcType.CHAR),
             @Result(column="is_deleted", property="isDeleted", jdbcType=JdbcType.CHAR),
-            @Result(column="gmt_create", property="gmtCreate", jdbcType=JdbcType.DATE),
-            @Result(column="gmt_modified", property="gmtModified", jdbcType=JdbcType.DATE),
+            @Result(column="gmt_create", property="gmtCreate", jdbcType=JdbcType.TIMESTAMP),
+            @Result(column="gmt_modified", property="gmtModified", jdbcType=JdbcType.TIMESTAMP),
     })
     User selectById(Long id);
 

@@ -10,7 +10,7 @@ public interface UserService {
 
     /**
      * 新增用户
-     * @param params -> [userid, username, yuanxi, ptype, pstatus, password, email, telephone]
+     * @param params -> [userid, username, yuanxi, ptype, pstatus, gender]
      * @return 新增用户id
      */
     int addUser(String[] params);
