@@ -1,7 +1,7 @@
 # Leave-Attendance-sys
 人事请假-考勤系统后端
 
-请注意拉取代码后在github上创建自己的分支，命名规则：姓名首字母缩写
+请注意拉取代码后在github上创建自己的分支，命名规则：姓名全拼小写字母（如：liyuanzhe）
 
 
 ## Spring-boot后端接口编写流程
