@@ -12,7 +12,7 @@ Step1.根据数据库表格创建实体类(entity文件夹下)
   Long---------->bigint/int  
   Date---------->datetime
    
-Step2.创建Mapper接口文件和SQLProvider连接文件(mapper文件夹下)
+Step2.创建Mapper接口文件(mapper文件夹下)
  
 Step3.创建Service接口文件和实现类(Service文件夹下)
  
