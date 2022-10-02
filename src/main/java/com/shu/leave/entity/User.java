@@ -1,10 +1,12 @@
 package com.shu.leave.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.util.Date;
 
 @Data
+@TableName("user_info")     // 类名跟表明不一致时才需要加这个注解，用于告知mybatis-plus去查哪个表
 public class User {
 
     // 主键id 自增

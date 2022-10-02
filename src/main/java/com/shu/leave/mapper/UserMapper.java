@@ -1,17 +1,19 @@
 package com.shu.leave.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.shu.leave.entity.User;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.type.JdbcType;
 
 import java.util.List;
 
-public interface UserMapper {
+@Mapper
+public interface UserMapper extends BaseMapper<User> {
 
     /**
      * 新增一条用户数据（插入除id以外完整的用户信息）
      * @param user
-     * @return 返回新增用户的主键id值
+     * @return 新增用户的主键id值
      */
     @Insert({
             "insert into user_info",

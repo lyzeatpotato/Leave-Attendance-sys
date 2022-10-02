@@ -1,5 +1,7 @@
 package com.shu.leave.service.Impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.shu.leave.entity.User;
 import com.shu.leave.mapper.UserMapper;
 import com.shu.leave.service.UserService;
@@ -47,9 +49,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findAllUser() {
-        User user = new User();
-        return userMapper.selectAll(user);
+    public IPage findAllUser() {
+        Page<User> page = new Page<>(0, 10);    // 分页查询对象，从索引0开始，每页显示10条
+        IPage iPage = userMapper.selectPage(page, null);    // 此处使用Mybatis-plus中提供的selectPage方法
+        return iPage;
     }
 
     @Override

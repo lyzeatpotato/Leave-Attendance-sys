@@ -1,5 +1,6 @@
 package com.shu.leave.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.shu.leave.entity.User;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,7 @@ public interface UserService {
      * 查询全部用户
      * @return 用户信息列表
      */
-    List<User> findAllUser();
+    IPage findAllUser();
 
     /**
      * 根据id查询用户
