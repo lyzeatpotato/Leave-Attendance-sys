@@ -1,7 +1,6 @@
 package com.shu.leave.service.Impl;
 
 import com.shu.leave.entity.User;
-import com.shu.leave.entity.UserExample;
 import com.shu.leave.mapper.UserMapper;
 import com.shu.leave.service.UserService;
 import org.springframework.stereotype.Service;
@@ -49,7 +48,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> findAllUser() {
-        UserExample user = new UserExample();
+        User user = new User();
         return userMapper.selectAll(user);
     }
 

@@ -1,8 +1,6 @@
 package com.shu.leave.mapper;
 
 import com.shu.leave.entity.User;
-import com.shu.leave.entity.UserExample;
-import com.shu.leave.mapper.SqlProvider.UserSqlProvider;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.type.JdbcType;
 
@@ -72,7 +70,11 @@ public interface UserMapper {
      * @param User
      * @return 全部用户信息列表
      */
-    @SelectProvider(type= UserSqlProvider.class, method="selectByExample")
+    @Select({
+            "select",
+            "id, userid, username, yuanxi, ptype, pstatus, gender, role, is_deleted, gmt_create, gmt_modified",
+            "from user_info"
+    })
     @Results({
             @Result(column="id", property="id", jdbcType= JdbcType.BIGINT, id=true),
             @Result(column="userid", property="userId", jdbcType=JdbcType.VARCHAR),
@@ -86,7 +88,7 @@ public interface UserMapper {
             @Result(column="gmt_create", property="gmtCreate", jdbcType=JdbcType.TIMESTAMP),
             @Result(column="gmt_modified", property="gmtModified", jdbcType=JdbcType.TIMESTAMP),
     })
-    List<User> selectAll(UserExample User);
+    List<User> selectAll(User User);
 
     /**
      * 根据id查询用户信息
