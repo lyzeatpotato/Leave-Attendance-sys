@@ -19,7 +19,7 @@ Step3.创建Service接口文件和实现类(Service文件夹下)
 Step4.创建Controller接口文件(Controller文件夹下)  
 **相关注释**  
 @ApiOperation(value = "接口名字", notes = "接口描述信息")  
-@ApiOperationSupport(order = 1)  
+@ApiOperationSupport(order = 1)（接口文档排列顺序）  
 @GetMapping("在网址url上显示的接口名称")  
  
 Step5.访问 <a>http://localhost:8007/leave-attendance/doc.html#/home</a> 查看接口文档
