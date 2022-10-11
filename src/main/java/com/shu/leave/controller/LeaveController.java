@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.text.ParseException;
+import java.util.Map;
 
 @Api(tags = "2.请假申请表")
 @ApiSupport(order = 2)
@@ -24,12 +25,11 @@ public class LeaveController {
     @ApiOperation(value = "新增请假申请表信息", notes = "要求一次性传入请假表单参数 [userid, leave_type, leave_start_time, leave_end_time, leave_reason, leave_material, status, department_status, hr_status, school_status]")
     @ApiOperationSupport(order = 1)
     @PostMapping("addLeaveForm")
-    public ResultEntity addLeaveForm(@RequestParam("userid") String userId, @RequestParam("leave_type") String leaveType,
-                                     @RequestParam("leave_start_time") String leaveStartTime, @RequestParam("leave_end_time") String leaveEndTime,
-                                     @RequestParam("leave_reason") String leaveReason, @RequestParam("leave_material") String leaveMaterial,
-                                     @RequestParam("status") String status, @RequestParam("department_status") String departmentStatus,
-                                     @RequestParam("hr_status") String hrStatus, @RequestParam("school_status") String schoolStatus) throws ParseException {
-        String[] params = new String[]{userId, leaveType, leaveStartTime, leaveEndTime, leaveReason, leaveMaterial, status, departmentStatus, hrStatus, schoolStatus};
+    public ResultEntity addLeaveForm(@RequestBody Map<String, String> json) throws ParseException {
+
+        String[] params = new String[]{json.get("userid"), json.get("leave-type"), json.get("leave-start-time"),
+                json.get("leave-end-time"), json.get("leave-reason"), json.get("leave-matiral")};
+        System.out.println(json);
         return BasicResponseUtils.success(leaveService.addLeaveForm(params));
     }
 

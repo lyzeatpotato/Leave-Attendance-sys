@@ -16,7 +16,7 @@ public interface LeaveMapper extends BaseMapper<Leave> {
      * @return 新增请假申请表的主键id值
      */
     @Insert({
-            "insert into user_info",
+            "insert into leave",
             "(userid, leave_type, leave_start_time, leave_end_time, leave_reason, leave_material, status,",
             " department_status, hr_status, school_status, is_deleted, gmt_create, gmt_modified)",
             "values (#{userId,jdbcType=VARCHAR}, #{leaveType,jdbcType=VARCHAR}, #{leaveStartTime,jdbcType=VARCHAR}, #{leaveEndTime,jdbcType=VARCHAR},",
