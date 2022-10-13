@@ -61,7 +61,7 @@ public interface UserMapper extends BaseMapper<User> {
             "ptype = #{pType,jdbcType=VARCHAR},",
             "pstatus = #{pStatus,jdbcType=VARCHAR},",
             "gender = #{gender,jdbcType=VARCHAR},",
-            "role = #{role,jdbcType=CHAR}",
+            "role = #{role,jdbcType=CHAR}",sss
             "where id = #{id,jdbcType=BIGINT}"
     })
     int updateUserById(User id);
