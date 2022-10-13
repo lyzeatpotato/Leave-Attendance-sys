@@ -18,7 +18,6 @@ public class UserServiceImpl implements UserService {
     @Resource
     UserMapper userMapper;
 
-
     @Override
     public int addUser(String[] params) {
         User user = new User();

@@ -1,10 +1,12 @@
 package com.shu.leave.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.util.Date;
 
 @Data
+@TableName("leave")
 public class Leave {
 
     // 主键id 自增

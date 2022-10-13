@@ -107,7 +107,7 @@ public interface UserMapper extends BaseMapper<User> {
             @Result(column="id", property="id", jdbcType= JdbcType.BIGINT, id=true),
             @Result(column="userid", property="userId", jdbcType=JdbcType.VARCHAR),
             @Result(column="username", property="userName", jdbcType=JdbcType.VARCHAR),
-            @Result(column="yuanxi", property="yuanXi", jdbcType=JdbcType.LONGVARCHAR),
+            @Result(column="yuanxi", property="yuanXi", jdbcType=JdbcType.VARCHAR),
             @Result(column="ptype", property="pType", jdbcType=JdbcType.VARCHAR),
             @Result(column="pstatus", property="pStatus", jdbcType=JdbcType.VARCHAR),
             @Result(column="gender", property="gender", jdbcType=JdbcType.VARCHAR),
