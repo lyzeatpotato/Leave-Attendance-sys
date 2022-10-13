@@ -61,7 +61,7 @@ public interface UserMapper extends BaseMapper<User> {
             "ptype = #{pType,jdbcType=VARCHAR},",
             "pstatus = #{pStatus,jdbcType=VARCHAR},",
             "gender = #{gender,jdbcType=VARCHAR},",
-            "role = #{role,jdbcType=CHAR}",sss
+            "role = #{role,jdbcType=CHAR}",
             "where id = #{id,jdbcType=BIGINT}"
     })
     int updateUserById(User id);
@@ -90,7 +90,7 @@ public interface UserMapper extends BaseMapper<User> {
             @Result(column="gmt_create", property="gmtCreate", jdbcType=JdbcType.TIMESTAMP),
             @Result(column="gmt_modified", property="gmtModified", jdbcType=JdbcType.TIMESTAMP),
     })
-    List<User> selectAll(User User);
+    List<User> selectAll();
 
     /**
      * 根据id查询用户信息
