@@ -90,7 +90,7 @@ public interface UserMapper extends BaseMapper<User> {
             @Result(column="gmt_create", property="gmtCreate", jdbcType=JdbcType.TIMESTAMP),
             @Result(column="gmt_modified", property="gmtModified", jdbcType=JdbcType.TIMESTAMP),
     })
-    List<User> selectAll(User User);
+    List<User> selectAll();
 
     /**
      * 根据id查询用户信息
