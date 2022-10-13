@@ -9,6 +9,8 @@ import java.util.Date;
 @TableName("user_info")     // 类名跟表明不一致时才需要加这个注解，用于告知mybatis-plus去查哪个表
 public class User {
 
+    //测试修改。。。。
+
     // 主键id 自增
     private Long id;
 
