@@ -102,4 +102,11 @@ public class LeaveController {
     public ResultEntity findLeaveFormByDeptAndUnfinishedSchool(@RequestParam("department") String department){
         return BasicResponseUtils.success(leaveService.findLeaveFormByUserDeptAndUnfinishedSchool(department));
     }
+
+    @ApiOperation(value = "查询全校范围内部门审核已完成，但人事处未审核的请假记录", notes = "传入对应部门")
+    @ApiOperationSupport(order = 9)
+    @GetMapping("findAllLeaveFormByUnfinishedHR")
+    public ResultEntity findAllLeaveFormByUnfinishedHR(){
+        return BasicResponseUtils.success(leaveService.findAllLeaveFormByUnfinishedHR());
+    }
 }

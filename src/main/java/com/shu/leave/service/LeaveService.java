@@ -64,4 +64,10 @@ public interface LeaveService {
      * @return 对应的请假列表
      */
     List<Leave> findLeaveFormByUserDeptAndUnfinishedSchool(String department);
+
+    /**
+     * 全校范围内部门审核已完成，但人事处未审核的请假表单信息
+     * @return 对应的请假列表
+     */
+    List<Leave> findAllLeaveFormByUnfinishedHR();
 }

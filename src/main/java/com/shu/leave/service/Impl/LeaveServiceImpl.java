@@ -86,4 +86,10 @@ public class LeaveServiceImpl implements LeaveService {
     public List<Leave> findLeaveFormByUserDeptAndUnfinishedSchool(String department) {
         return leaveMapper.selectByUserDeptAndUnfinishedSchool(department);
     }
+
+
+    @Override
+    public List<Leave> findAllLeaveFormByUnfinishedHR() {
+        return leaveMapper.selectAllByUnfinishedHR();
+    }
 }

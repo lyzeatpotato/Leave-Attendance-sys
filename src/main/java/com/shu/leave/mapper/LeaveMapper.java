@@ -100,7 +100,10 @@ public interface LeaveMapper extends BaseMapper<Leave> {
      * @param department
      * @return 返回请假列表
      */
-    @Select("SELECT leave.* FROM leave, user_info " +
+    @Select("SELECT leave.id, leave.userid, leave.leave_type, leave.leave_start_time, leave.leave_end_time, " +
+            "leave.leave_reason, leave.leave_material, leave.status, leave.department_status, " +
+            "leave.hr_status, leave.school_status, leave.is_deleted, leave.gmt_create, leave.gmt_modified " +
+            "FROM leave, user_info " +
             "WHERE leave.userid = user_info.id " +
             "and user_info.yuanxi = #{department, jdbcType=VARCHAR}")
     @Results(id = "leaveDeptRelatedMapper", value = {
@@ -130,7 +133,10 @@ public interface LeaveMapper extends BaseMapper<Leave> {
      * @param department
      * @return 返回请假列表
      */
-    @Select("SELECT leave.* FROM leave, user_info " +
+    @Select("SELECT leave.id, leave.userid, leave.leave_type, leave.leave_start_time, leave.leave_end_time," +
+            "leave.leave_reason, leave.leave_material, leave.status, leave.department_status, " +
+            "leave.hr_status, leave.school_status, leave.is_deleted, leave.gmt_create, leave.gmt_modified " +
+            "FROM leave, user_info " +
             "WHERE leave.userid = user_info.id " +
             "and user_info.yuanxi = #{department, jdbcType=VARCHAR} " +
             "and leave.hr_status = 0")
@@ -142,10 +148,29 @@ public interface LeaveMapper extends BaseMapper<Leave> {
      * @param department
      * @return 返回请假列表
      */
-    @Select("SELECT leave.* FROM leave, user_info " +
+    @Select("SELECT leave.id, leave.userid, leave.leave_type, leave.leave_start_time, leave.leave_end_time," +
+            "leave.leave_reason, leave.leave_material, leave.status, leave.department_status, " +
+            "leave.hr_status, leave.school_status, leave.is_deleted, leave.gmt_create, leave.gmt_modified " +
+            "FROM leave, user_info " +
             "WHERE leave.userid = user_info.id " +
             "and user_info.yuanxi = #{department, jdbcType=VARCHAR} " +
             "and leave.school_status = 0")
     @ResultMap(value = "leaveDeptRelatedMapper")
     List<Leave> selectByUserDeptAndUnfinishedSchool(String department);
+
+    /**
+     * 全校范围内部门审核已完成，但人事处未审核的请假表单信息
+     * @param
+     * @return 返回请假列表
+     */
+    @Select("SELECT leave.id, leave.userid, leave.leave_type, leave.leave_start_time, leave.leave_end_time," +
+            "leave.leave_reason, leave.leave_material, leave.status, leave.department_status, " +
+            "leave.hr_status, leave.school_status, leave.is_deleted, leave.gmt_create, leave.gmt_modified " +
+            "FROM leave, user_info " +
+            "WHERE leave.userid = user_info.id " +
+            "and leave.department_status = 1 "+
+            "and leave.hr_status = 0")
+    @ResultMap(value = "leaveDeptRelatedMapper")
+    List<Leave> selectAllByUnfinishedHR();
+
 }
