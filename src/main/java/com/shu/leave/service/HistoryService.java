@@ -5,5 +5,5 @@ import org.springframework.stereotype.Service;
 @Service
 public interface HistoryService {
 
-    boolean addUserLeaveHistory(String[] param);
+    int addUserLeaveHistory(String[] param);
 }
