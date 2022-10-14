@@ -43,4 +43,31 @@ public interface LeaveService {
      * @return 对应id用户的全部请假表列表
      */
     List<Leave> findLeaveFormByUserid(Long userid);
+
+    /**
+     * 按部门查询: 查询某一部门下的全部请假记录
+     * @param department
+     * @return 对应部门的全部请假列表
+     */
+    List<Leave> findLeaveFormByUserDept(String department);
+
+    /**
+     * 按部门条件查询: 查询某一部门下需要人事处审核，但尚未完成的全部请假记录
+     * @param department
+     * @return 对应的请假列表
+     */
+    List<Leave> findLeaveFormByUserDeptAndUnfinishedHR(String department);
+
+    /**
+     * 按部门条件查询: 查询某一部门下需要校领导审核，但尚未完成的全部请假记录
+     * @param department
+     * @return 对应的请假列表
+     */
+    List<Leave> findLeaveFormByUserDeptAndUnfinishedSchool(String department);
+
+    /**
+     * 全校范围内部门审核已完成，但人事处未审核的请假表单信息
+     * @return 对应的请假列表
+     */
+    List<Leave> findAllLeaveFormByUnfinishedHR();
 }
