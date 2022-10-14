@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-@TableName("absence-history")
+@TableName("absence_history")
 public class History {
 
     // 主键id 自增
@@ -41,6 +41,9 @@ public class History {
 
     // 本月累计工伤假总天数
     private String gongshangjiaDays;
+
+    // 本月累计公差数
+    private String gongchaiDays;
 
     // 本月累计旷工总天数
     private String kuanggongDays;

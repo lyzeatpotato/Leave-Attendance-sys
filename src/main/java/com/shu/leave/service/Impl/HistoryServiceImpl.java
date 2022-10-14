@@ -18,7 +18,7 @@ public class HistoryServiceImpl implements HistoryService {
     HistoryMapper historyMapper;
 
     @Override
-    public boolean addUserLeaveHistory(String[] param) {
+    public int addUserLeaveHistory(String[] param) {
         History history = new History();
         Date date = new Date();
         LocalDate current_date = LocalDate.now();
