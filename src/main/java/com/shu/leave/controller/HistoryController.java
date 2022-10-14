@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import java.util.Map;
 
-@Api(tags = "3.教师个人年度/月度请假记录")
+@Api(tags = "3.教师月度考勤")
 @ApiSupport(order = 3)
 @RestController
 @RequestMapping("history")
@@ -24,7 +24,7 @@ public class HistoryController {
     @Resource
     HistoryService historyService;
 
-    @ApiOperation(value = "新增一条用户请假记录", notes = "在每次用户提交完请假申请表后就执行插入")
+    @ApiOperation(value = "新增一条考勤历史记录", notes = "在每次用户提交完请假申请表后就执行插入，按年-月对应")
     @ApiOperationSupport(order = 1)
     @PostMapping("addHistory")
     public ResultEntity addUserAbsenceHistory(@RequestParam() Map<String, String> historyJson) {

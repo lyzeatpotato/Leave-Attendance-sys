@@ -48,6 +48,7 @@ public class UserController {
     @ApiOperationSupport(order = 4)
     @GetMapping("findUserById")
     public ResultEntity findAllUser(@RequestParam("id") String userid){
+        System.out.println(userid);
         // 进行前端传入数据的类型转换
         Long userId = Long.valueOf(userid);
         return BasicResponseUtils.success(userService.findUserById(userId));

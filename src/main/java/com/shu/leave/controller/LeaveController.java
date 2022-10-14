@@ -24,14 +24,14 @@ public class LeaveController {
     @Resource
     LeaveService leaveService;
 
-    @ApiOperation(value = "新增请假申请表信息", notes = "要求一次性传入请假表单参数 [userid, leave_type, leave_start_time, leave_end_time, leave_reason, leave_material, status, department_status, hr_status, school_status]")
+    @ApiOperation(value = "新增请假申请表信息", notes = "所需参数[userid, leave_type, leave_start_time, leave_end_time, leave_reason, leave_material]")
     @ApiOperationSupport(order = 1)
     @PostMapping("addLeaveForm")
-    public ResultEntity addLeaveForm(@RequestBody Map<String, String> json) throws ParseException {
+    public ResultEntity addLeaveForm(@RequestParam("userid") String userId, @RequestParam("leave-type") String leaveType,
+                                     @RequestParam("leave-start-time") String leaveStartTime, @RequestParam("leave-end-time") String leaveEndTime,
+                                     @RequestParam("leave-reason") String leaveReason, @RequestParam("leave-material") String leaveMaterial) throws ParseException {
 
-        String[] params = new String[]{json.get("userid"), json.get("leave-type"), json.get("leave-start-time"),
-                json.get("leave-end-time"), json.get("leave-reason"), json.get("leave-matiral")};
-        System.out.println(json);
+        String[] params = new String[]{userId, leaveType, leaveStartTime, leaveEndTime, leaveReason, leaveMaterial};
         return BasicResponseUtils.success(leaveService.addLeaveForm(params));
     }
 
