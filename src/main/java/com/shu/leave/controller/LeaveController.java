@@ -13,6 +13,8 @@ import javax.annotation.Resource;
 import java.text.ParseException;
 import java.util.Map;
 
+import static com.shu.leave.common.ResponseCodeEnums.RANGE_ERROR;
+
 @Api(tags = "2.请假申请表")
 @ApiSupport(order = 2)
 @RestController
@@ -63,5 +65,41 @@ public class LeaveController {
         // 对前端传入数据做数据类型转换
         Long userId = Long.valueOf(userid);
         return BasicResponseUtils.success(leaveService.findLeaveFormByUserid(userId));
+    }
+
+//    @ApiOperation(value = "查询部门下的请假表列表", notes = "传入对应部门和查询type：type=0,查询全部；type=1,查询部门下人事处尚未审核记录；type=2,查询部门下校领导尚未审核记录")
+//    @ApiOperationSupport(order = 6)
+//    @GetMapping("findLeaveFormByDept")
+//    public ResultEntity findLeaveFormByDept(@RequestParam("department") String department, @RequestParam("type") int type){
+//        if(type == 0){
+//            return BasicResponseUtils.success(leaveService.findLeaveFormByUserDept(department));
+//        }else if(type == 1){
+//            return BasicResponseUtils.success(leaveService.findLeaveFormByUserDeptAndUnfinishedHR(department));
+//        }else if(type == 2){
+//            return BasicResponseUtils.success(leaveService.findLeaveFormByUserDeptAndUnfinishedSchool(department));
+//        }else {
+//            return BasicResponseUtils.error(RANGE_ERROR);
+//        }
+//    }
+
+    @ApiOperation(value = "查询部门下的请假表列表", notes = "传入对应部门")
+    @ApiOperationSupport(order = 6)
+    @GetMapping("findLeaveFormByDept")
+    public ResultEntity findLeaveFormByDept(@RequestParam("department") String department){
+        return BasicResponseUtils.success(leaveService.findLeaveFormByUserDept(department));
+    }
+
+    @ApiOperation(value = "查询部门下需要人事处审核，但尚未审核请假记录", notes = "传入对应部门")
+    @ApiOperationSupport(order = 7)
+    @GetMapping("findLeaveFormByDeptAndUnfinishedHR")
+    public ResultEntity findLeaveFormByDeptAndUnfinishedHR(@RequestParam("department") String department){
+        return BasicResponseUtils.success(leaveService.findLeaveFormByUserDeptAndUnfinishedHR(department));
+    }
+
+    @ApiOperation(value = "查询部门下需要校领导审核，但尚未审核请假记录", notes = "传入对应部门")
+    @ApiOperationSupport(order = 8)
+    @GetMapping("findLeaveFormByDeptAndUnfinishedSchool")
+    public ResultEntity findLeaveFormByDeptAndUnfinishedSchool(@RequestParam("department") String department){
+        return BasicResponseUtils.success(leaveService.findLeaveFormByUserDeptAndUnfinishedSchool(department));
     }
 }

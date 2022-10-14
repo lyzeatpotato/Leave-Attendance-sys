@@ -2,6 +2,7 @@ package com.shu.leave.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.shu.leave.entity.Leave;
+import com.shu.leave.entity.User;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.type.JdbcType;
 
@@ -93,4 +94,58 @@ public interface LeaveMapper extends BaseMapper<Leave> {
             @Result(column="gmt_modified", property="gmtModified", jdbcType=JdbcType.TIMESTAMP),
     })
     List<Leave> selectByUserid(Long userid);
+
+    /**
+     * 按部门查询: 查询某一部门下的全部请假记录
+     * @param department
+     * @return 返回请假列表
+     */
+    @Select("SELECT leave.* FROM leave, user_info " +
+            "WHERE leave.userid = user_info.id " +
+            "and user_info.yuanxi = #{department, jdbcType=VARCHAR}")
+    @Results(id = "leaveDeptRelatedMapper", value = {
+            @Result(column="id", property="id", jdbcType= JdbcType.BIGINT, id=true),
+            @Result(column="userid", property="userId", jdbcType=JdbcType.VARCHAR),
+            @Result(column="leave_type", property="leaveType", jdbcType=JdbcType.VARCHAR),
+            @Result(column="leave_start_time", property="leaveStartTime", jdbcType=JdbcType.VARCHAR),
+            @Result(column="leave_end_time", property="leaveEndTime", jdbcType=JdbcType.VARCHAR),
+            @Result(column="leave_reason", property="leaveReason", jdbcType=JdbcType.VARCHAR),
+            @Result(column="leave_material", property="leaveMaterial", jdbcType=JdbcType.VARCHAR),
+            @Result(column="status", property="status", jdbcType=JdbcType.CHAR),
+            @Result(column="department_status", property="departmentStatus", jdbcType=JdbcType.CHAR),
+            @Result(column="hr_status", property="hrStatus", jdbcType=JdbcType.CHAR),
+            @Result(column="school_status", property="schoolStatus", jdbcType=JdbcType.CHAR),
+            @Result(column="is_deleted", property="isDeleted", jdbcType=JdbcType.CHAR),
+            @Result(column="gmt_create", property="gmtCreate", jdbcType=JdbcType.TIMESTAMP),
+            @Result(column="gmt_modified", property="gmtModified", jdbcType=JdbcType.TIMESTAMP),
+            @Result(
+                    column = "userid",property = "user",  javaType = User.class,
+                    one = @One(select = "com.shu.leave.mapper.UserMapper.selectById")
+            )
+    })
+    List<Leave> selectByUserDept(String department);
+
+    /**
+     * 按部门条件查询: 查询某一部门下需要人事处审核，但是尚未完成的全部请假记录（根据hr_status字段）
+     * @param department
+     * @return 返回请假列表
+     */
+    @Select("SELECT leave.* FROM leave, user_info " +
+            "WHERE leave.userid = user_info.id " +
+            "and user_info.yuanxi = #{department, jdbcType=VARCHAR} " +
+            "and leave.hr_status = 0")
+    @ResultMap(value = "leaveDeptRelatedMapper")
+    List<Leave> selectByUserDeptAndUnfinishedHR(String department);
+
+    /**
+     * 按部门条件查询: 查询某一部门下需要校领导审核，但是尚未完成的全部请假记录（根据school_status字段）
+     * @param department
+     * @return 返回请假列表
+     */
+    @Select("SELECT leave.* FROM leave, user_info " +
+            "WHERE leave.userid = user_info.id " +
+            "and user_info.yuanxi = #{department, jdbcType=VARCHAR} " +
+            "and leave.school_status = 0")
+    @ResultMap(value = "leaveDeptRelatedMapper")
+    List<Leave> selectByUserDeptAndUnfinishedSchool(String department);
 }
