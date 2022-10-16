@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
-@Api(tags = "2.管理员相关")
-@ApiSupport(order = 1)
+@Api(tags = "3.管理员相关")
+@ApiSupport(order = 3)
 @RestController
 @RequestMapping("admin_info")
 public class AdminController {
