@@ -10,10 +10,10 @@ import java.util.Date;
 public class History {
 
     // 主键id 自增
-    private long id;
+    private Long id;
 
     // 提交信息表的用户id
-    private long userId;
+    private Long userId;
 
     // 年度信息
     private String year;

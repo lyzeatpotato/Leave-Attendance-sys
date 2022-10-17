@@ -63,7 +63,7 @@ public class LeaveController {
     @GetMapping("findLeaveFormByUserid")
     public ResultEntity findLeaveFormByUserid(@RequestParam("userid") String userid) {
         // 对前端传入数据做数据类型转换
-        Long userId = Long.valueOf(userid);
+        long userId = Long.valueOf(userid);
         return BasicResponseUtils.success(leaveService.findLeaveFormByUserid(userId));
     }
 

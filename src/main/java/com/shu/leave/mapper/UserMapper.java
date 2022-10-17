@@ -11,6 +11,16 @@ import java.util.List;
 public interface UserMapper extends BaseMapper<User> {
 
     /**
+     * 通过用户工号，映射其在user表中的主键
+     * @param userId
+     * @return 用户主键id
+     */
+    @Select({
+            "select id from user_info where userid=#{userId,jdbcType=VARCHAR}"
+    })
+    long getUserPrimaryKeyByUserId(String userId);
+
+    /**
      * 新增一条用户数据（插入除id以外完整的用户信息）
      * @param user
      * @return 新增用户的主键id值
@@ -69,7 +79,6 @@ public interface UserMapper extends BaseMapper<User> {
 
     /**
      * 查询全部用户信息
-     * @param User
      * @return 全部用户信息列表
      */
     @Select({

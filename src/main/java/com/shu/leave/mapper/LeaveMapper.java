@@ -30,7 +30,7 @@ public interface LeaveMapper extends BaseMapper<Leave> {
 
     /**
      * 查询全部请假申请表
-     * @return
+     * @return 请假表单信息
      */
     @Select({
             "select id, userid, leave_type, leave_start_time, leave_end_time, leave_reason, leave_material,",
@@ -160,7 +160,6 @@ public interface LeaveMapper extends BaseMapper<Leave> {
 
     /**
      * 全校范围内部门审核已完成，但人事处未审核的请假表单信息
-     * @param
      * @return 返回请假列表
      */
     @Select("SELECT leave.id, leave.userid, leave.leave_type, leave.leave_start_time, leave.leave_end_time," +

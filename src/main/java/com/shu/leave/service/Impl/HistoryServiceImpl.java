@@ -2,6 +2,7 @@ package com.shu.leave.service.Impl;
 
 import com.shu.leave.entity.History;
 import com.shu.leave.mapper.HistoryMapper;
+import com.shu.leave.mapper.UserMapper;
 import com.shu.leave.service.HistoryService;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,9 @@ import java.util.Date;
 public class HistoryServiceImpl implements HistoryService {
 
     @Resource
+    UserMapper userMapper;
+
+    @Resource
     HistoryMapper historyMapper;
 
     @Override
@@ -22,7 +26,8 @@ public class HistoryServiceImpl implements HistoryService {
         History history = new History();
         Date date = new Date();
         LocalDate current_date = LocalDate.now();
-        history.setUserId(Long.valueOf(param[0]));
+        long userPrimaryKey = userMapper.getUserPrimaryKeyByUserId(param[0]);
+        history.setUserId(userPrimaryKey);
         history.setYear(String.valueOf(current_date.getYear()));
         history.setMonth(String.valueOf(current_date.getMonth()));
         history.setShijiaDays(param[1]);

@@ -8,6 +8,7 @@ import com.shu.leave.entity.History;
 import com.shu.leave.entity.Leave;
 import com.shu.leave.mapper.HistoryMapper;
 import com.shu.leave.mapper.LeaveMapper;
+import com.shu.leave.mapper.UserMapper;
 import com.shu.leave.service.LeaveService;
 import com.shu.leave.utils.UnitedUtils;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,9 @@ import java.util.List;
 public class LeaveServiceImpl implements LeaveService {
 
     @Resource
+    UserMapper userMapper;
+
+    @Resource
     LeaveMapper leaveMapper;
 
     @Resource
@@ -32,7 +36,8 @@ public class LeaveServiceImpl implements LeaveService {
     @Override
     public int addLeaveForm(String[] params) throws ParseException {
         Leave leaveForm = new Leave();
-        leaveForm.setUserId(Long.valueOf(params[0]));
+        long userPrimaryKey = userMapper.getUserPrimaryKeyByUserId(params[0]);
+        leaveForm.setUserId(userPrimaryKey);
         leaveForm.setLeaveType(params[1]);  // 前端输入的请假类型
         SimpleDateFormat df0 = new SimpleDateFormat("yyyy-MM-dd HH");
         Date startDate = df0.parse(params[2]);
