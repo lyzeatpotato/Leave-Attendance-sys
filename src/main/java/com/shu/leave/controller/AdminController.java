@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
-@Api(tags = "3.管理员相关")
-@ApiSupport(order = 3)
+@Api(tags = "5.管理员相关")
+@ApiSupport(order = 5)
 @RestController
 @RequestMapping("admin_info")
 public class AdminController {
@@ -50,5 +50,15 @@ public class AdminController {
     @GetMapping("findAdminById")
     public ResultEntity findAllAdmin(@RequestParam("id") Long Adminid){
         return BasicResponseUtils.success(adminService.findAdminById(Adminid));
+    }
+
+    @ApiOperation(value = "修改管理员信息", notes = "要求完整输入修改后的管理信息 [id, userid, username]")
+    @ApiOperationSupport(order = 5)
+    @GetMapping("updateUser")
+    public ResultEntity updateUser( @RequestParam("id") String id,
+                                    @RequestParam("userid") String userid, @RequestParam("username") String username){
+
+        String[] param = new String[]{id, userid, username};
+        return BasicResponseUtils.success(adminService.updateAdmin(param));
     }
 }

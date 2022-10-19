@@ -35,4 +35,11 @@ public interface UserService {
      * @return id对应的用户信息
      */
     User findUserById(Long id);
+
+    /**
+     * 根据id查询用户
+     * @param params -> [id, userid, username, yuanxi, ptype, pstatus, gender]
+     * @return id对应的用户信息
+     */
+    int updateUser(String[] params);
 }

@@ -56,4 +56,29 @@ public class UserServiceImpl implements UserService {
     public User findUserById(Long id) {
         return userMapper.selectById(id);
     }
+
+    @Override
+    public int updateUser(String[] params ) {
+        User user = new User();
+        user.setId(Long.parseLong(params[0]));
+        user.setUserId(params[1]);
+        user.setUserName(params[2]);
+        user.setYuanXi(params[3]);
+        user.setPType(params[4]);
+        user.setPStatus(params[5]);
+        user.setGender(params[6]);
+        user.setRole("0");  // 此处默认初始新建的用户权限都为“基本教师权限”
+        user.setIsDeleted("0");
+        /***
+         * 时间转换逻辑：
+         * util.Date获取的时间能够精确到时分秒，但转换成sql.Date则只能保留日期
+         * 做法是使用sql.Date的子类：sql.Timestamp来做数据转换
+         */
+        Date date = new Date();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Timestamp timeStamp = Timestamp.valueOf(df.format(date));
+        user.setGmtCreate(timeStamp);
+        user.setGmtModified(timeStamp);
+        return userMapper.update(user);
+    }
 }

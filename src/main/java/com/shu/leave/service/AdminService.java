@@ -27,7 +27,8 @@ public interface AdminService {
      * 查询全部用户
      * @return 用户信息列表
      */
-    IPage findAllAdmin();
+    //IPage findAllAdmin();
+    List<Admin>  findAllAdmin();
 
     /**
      * 根据id查询用户
@@ -35,4 +36,11 @@ public interface AdminService {
      * @return id对应的用户信息
      */
     Admin findAdminById(Long id);
+
+    /**
+     * 根据id查询用户
+     * @param params -> [id, userid, username]
+     * @return id对应的用户信息
+     */
+    int updateAdmin(String[] params);
 }

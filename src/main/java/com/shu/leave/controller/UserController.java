@@ -47,10 +47,22 @@ public class UserController {
     @ApiOperation(value = "根据主键查询用户", notes = "显示id条件下的用户详细信息")
     @ApiOperationSupport(order = 4)
     @GetMapping("findUserById")
-    public ResultEntity findAllUser(@RequestParam("id") String userid){
+    public ResultEntity findUserById(@RequestParam("id") String userid){
         System.out.println(userid);
         // 进行前端传入数据的类型转换
         Long userId = Long.valueOf(userid);
         return BasicResponseUtils.success(userService.findUserById(userId));
+    }
+
+    @ApiOperation(value = "修改用户信息", notes = "要求完整输入修改后的用户信息 [id, userid, username, yuanxi, ptype, pstatus, gender]")
+    @ApiOperationSupport(order = 5)
+    @GetMapping("updateUser")
+    public ResultEntity updateUser( @RequestParam("id") String id,
+                                    @RequestParam("userid") String userid, @RequestParam("username") String username,
+                                    @RequestParam("yuanxi") String yuanxi, @RequestParam("ptype") String ptype,
+                                    @RequestParam("pstatus") String pstatus,  @RequestParam("gender") String gender){
+
+        String[] param = new String[]{id, userid, username, yuanxi, ptype, pstatus, gender};
+        return BasicResponseUtils.success(userService.updateUser(param));
     }
 }

@@ -1,9 +1,11 @@
 package com.shu.leave.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.shu.leave.entity.Calender;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
+import java.util.List;
 
 @Service
 public interface CalenderService {
@@ -35,5 +37,5 @@ public interface CalenderService {
      * 查询全部校历数据
      * @return 未被逻辑删除的校历数据
      */
-    IPage findAllCalender();
+    List<Calender> findAllCalender();
 }

@@ -2,6 +2,7 @@ package com.shu.leave.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.shu.leave.entity.Admin;
+import com.shu.leave.entity.User;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.type.JdbcType;
 
@@ -63,13 +64,13 @@ public interface AdminMapper extends BaseMapper<Admin> {
 
     /**
      * 查询全部管理信息
-     * @param Admin
+
      * @return 全部管理信息列表
      */
     @Select({
             "select",
             "id, userid, username, is_deleted, gmt_create, gmt_modified",
-            "from admin_info"
+            "from admin_info where is_deleted = 0"
     })
     @Results({
             @Result(column="id", property="id", jdbcType= JdbcType.BIGINT, id=true),
@@ -79,8 +80,21 @@ public interface AdminMapper extends BaseMapper<Admin> {
             @Result(column="gmt_create", property="gmtCreate", jdbcType=JdbcType.TIMESTAMP),
             @Result(column="gmt_modified", property="gmtModified", jdbcType=JdbcType.TIMESTAMP),
     })
-    List<Admin> selectAll(Admin Admin);
+    List<Admin> selectAll();
 
+
+    /**
+     * 修改一条管理数据
+     * @param admin
+     * @return 修改管理的主键id值
+     */
+    @Update({
+            "update admin_info set",
+            "userid = #{userId,jdbcType=VARCHAR}, username = #{userName,jdbcType=VARCHAR}, ",
+            "gmt_create = #{gmtCreate,jdbcType=TIMESTAMP}, gmt_modified = #{gmtModified,jdbcType=TIMESTAMP} where id = #{id,jdbcType=VARCHAR}"
+    })
+
+    int update(Admin admin);
     /**
      * 根据id查询管理信息
      * @param id
@@ -90,7 +104,7 @@ public interface AdminMapper extends BaseMapper<Admin> {
             "select",
             "userid, username, is_deleted, gmt_create, gmt_modified",
             "from admin_info",
-            "where id = #{id,jdbcType=BIGINT}"
+            "where id = #{id,jdbcType=BIGINT} and is_deleted = 0"
     })
     @Results({
             @Result(column="id", property="id", jdbcType= JdbcType.BIGINT, id=true),
@@ -101,5 +115,7 @@ public interface AdminMapper extends BaseMapper<Admin> {
             @Result(column="gmt_modified", property="gmtModified", jdbcType=JdbcType.TIMESTAMP),
     })
     Admin selectById(Long id);
+
+
 
 }

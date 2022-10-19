@@ -54,7 +54,7 @@ public class CalenderController {
     @ApiOperation(value = "查询全部校历数据", notes = "显示全部未被逻辑删除的用户信息 ")
     @ApiOperationSupport(order = 4)
     @GetMapping("findAllCalender")
-    public ResultEntity findAllCalenderForm() throws ParseException {
+    public ResultEntity findAllCalenderForm()  {
         return BasicResponseUtils.success(calenderService.findAllCalender());
     }
 }

@@ -3,6 +3,7 @@ package com.shu.leave.service.Impl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.shu.leave.entity.Calender;
+import com.shu.leave.entity.User;
 import com.shu.leave.mapper.CalenderMapper;
 import com.shu.leave.service.CalenderService;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class CalenderServiceImpl implements CalenderService {
@@ -67,11 +69,15 @@ public class CalenderServiceImpl implements CalenderService {
         return calenderMapper.deleteLogicallyById(id);
     }
 
+
+//    public IPage findAllCalender() {
+//        Page<Calender> page = new Page<>(0, 10);    // 分页查询对象，从索引0开始，每页显示10条
+//        page = (Page<Calender>)calenderMapper.selectAll();
+//        IPage iPage = calenderMapper.selectPage(page, null);    // 此处使用Mybatis-plus中提供的selectPage方法
+//        return iPage;
+//    }
     @Override
-    public IPage findAllCalender() {
-        Page<Calender> page = new Page<>(0, 10);    // 分页查询对象，从索引0开始，每页显示10条
-        page = (Page<Calender>)calenderMapper.selectAll();
-        IPage iPage = calenderMapper.selectPage(page, null);    // 此处使用Mybatis-plus中提供的selectPage方法
-        return iPage;
+    public List<Calender> findAllCalender() {
+        return calenderMapper.selectAll();
     }
 }

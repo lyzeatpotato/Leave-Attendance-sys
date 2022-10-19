@@ -36,6 +36,20 @@ public interface UserMapper extends BaseMapper<User> {
     int insert(User user);
 
     /**
+     * 修改一条用户数据
+     * @param user
+     * @return 修改用户的主键id值
+     */
+    @Update({
+            "update user_info set",
+            "userid = #{userId,jdbcType=VARCHAR}, username = #{userName,jdbcType=VARCHAR}, yuanxi = #{yuanXi,jdbcType=VARCHAR}, ptype = #{pType,jdbcType=VARCHAR},",
+            "pstatus = #{pStatus,jdbcType=VARCHAR}, gender = #{gender,jdbcType=VARCHAR}, role = #{role,jdbcType=CHAR},",
+            "gmt_create = #{gmtCreate,jdbcType=TIMESTAMP}, gmt_modified = #{gmtModified,jdbcType=TIMESTAMP} where id = #{id,jdbcType=VARCHAR}"
+    })
+
+    int update(User user);
+
+    /**
      * 根据主键直接删除用户（一般不用）
      * @param id
      * @return 删除是否成功
@@ -126,5 +140,7 @@ public interface UserMapper extends BaseMapper<User> {
             @Result(column="gmt_modified", property="gmtModified", jdbcType=JdbcType.TIMESTAMP),
     })
     User selectById(Long id);
+
+
 
 }

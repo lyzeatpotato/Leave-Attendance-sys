@@ -37,7 +37,7 @@ public interface CalenderMapper extends BaseMapper<Calender> {
     @Update({
             "update calender set",
             "adminid = #{adminId,jdbcType=VARCHAR}, holiday_name = #{holidayName,jdbcType=VARCHAR}, holiday_start_date = #{holidayStartDate,jdbcType=VARCHAR}, holiday_end_date = #{holidayEndDate,jdbcType=VARCHAR},",
-            "description = #{description,jdbcType=VARCHAR}, is_deleted = #{isDeleted,jdbcType=CHAR}, gmt_create = #{gmtCreate,jdbcType=TIMESTAMP}, gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}",
+            "description = #{description,jdbcType=VARCHAR}, gmt_create = #{gmtCreate,jdbcType=TIMESTAMP}, gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}",
             "where id = #{id,jdbcType=VARCHAR}"
     })
     int update (Calender calender);
@@ -62,7 +62,7 @@ public interface CalenderMapper extends BaseMapper<Calender> {
     @Select({
             "select",
             "id, adminid, holiday_name, holiday_start_date, holiday_end_date, description",
-            "from calender"
+            "from calender where is_deleted = 0"
     })
     @Results({
             @Result(column="id", property="id", jdbcType= JdbcType.BIGINT, id=true),
