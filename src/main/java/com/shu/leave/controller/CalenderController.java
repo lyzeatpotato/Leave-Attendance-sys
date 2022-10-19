@@ -23,24 +23,24 @@ public class CalenderController {
 
     @Resource
     CalenderService calenderService;
-    @ApiOperation(value = "新增校历假期数据", notes = "要求给出以下校历假期数据 [adminid, holiday_name, holiday_start_name, holiday_end_date, description]")
+    @ApiOperation(value = "新增校历假期数据", notes = "要求给出以下校历假期数据 [adminid, holiday_name, holiday_start_date, holiday_end_date, description]")
     @ApiOperationSupport(order = 1)
     @GetMapping("addCalender")
     public ResultEntity addCalenderForm(@RequestParam("adminid") String adminId, @RequestParam("holiday_name") String holidayName,
-                                     @RequestParam("holiday_start_name") String holidayStartName, @RequestParam("holiday_end_date") String holidayEndDate,
+                                     @RequestParam("holiday_start_date") String holidayStartDate, @RequestParam("holiday_end_date") String holidayEndDate,
                                      @RequestParam("description") String description) throws ParseException {
-        String[] params = new String[]{adminId,holidayName, holidayStartName, holidayEndDate, description};
+        String[] params = new String[]{adminId,holidayName, holidayStartDate, holidayEndDate, description};
         return BasicResponseUtils.success(calenderService.addCalenderForm(params));
     }
 
-    @ApiOperation(value = "修改校历假期数据", notes = "要求给出以下校历假期数据 [id,adminid, holiday_name, holiday_start_name, holiday_end_date, description]")
+    @ApiOperation(value = "修改校历假期数据", notes = "要求给出以下校历假期数据 [id,adminid, holiday_name, holiday_start_date, holiday_end_date, description]")
     @ApiOperationSupport(order = 2)
     @GetMapping("updateCalender")
     public ResultEntity updateCalenderForm(@RequestParam("id") String id,
                                         @RequestParam("adminid") String adminId, @RequestParam("holiday_name") String holidayName,
-                                        @RequestParam("holiday_start_name") String holidayStartName, @RequestParam("holiday_end_date") String holidayEndDate,
+                                        @RequestParam("holiday_start_date") String holidayStartDate, @RequestParam("holiday_end_date") String holidayEndDate,
                                         @RequestParam("description") String description) throws ParseException {
-        String[] params = new String[]{id,adminId,holidayName, holidayStartName, holidayEndDate, description};
+        String[] params = new String[]{id,adminId,holidayName, holidayStartDate, holidayEndDate, description};
         return BasicResponseUtils.success(calenderService.updateCalenderForm(params));
     }
 

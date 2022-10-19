@@ -21,9 +21,9 @@ public interface CalenderMapper extends BaseMapper<Calender> {
      */
     @Insert({
             "insert into calender",
-            "(adminid, holiday_name, holiday_start_name, holiday_end_date, description, ",
+            "(adminid, holiday_name, holiday_start_date, holiday_end_date, description, ",
             "is_deleted, gmt_create, gmt_modified)",
-            "values (#{adminId,jdbcType=VARCHAR}, #{holidayName,jdbcType=VARCHAR}, #{holidayStartName,jdbcType=VARCHAR}, #{holidayEndDate,jdbcType=VARCHAR},",
+            "values (#{adminId,jdbcType=VARCHAR}, #{holidayName,jdbcType=VARCHAR}, #{holidayStartDate,jdbcType=VARCHAR}, #{holidayEndDate,jdbcType=VARCHAR},",
             "#{description,jdbcType=VARCHAR}, #{isDeleted,jdbcType=CHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP})"
     })
     @SelectKey(statement = "SELECT SCOPE_IDENTITY();", keyProperty = "id", before = false, resultType = Long.class)
@@ -36,7 +36,7 @@ public interface CalenderMapper extends BaseMapper<Calender> {
      */
     @Update({
             "update calender set",
-            "adminid = #{adminId,jdbcType=VARCHAR}, holiday_name = #{holidayName,jdbcType=VARCHAR}, holiday_start_name = #{holidayStartName,jdbcType=VARCHAR}, holiday_end_date = #{holidayEndDate,jdbcType=VARCHAR},",
+            "adminid = #{adminId,jdbcType=VARCHAR}, holiday_name = #{holidayName,jdbcType=VARCHAR}, holiday_start_date = #{holidayStartDate,jdbcType=VARCHAR}, holiday_end_date = #{holidayEndDate,jdbcType=VARCHAR},",
             "description = #{description,jdbcType=VARCHAR}, is_deleted = #{isDeleted,jdbcType=CHAR}, gmt_create = #{gmtCreate,jdbcType=TIMESTAMP}, gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}",
             "where id = #{id,jdbcType=VARCHAR}"
     })
@@ -61,16 +61,16 @@ public interface CalenderMapper extends BaseMapper<Calender> {
      */
     @Select({
             "select",
-            "id, adminid, holiday_name, holiday_start_name, holiday_end_date, description",
+            "id, adminid, holiday_name, holiday_start_date, holiday_end_date, description",
             "from calender"
     })
     @Results({
             @Result(column="id", property="id", jdbcType= JdbcType.BIGINT, id=true),
             @Result(column="adminid", property="adminId", jdbcType=JdbcType.VARCHAR),
-            @Result(column="holiday_name", property="userName", jdbcType=JdbcType.VARCHAR),
-            @Result(column="holiday_start_name", property="yuanXi", jdbcType=JdbcType.LONGVARCHAR),
-            @Result(column="holiday_end_date", property="pType", jdbcType=JdbcType.VARCHAR),
-            @Result(column="description", property="pStatus", jdbcType=JdbcType.VARCHAR),
+            @Result(column="holiday_name", property="holidayName", jdbcType=JdbcType.VARCHAR),
+            @Result(column="holiday_start_date", property="holidayStartDate", jdbcType=JdbcType.LONGVARCHAR),
+            @Result(column="holiday_end_date", property="holidayEndDate", jdbcType=JdbcType.VARCHAR),
+            @Result(column="description", property="description", jdbcType=JdbcType.VARCHAR),
 //            @Result(column="is_deleted", property="isDeleted", jdbcType=JdbcType.CHAR),
 //            @Result(column="gmt_create", property="gmtCreate", jdbcType=JdbcType.TIMESTAMP),
 //            @Result(column="gmt_modified", property="gmtModified", jdbcType=JdbcType.TIMESTAMP),
@@ -79,7 +79,7 @@ public interface CalenderMapper extends BaseMapper<Calender> {
 
 //    @Select({
 //            "select",
-//            "id, adminid, holiday_name, holiday_start_name, holiday_end_date, description",
+//            "id, adminid, holiday_name, holiday_start_date, holiday_end_date, description",
 //            "from calender"
 //    })
 //    List<Calender> selectPage(Page<Calender> page);

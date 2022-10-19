@@ -27,7 +27,7 @@ public class CalenderServiceImpl implements CalenderService {
         SimpleDateFormat df0 = new SimpleDateFormat("yyyy-MM-dd");
         Date startDate = df0.parse(params[2]);
         Date endDate = df0.parse(params[3]);
-        calenderForm.setHolidayStartName(startDate);
+        calenderForm.setHolidayStartDate(startDate);
         calenderForm.setHolidayEndDate(endDate);
         calenderForm.setDescription(params[4]);
         calenderForm.setIsDeleted("0");
@@ -49,7 +49,7 @@ public class CalenderServiceImpl implements CalenderService {
         SimpleDateFormat df0 = new SimpleDateFormat("yyyy-MM-dd");
         Date startDate = df0.parse(params[3]);
         Date endDate = df0.parse(params[4]);
-        calenderForm.setHolidayStartName(startDate);
+        calenderForm.setHolidayStartDate(startDate);
         calenderForm.setHolidayEndDate(endDate);
         calenderForm.setDescription(params[5]);
         calenderForm.setIsDeleted("0");

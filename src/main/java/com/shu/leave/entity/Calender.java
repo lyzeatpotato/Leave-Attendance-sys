@@ -19,7 +19,7 @@ public class Calender {
     private String holidayName;
 
     // 校历假期开始日期
-    private Date holidayStartName;
+    private Date holidayStartDate;
 
     // 校历假期结束日期
     private Date holidayEndDate;
