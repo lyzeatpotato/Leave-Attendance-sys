@@ -27,7 +27,7 @@ public interface UserService {
      * 查询全部用户
      * @return 用户信息列表
      */
-    IPage findAllUser();
+    List<User> findAllUser();
 
     /**
      * 根据id查询用户

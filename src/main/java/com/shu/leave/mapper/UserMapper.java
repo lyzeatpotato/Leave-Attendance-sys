@@ -11,6 +11,16 @@ import java.util.List;
 public interface UserMapper extends BaseMapper<User> {
 
     /**
+     * 通过用户工号，映射其在user表中的主键
+     * @param userId
+     * @return 用户主键id
+     */
+    @Select({
+            "select id from user_info where userid=#{userId,jdbcType=VARCHAR}"
+    })
+    long getUserPrimaryKeyByUserId(String userId);
+
+    /**
      * 新增一条用户数据（插入除id以外完整的用户信息）
      * @param user
      * @return 新增用户的主键id值
@@ -69,7 +79,6 @@ public interface UserMapper extends BaseMapper<User> {
 
     /**
      * 查询全部用户信息
-     * @param User
      * @return 全部用户信息列表
      */
     @Select({
@@ -90,7 +99,7 @@ public interface UserMapper extends BaseMapper<User> {
             @Result(column="gmt_create", property="gmtCreate", jdbcType=JdbcType.TIMESTAMP),
             @Result(column="gmt_modified", property="gmtModified", jdbcType=JdbcType.TIMESTAMP),
     })
-    List<User> selectAll(User User);
+    List<User> selectAll();
 
     /**
      * 根据id查询用户信息
@@ -107,7 +116,7 @@ public interface UserMapper extends BaseMapper<User> {
             @Result(column="id", property="id", jdbcType= JdbcType.BIGINT, id=true),
             @Result(column="userid", property="userId", jdbcType=JdbcType.VARCHAR),
             @Result(column="username", property="userName", jdbcType=JdbcType.VARCHAR),
-            @Result(column="yuanxi", property="yuanXi", jdbcType=JdbcType.LONGVARCHAR),
+            @Result(column="yuanxi", property="yuanXi", jdbcType=JdbcType.VARCHAR),
             @Result(column="ptype", property="pType", jdbcType=JdbcType.VARCHAR),
             @Result(column="pstatus", property="pStatus", jdbcType=JdbcType.VARCHAR),
             @Result(column="gender", property="gender", jdbcType=JdbcType.VARCHAR),

@@ -7,10 +7,7 @@ import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -25,7 +22,7 @@ public class UserController {
 
     @ApiOperation(value = "新增用户", notes = "要求完整输入全部用户信息 [userid, username, yuanxi, ptype, pstatus, gender]")
     @ApiOperationSupport(order = 1)
-    @GetMapping("addUser")
+    @PostMapping("addUser")
     public ResultEntity addUser(@RequestParam("userid") String userid, @RequestParam("username") String username,
                                 @RequestParam("yuanxi") String yuanxi, @RequestParam("ptype") String ptype,
                                 @RequestParam("pstatus") String pstatus,  @RequestParam("gender") String gender){
@@ -50,7 +47,10 @@ public class UserController {
     @ApiOperation(value = "根据主键查询用户", notes = "显示id条件下的用户详细信息")
     @ApiOperationSupport(order = 4)
     @GetMapping("findUserById")
-    public ResultEntity findAllUser(@RequestParam("id") Long userid){
-        return BasicResponseUtils.success(userService.findUserById(userid));
+    public ResultEntity findAllUser(@RequestParam("id") String userid){
+        System.out.println(userid);
+        // 进行前端传入数据的类型转换
+        Long userId = Long.valueOf(userid);
+        return BasicResponseUtils.success(userService.findUserById(userId));
     }
 }
