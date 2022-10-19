@@ -1,10 +1,13 @@
 package com.shu.leave.controller;
 
+import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.shu.leave.common.ResultEntity;
 import com.shu.leave.service.LeaveService;
 import com.shu.leave.utils.BasicResponseUtils;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,6 +24,9 @@ public class LeaveController {
     @Resource
     LeaveService leaveService;
 
+    @ApiOperation(value = "新增请假数据", notes = "要求完整输入请假数据")
+    @ApiOperationSupport(order = 1)
+    @GetMapping("addLeave")
     public ResultEntity addLeaveForm(@RequestParam("userid") String userId, @RequestParam("leave_type") String leaveType,
                                      @RequestParam("leave_start_time") String leaveStartTime, @RequestParam("leave_end_time") String leaveEndTime,
                                      @RequestParam("leave_reason") String leaveReason, @RequestParam("leave_material") String leaveMaterial,

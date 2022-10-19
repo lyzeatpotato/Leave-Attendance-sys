@@ -39,7 +39,7 @@ public interface UserMapper extends BaseMapper<User> {
     /**
      * 根据主键逻辑删除用户
      * @param id
-     * @return 被逻辑删除的用户id
+     * @return 被逻辑删除的数据id
      */
     @Update({
             "update user_info",
