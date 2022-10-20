@@ -1,45 +1,46 @@
 package com.shu.leave.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.shu.leave.entity.User;
+import com.shu.leave.entity.Admin;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public interface UserService {
+public interface AdminService {
 
     /**
      * 新增用户
-     * @param params -> [userid, username, yuanxi, ptype, pstatus, gender]
+     * @param params -> [Userid, Username]
      * @return 新增用户id
      */
-    int addUser(String[] params);
+    int addAdmin(String[] params);
 
     /**
      * 逻辑删除用户
      * @param id
      * @return 被逻辑删除的用户id
      */
-    int deleteLogicallyUser(Long id);
+    int deleteLogicallyAdmin(Long id);
 
     /**
      * 查询全部用户
      * @return 用户信息列表
      */
-    List<User> findAllUser();
+    //IPage findAllAdmin();
+    List<Admin>  findAllAdmin();
 
     /**
      * 根据id查询用户
      * @param id
      * @return id对应的用户信息
      */
-    User findUserById(Long id);
+    Admin findAdminById(Long id);
 
     /**
      * 根据id查询用户
-     * @param params -> [id, userid, username, yuanxi, ptype, pstatus, gender]
+     * @param params -> [id, userid, username]
      * @return id对应的用户信息
      */
-    int updateUser(String[] params);
+    int updateAdmin(String[] params);
 }
