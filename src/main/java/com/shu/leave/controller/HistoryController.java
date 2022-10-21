@@ -7,10 +7,7 @@ import com.shu.leave.service.HistoryService;
 import com.shu.leave.utils.BasicResponseUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.Map;
@@ -31,5 +28,26 @@ public class HistoryController {
         String[] param = new String[] {historyJson.get("userid"), historyJson.get("shijia"), historyJson.get("bingjia"), historyJson.get("hunjia"), historyJson.get("shengyujia"),
                                         historyJson.get("tanqinjia"), historyJson.get("sangjia"), historyJson.get("gongshang"), historyJson.get("kuanggongjia"), historyJson.get("inactive")};
         return BasicResponseUtils.success(historyService.addUserLeaveHistory(param));
+    }
+
+    @ApiOperation(value = "用户历史请假记录", notes = "根据用户工号，查询某用户的历史请假记录")
+    @ApiOperationSupport(order = 2)
+    @GetMapping("findUserHitoryByUserId")
+    public ResultEntity findUserHistoryByUserId(@RequestParam("userid") String userId) {
+        return BasicResponseUtils.success(historyService.findHistoryByUserId(userId));
+    }
+
+    @ApiOperation(value = "用户某年月考勤记录", notes = "根据用户工号，查询某用户在某年某月度下的请假记录")
+    @ApiOperationSupport(order = 3)
+    @GetMapping("findUserHistoryYearMonth")
+    public ResultEntity findUserYearMonth(@RequestParam("userid") String userId, @RequestParam("year") String year, @RequestParam("month") String month) {
+        return BasicResponseUtils.success(historyService.findHistoryByUserIdYearMonth(userId, year, month));
+    }
+
+    @ApiOperation(value = "用户年度请假类型统计", notes = "根据用户工号，查询用户某年某种请假类型下的总天数")
+    @ApiOperationSupport(order = 4)
+    @GetMapping("sumHistoryLeaveType")
+    public ResultEntity sumHistoryLeaveType(@RequestParam("userid") String userId, @RequestParam("year") String year, @RequestParam("type") String leaveType) {
+        return BasicResponseUtils.success(historyService.sumHistoryLeaveType(userId, year, leaveType));
     }
 }

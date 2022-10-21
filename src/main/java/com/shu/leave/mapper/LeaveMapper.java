@@ -26,7 +26,7 @@ public interface LeaveMapper extends BaseMapper<Leave> {
             "#{isDeleted,jdbcType=CHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP})"
     })
     @SelectKey(statement = "SELECT SCOPE_IDENTITY();", keyProperty = "id", before = false, resultType = Long.class)
-    int insert(Leave leave);
+    int addLeave(Leave leave);
 
     /**
      * 查询全部请假申请表
@@ -65,7 +65,7 @@ public interface LeaveMapper extends BaseMapper<Leave> {
             "status, department_status, hr_status, school_status, is_deleted, gmt_create, gmt_modified",
             "from leave where id=#{id,jdbcType=BIGINT} and is_deleted=0"
     })
-    Leave selectById(Long id);
+    Leave findById(Long id);
 
     /**
      * 根据教师id查询其对应的请假申请表信息
