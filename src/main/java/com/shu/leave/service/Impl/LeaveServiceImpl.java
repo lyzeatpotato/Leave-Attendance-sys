@@ -62,7 +62,7 @@ public class LeaveServiceImpl implements LeaveService {
         // 对考勤表的对应请假类型进行修改
         LocalDate current_date = LocalDate.now();
         try {
-            History historyArr = historyMapper.selectWithMonthYear(Long.valueOf(params[0]), String.valueOf(current_date.getMonthValue()), String.valueOf(current_date.getYear()));
+            History historyArr = historyMapper.selectWithMonthYear(userPrimaryKey, String.valueOf(current_date.getMonthValue()), String.valueOf(current_date.getYear()));
             // 若根据当前年月查询到了对应的用户记录，则根据请假类型对之修改
             int leaveTypeIndex = UnitedUtils.getLeaveTypeIndex(params[1]);
             UpdateWrapper<History> updateWrapper = new UpdateWrapper<>();
@@ -119,7 +119,7 @@ public class LeaveServiceImpl implements LeaveService {
             e.printStackTrace();
             // 若根据当前年月查询不到对应用户的考勤记录，说明该用户本年本月度没有请假记录，则新增一条考勤记录
             History history = new History();
-            history.setUserId(Long.valueOf(params[0]));
+            history.setUserId(userPrimaryKey);
             history.setYear(String.valueOf(current_date.getYear()));
             history.setMonth(String.valueOf(current_date.getMonthValue()));
             history.setShijiaDays("0");
@@ -189,8 +189,8 @@ public class LeaveServiceImpl implements LeaveService {
     }
 
     @Override
-    public List<Leave> findLeaveFormByUserid(Long userid) {
-        return leaveMapper.selectByUserid(userid);
+    public List<Leave> findLeaveFormByUserid(String userid) {
+        return leaveMapper.selectByUserid(userMapper.getUserPrimaryKeyByUserId(userid));
     }
 
     @Override

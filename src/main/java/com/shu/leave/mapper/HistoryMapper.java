@@ -40,6 +40,11 @@ public interface HistoryMapper extends BaseMapper<History> {
     History selectWithMonthYear(long userid, String month, String year);
 
 
+    /**
+     * 根据用户工号查看某教师的全部考勤信息
+     * @param userid
+     * @return 当前工号的全部考勤信息
+     */
     @Select({
             "select userid, year, month, shijia_days, bingjia_days, hunjia_days, shengyujia_days, tanqinjia_days,",
             "sangjia_days, gongshangjia_days, gongchai_days, kuanggong_days, inactive_days, is_deleted, gmt_create, gmt_modified",
@@ -51,7 +56,7 @@ public interface HistoryMapper extends BaseMapper<History> {
             @Result(column = "year", property = "year", jdbcType = JdbcType.VARCHAR),
             @Result(column = "month", property = "month", jdbcType = JdbcType.VARCHAR),
             @Result(column = "shijia_days", property = "shijiaDays", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "bingjia_days", property = "shijiaDays", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "bingjia_days", property = "bingjiaDays", jdbcType = JdbcType.VARCHAR),
             @Result(column = "hunjia_days", property = "hunjiaDays", jdbcType = JdbcType.VARCHAR),
             @Result(column = "shengyujia_days", property = "shengyujiaDays", jdbcType = JdbcType.VARCHAR),
             @Result(column = "tanqinjia_days", property = "tanqinjiaDays", jdbcType = JdbcType.VARCHAR),

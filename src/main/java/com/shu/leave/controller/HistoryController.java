@@ -32,4 +32,11 @@ public class HistoryController {
                                         historyJson.get("tanqinjia"), historyJson.get("sangjia"), historyJson.get("gongshang"), historyJson.get("kuanggongjia"), historyJson.get("inactive")};
         return BasicResponseUtils.success(historyService.addUserLeaveHistory(param));
     }
+
+    @ApiOperation(value = "根据工号查询用户全部考勤信息", notes = "传入用户工号")
+    @ApiOperationSupport(order = 2)
+    @PostMapping("findHistoryByUserId")
+    public ResultEntity findAbsenceHistoryByUserId(@RequestParam("userid") String userId) {
+        return BasicResponseUtils.success(historyService.findUserLeaveHistoryByUserid(userId));
+    }
 }

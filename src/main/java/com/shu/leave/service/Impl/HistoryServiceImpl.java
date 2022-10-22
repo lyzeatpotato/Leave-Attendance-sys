@@ -11,6 +11,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class HistoryServiceImpl implements HistoryService {
@@ -44,5 +45,11 @@ public class HistoryServiceImpl implements HistoryService {
         history.setGmtCreate(timeStamp);
         history.setGmtModified(timeStamp);
         return historyMapper.insert(history);
+    }
+
+    @Override
+    public List<History> findUserLeaveHistoryByUserid(String userid) {
+        long userPrimaryKey = userMapper.getUserPrimaryKeyByUserId(userid);
+        return historyMapper.selectWithUserId(userPrimaryKey);
     }
 }
