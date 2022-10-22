@@ -3,6 +3,8 @@ package com.shu.leave.service.Impl;
 import com.shu.leave.entity.Leave;
 import com.shu.leave.mapper.LeaveMapper;
 import com.shu.leave.service.LeaveService;
+import com.shu.leave.vo.SingleLeaveStepVo;
+import com.shu.leave.vo.SingleLeaveVo;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -41,4 +43,92 @@ public class LeaveServiceImpl implements LeaveService {
         leaveForm.setGmtModified(timeStamp);
         return leaveMapper.insert(leaveForm);
     }
+
+    @Override
+    public SingleLeaveVo selectSingleLeave(String role, String yuanxi, long id){
+        SingleLeaveVo singleLeaveVo = leaveMapper.selectSingleLeave(yuanxi,id);
+        return singleLeaveVo;
+    }
+    @Override
+    public SingleLeaveStepVo selectSingleLeaveStep(String role,long id,String step){
+        if (step=="1") {
+            SingleLeaveStepVo singleLeaveStepVo= leaveMapper.electSingleLeaveStepOne(role, id);
+            return singleLeaveStepVo;
+        }
+        else if (step=="2"){
+            SingleLeaveStepVo singleLeaveStepVo= leaveMapper.electSingleLeaveStepOne(role, id);
+            return singleLeaveStepVo;
+        }
+        else if (step=="3"){
+            SingleLeaveStepVo singleLeaveStepVo= leaveMapper.electSingleLeaveStepOne(role, id);
+            return singleLeaveStepVo;
+        }
+        else if (step=="4"){
+            SingleLeaveStepVo singleLeaveStepVo= leaveMapper.electSingleLeaveStepOne(role, id);
+            return singleLeaveStepVo;
+        }
+        else {
+            SingleLeaveStepVo singleLeaveStepVo= leaveMapper.electSingleLeaveStepOne(role, id);
+            return singleLeaveStepVo;
+        }
+    }
+    /*
+    审核工作
+     */
+    @Override
+    public int singleLeaveAudit(String role, String userid, long id, String result, String recommend) {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        String time = df.format(System.currentTimeMillis());
+        switch (role) {
+            case "1": {
+                leaveMapper.dpOfficerAudit(userid, id, result, recommend, time);
+                if (result=="通过")
+                    //通过就修改状态
+                    leaveMapper.dpOfficerAudity(id,time);
+                else
+                    leaveMapper.dpOfficerAuditn(id,time);
+                break;
+            }
+            case "2": {
+                leaveMapper.dpLeaderAudit(userid, id, result, recommend, time);
+                if (result=="通过")
+                    //通过就修改状态
+                    leaveMapper.dpLeaderAudity(id,time);
+                else
+                    leaveMapper.dpLeaderAuditn(id,time);
+                break;
+            }
+            case "3": {
+                leaveMapper.hrOfficerAudit(userid, id, result, recommend, time);
+                if (result=="通过")
+                    //通过就修改状态
+                    leaveMapper.hrOfficerAudity(id,time);
+                else
+                    leaveMapper.hrLeaderAuditn(id,time);
+                break;
+            }
+            case "4": {
+                leaveMapper.hrLeaderAudit(userid, id, result, recommend, time);
+                if (result=="通过")
+                    //通过就修改状态
+                    leaveMapper.hrLeaderAudity(id,time);
+                else
+                    leaveMapper.hrLeaderAuditn(id,time);
+                break;
+            }
+            case "5": {
+                leaveMapper.scLeaderAudit(userid, id, result, recommend, time);
+                if (result=="通过")
+                    //通过就修改状态
+                    leaveMapper.scLeaderAudity(id,time);
+                else
+                    leaveMapper.scLeaderAuditn(id,time);
+                break;
+            }
+            default:
+                return 0;
+        }
+        return 1;
+    }
 }
+

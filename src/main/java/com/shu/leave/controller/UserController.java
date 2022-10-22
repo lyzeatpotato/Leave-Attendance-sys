@@ -53,4 +53,6 @@ public class UserController {
     public ResultEntity findAllUser(@RequestParam("id") Long userid){
         return BasicResponseUtils.success(userService.findUserById(userid));
     }
+
+
 }
