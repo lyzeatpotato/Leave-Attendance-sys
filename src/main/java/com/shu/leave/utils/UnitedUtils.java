@@ -69,4 +69,17 @@ public class UnitedUtils {
             return (int) ((endDateTime - startDateTime) / (1000 * 3600 * 24));
         }
     }
+
+    public static Date[] getSortedDateArray(Date[] inputDateArray) {
+        for(int i = 0; i < inputDateArray.length - 1; i++) {
+            for (int j = i + 1; j < inputDateArray.length; j++) {
+                if (inputDateArray[i].getTime() < inputDateArray[j].getTime()) {
+                    Date temp = inputDateArray[i];
+                    inputDateArray[i] = inputDateArray[j];
+                    inputDateArray[j] = temp;
+                }
+            }
+        }
+        return inputDateArray;
+    }
 }

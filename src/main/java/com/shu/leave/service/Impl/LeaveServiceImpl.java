@@ -9,8 +9,10 @@ import com.shu.leave.entity.Leave;
 import com.shu.leave.mapper.HistoryMapper;
 import com.shu.leave.mapper.LeaveMapper;
 import com.shu.leave.mapper.UserMapper;
+import com.shu.leave.service.CalenderService;
 import com.shu.leave.service.LeaveService;
 import com.shu.leave.utils.UnitedUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -24,28 +26,52 @@ import java.util.List;
 @Service
 public class LeaveServiceImpl implements LeaveService {
 
-    @Resource
+    @Autowired
     UserMapper userMapper;
-
-    @Resource
+    @Autowired
     LeaveMapper leaveMapper;
-
-    @Resource
+    @Autowired
     HistoryMapper historyMapper;
+    @Autowired
+    CalenderService calenderService;
 
     @Override
     public int addLeaveForm(String[] params) throws ParseException {
         Leave leaveForm = new Leave();
         long userPrimaryKey = userMapper.getUserPrimaryKeyByUserId(params[0]);
         leaveForm.setUserId(userPrimaryKey);
-        leaveForm.setLeaveType(params[1]);  // 前端输入的请假类型
+        String leaveType = params[1];
+        leaveForm.setLeaveType(leaveType);  // 前端输入的请假类型
         SimpleDateFormat df0 = new SimpleDateFormat("yyyy-MM-dd HH");
         Date startDate = df0.parse(params[2]);
         Date endDate = df0.parse(params[3]);
-        int dayDiffer = UnitedUtils.getDayDiffer(startDate, endDate);   // 计算总计请假天数
         leaveForm.setLeaveStartTime(startDate);
         leaveForm.setLeaveEndTime(endDate);
         System.out.println(leaveForm.getLeaveStartTime());
+        /**
+         * 根据请假类型判断假期是否需要顺延，并根据校历信息对请假起止时间进行修改（暂未考虑补休）
+         * 规则：1.病假遇寒暑假、公休日和法定节假日不顺延；
+         *      2.事假、丧假遇到公休日和法定节假日顺延；
+         *      3.婚假、产假、生育假与配偶陪产假遇寒暑假和法定节假日顺延。
+         */
+
+        int dayDiffer = 0;
+        if (leaveType.equals("事假") || leaveType.equals("丧假")) {
+            // 事假、丧假 判别公休日和法定节假日
+            int holidayExtends = calenderService.totalExtendHolidays(startDate, endDate);   // 遇到法定节假日需要顺延的天数
+            if (holidayExtends != -1) {     // =>此处判断不等于-1是确认用户选择的请假范围未被某一个假期范围所包含，如被包含则不记录请假时长(dayDiffer=0)
+                // 请假天数=当前申请天数-遇到公休/法定节假日顺延的天数
+                dayDiffer = UnitedUtils.getDayDiffer(startDate, endDate) - holidayExtends;
+            }
+        } else if (leaveType.equals("婚假") || leaveType.equals("产假") || leaveType.equals("陪产假")) {
+            // 婚假、产假、陪产假 判别法定节假日和寒暑假
+            int holidayExtends = calenderService.totalExtendHolidays(startDate, endDate);   // 遇到法定节假日需要顺延的天数
+            int vocationExtends = calenderService.totalExtendVocation(startDate, endDate);  // 遇到寒暑假需要顺延的天数
+            if (holidayExtends != -1 && vocationExtends != -1) {
+                // 请假天数=当前申请天数-遇到法定节假日/寒暑假顺延的天数
+                dayDiffer = UnitedUtils.getDayDiffer(startDate, endDate) - holidayExtends - vocationExtends;
+            }
+        }
         leaveForm.setLeaveReason(params[4]);
         leaveForm.setLeaveMaterial(params[5]);
         leaveForm.setStatus("0");
@@ -62,12 +88,12 @@ public class LeaveServiceImpl implements LeaveService {
         // 对考勤表的对应请假类型进行修改
         LocalDate current_date = LocalDate.now();
         try {
-            History historyArr = historyMapper.selectWithMonthYear(Long.parseLong(params[0]), String.valueOf(current_date.getMonthValue()), String.valueOf(current_date.getYear()));
+            History historyArr = historyMapper.selectWithMonthYear(userPrimaryKey, String.valueOf(current_date.getMonthValue()), String.valueOf(current_date.getYear()));
             // 若根据当前年月查询到了对应的用户记录，则根据请假类型对之修改
-//            int leaveTypeIndex = UnitedUtils.getLeaveTypeIndex(params[1]);
+//            int leaveTypeIndex = UnitedUtils.getLeaveTypeIndex(leaveType);
             UpdateWrapper<History> updateWrapper = new UpdateWrapper<>();
             updateWrapper.eq("id", historyArr.getId());
-            switch (params[1]) {
+            switch (leaveType) {
                 case "事假":
                     int shijia = historyArr.getShijiaDays() + dayDiffer;
                     updateWrapper.set("shijia_days", shijia);
@@ -110,7 +136,7 @@ public class LeaveServiceImpl implements LeaveService {
             e.printStackTrace();
             // 若根据当前年月查询不到对应用户的考勤记录，说明该用户本年本月度没有请假记录，则新增一条考勤记录
             History history = new History();
-            history.setUserId(Long.valueOf(params[0]));
+            history.setUserId(userPrimaryKey);
             history.setYear(String.valueOf(current_date.getYear()));
             history.setMonth(String.valueOf(current_date.getMonthValue()));
             history.setShijiaDays(0);
@@ -126,7 +152,7 @@ public class LeaveServiceImpl implements LeaveService {
             history.setIsDeleted("0");
             history.setGmtCreate(timeStamp);
             history.setGmtModified(timeStamp);
-            switch (params[1]) {
+            switch (leaveType) {
                 case "事假":
                     history.setShijiaDays(dayDiffer);
                     break;
