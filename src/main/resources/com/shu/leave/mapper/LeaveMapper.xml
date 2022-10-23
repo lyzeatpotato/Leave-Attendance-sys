@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shu.leave.mapper.LeaveMapper">
+    <resultMap id="BaseResultMap" type="com.shu.leave.entity.Leave">
+        <!--@mbg.generated-->
+        <!--@Table [leave]-->
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="userid" jdbcType="BIGINT" property="userid" />
+        <result column="leave_type" jdbcType="VARCHAR" property="leaveType" />
+        <result column="leave_start_time" jdbcType="TIMESTAMP" property="leaveStartTime" />
+        <result column="leave_end_time" jdbcType="TIMESTAMP" property="leaveEndTime" />
+        <result column="leave_reason" jdbcType="VARCHAR" property="leaveReason" />
+        <result column="leave_material" jdbcType="VARCHAR" property="leaveMaterial" />
+        <result column="status" jdbcType="CHAR" property="status" />
+        <result column="department_status" jdbcType="CHAR" property="departmentStatus" />
+        <result column="hr_status" jdbcType="CHAR" property="hrStatus" />
+        <result column="school_status" jdbcType="CHAR" property="schoolStatus" />
+        <result column="is_deleted" jdbcType="CHAR" property="isDeleted" />
+        <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+    </resultMap>
+
+    <!--查询某个详细的请假信息-->
+    <select id="selectSingleLeave" resultType="com.shu.leave.vo.SingleLeaveVo">
+        select
+        a.id,b.username,b.yuanxi,a.leave_type,a.leave_start_time,a.leave_end_time,a.leave_reason,a.leave_material,a.department_status,a.hr_status,a.school_status
+        from leave as a,user_info as b
+        where a.id='${id}' and b.yuanxi like '%${yuanxi}%' and a.userid =b.id
+    </select>
+
+
+    <!--查询某个步骤的审核信息-->
+    <select id="electSingleLeaveStepOne" resultType="com.shu.leave.vo.SingleLeaveStepVo">
+        select a.id,c.dp_officer_id,b.username,c.dp_officer_result,c.dp_officer_recommend,c.dp_officer_time,c.dp_officer_status
+        from leave as a,user_info as b,leave_department_audit as c
+        where a.id=c.formid and c.dp_officer_id=b.userid and a.id='${id}';
+    </select>
+    <select id="electSingleLeaveStepTwo" resultType="com.shu.leave.vo.SingleLeaveStepVo">
+        select a.id,c.dp_leader_id,b.username,c.dp_leader_result,c.dp_leader_recommend,c.dp_leader_time,c.dp_leader_status
+        from leave as a,user_info as b,leave_department_audit as c
+        where a.id=c.formid and c.dp_leader_id=b.userid and a.id='${id}';
+    </select>
+    <select id="electSingleLeaveStepThree" resultType="com.shu.leave.vo.SingleLeaveStepVo">
+        select a.id,c.hr_officer_id,b.username,c.hr_officer_result,c.hr_officer_recommend,c.hr_officer_time,c.hr_officer_status
+        from leave as a,user_info as b,leave_hr_audit as c
+        where a.id=c.formid and c.hr_officer_id=b.userid and a.id='${id}';
+    </select>
+    <select id="electSingleLeaveStepFour" resultType="com.shu.leave.vo.SingleLeaveStepVo">
+        select a.id,c.hr_leader_id,b.username,c.hr_leader_result,c.hr_leader_recommend,c.hr_leader_time,c.hr_leader_status
+        from leave as a,user_info as b,leave_hr_audit as c
+        where a.id=c.formid and c.hr_leader_id=b.userid and a.id='${id}';
+    </select>
+    <select id="electSingleLeaveStepFive" resultType="com.shu.leave.vo.SingleLeaveStepVo">
+        select a.id,c.sc_leader_id,b.username,c.sc_leader_result,c.sc_leader_recommend,c.sc_leader_time,c.sc_leader_status
+        from leave as a,user_info as b,leave_school_audit as c
+        where a.id=c.formid and c.sc_leader_id=b.userid and a.id='${id}';
+    </select>
+
+
+    <!--审核表单更新-->
+    <update id="dpOfficerAudit">
+        update leave_department_audit
+        set dp_officer_id='${userid}',dp_officer_result='${result}',dp_officer_recommend='${recommend}',dp_officer_time='${time}',dp_officer_status='1',gmt_modified='${time}'
+        where leave_department_audit.formid='${id}'
+    </update>
+    <update id="dpLeaderAudit">
+        update leave_department_audit
+        set dp_leader_id='${userid}',dp_leader_result='${result}',dp_leader_recommend='${recommend}',dp_leader_time='${time}',dp_leader_status='1',gmt_modified='${time}'
+        where leave_department_audit.formid='${id}'
+    </update>
+    <update id="hrOfficerAudit">
+        update leave_hr_audit
+        set hr_officer_id='${userid}',hr_officer_result='${result}',hr_officer_recommend='${recommend}',hr_officer_time='${time}',hr_officer_status='1',gmt_modified='${time}'
+        where leave_hr_audit.formid='${id}'
+    </update>
+    <update id="hrLeaderAudit">
+        update leave_hr_audit
+        set hr_leader_id='${userid}',hr_leader_result='${result}',hr_leader_recommend='${recommend}',hr_leader_time='${time}',hr_leader_status='1',gmt_modified='${time}'
+        where leave_hr_audit.formid='${id}'
+    </update>
+    <update id="scLeaderAudit">
+        update leave_school_audit
+        set sc_leader_id='${userid}',sc_leader_result='${result}',sc_leader_recommend='${recommend}',sc_leader_time='${time}',sc_leader_status='1',gmt_modified='${time}'
+        where leave_school_audit.formid='${id}'
+    </update>
+
+
+    <!--部门人事审核-->
+    <!--leave的更新-->
+    <update id="dpOfficerAudity">
+        update leave
+        set status='0',department_status='0',hr_status='0',school_status='0',gmt_modified='${time}'
+        where id='${id}'
+    </update>
+    <update id="dpOfficerAuditn">
+        update leave
+        set status='2',department_status='1',hr_status='2',school_status='2',gmt_modified='${time}'
+        where id='${id}'
+    </update>
+    <!--部门领导审核-->
+    <update id="dpLeaderAudity">
+        update leave
+        set status='0',department_status='1',hr_status='0',school_status='0',gmt_modified='${time}'
+        where id='${id}'
+    </update>
+    <update id="dpLeaderAuditn">
+        update leave
+        set status='2',department_status='1',hr_status='2',school_status='2',gmt_modified='${time}'
+        where id='${id}'
+    </update>
+    <!--人事处人事审核-->
+    <update id="hrOfficerAudity">
+        update leave
+        set status='0',department_status='1',hr_status='0',school_status='0',gmt_modified='${time}'
+        where id='${id}'
+    </update>
+    <update id="hrOfficerAuditn">
+        update leave
+        set status='2',department_status='1',hr_status='1',school_status='2',gmt_modified='${time}'
+        where id='${id}'
+    </update>
+    <!--人事处领导审核-->
+    <update id="hrLeaderAudity">
+        update leave
+        set status='0',department_status='1',hr_status='1',school_status='0',gmt_modified='${time}'
+        where id='${id}'
+    </update>
+    <update id="hrLeaderAuditn">
+        update leave
+        set status='2',department_status='1',hr_status='1',school_status='2',gmt_modified='${time}'
+        where id='${id}'
+    </update>
+    <!--学校领导审核-->
+    <update id="scLeaderAudity">
+        update leave
+        set status='1',department_status='1',hr_status='1',school_status='1',gmt_modified='${time}'
+        where id='${id}'
+    </update>
+    <update id="scLeaderAuditn">
+        update leave
+        set status='2',department_status='1',hr_status='1',school_status='1',gmt_modified='${time}'
+        where id='${id}'
+    </update>
+
+
+</mapper>
