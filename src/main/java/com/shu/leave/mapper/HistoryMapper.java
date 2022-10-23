@@ -40,6 +40,11 @@ public interface HistoryMapper extends BaseMapper<History> {
     History selectWithMonthYear(long userid, String month, String year);
 
 
+    /**
+     * 根据用户工号查看某教师的全部考勤信息
+     * @param userid
+     * @return 当前工号的全部考勤信息
+     */
     @Select({
             "select userid, year, month, shijia_days, bingjia_days, hunjia_days, shengyujia_days, tanqinjia_days,",
             "sangjia_days, gongshangjia_days, gongchai_days, kuanggong_days, inactive_days, is_deleted, gmt_create, gmt_modified",

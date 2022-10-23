@@ -206,8 +206,8 @@ public class LeaveServiceImpl implements LeaveService {
     }
 
     @Override
-    public List<Leave> findLeaveFormByUserid(Long userid) {
-        return leaveMapper.selectByUserid(userid);
+    public List<Leave> findLeaveFormByUserid(String userid) {
+        return leaveMapper.selectByUserid(userMapper.getUserPrimaryKeyByUserId(userid));
     }
 
     @Override

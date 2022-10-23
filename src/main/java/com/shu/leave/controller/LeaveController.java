@@ -61,13 +61,11 @@ public class LeaveController {
         return BasicResponseUtils.success(leaveService.findLeaveFormById(formId));
     }
 
-    @ApiOperation(value = "查询用户对应的请假表列表", notes = "根据用户id查询该用户提交的全部请假表列表")
+    @ApiOperation(value = "根据工号查询用户的全部请假记录", notes = "传入用户工号")
     @ApiOperationSupport(order = 5)
     @GetMapping("findLeaveFormByUserid")
     public ResultEntity findLeaveFormByUserid(@RequestParam("userid") String userid) {
-        // 对前端传入数据做数据类型转换
-        long userId = Long.valueOf(userid);
-        return BasicResponseUtils.success(leaveService.findLeaveFormByUserid(userId));
+        return BasicResponseUtils.success(leaveService.findLeaveFormByUserid(userid));
     }
 
 //    @ApiOperation(value = "查询部门下的请假表列表", notes = "传入对应部门和查询type：type=0,查询全部；type=1,查询部门下人事处尚未审核记录；type=2,查询部门下校领导尚未审核记录")
