@@ -11,6 +11,16 @@ import java.util.List;
 public interface UserMapper extends BaseMapper<User> {
 
     /**
+     * 通过用户工号，映射其在user表中的主键
+     * @param userId
+     * @return 用户主键id
+     */
+    @Select({
+            "select id from user_info where userid=#{userId,jdbcType=VARCHAR}"
+    })
+    long getUserPrimaryKeyByUserId(String userId);
+
+    /**
      * 新增一条用户数据（插入除id以外完整的用户信息）
      * @param user
      * @return 新增用户的主键id值
@@ -26,6 +36,20 @@ public interface UserMapper extends BaseMapper<User> {
     int insert(User user);
 
     /**
+     * 修改一条用户数据
+     * @param user
+     * @return 修改用户的主键id值
+     */
+    @Update({
+            "update user_info set",
+            "userid = #{userId,jdbcType=VARCHAR}, username = #{userName,jdbcType=VARCHAR}, yuanxi = #{yuanXi,jdbcType=VARCHAR}, ptype = #{pType,jdbcType=VARCHAR},",
+            "pstatus = #{pStatus,jdbcType=VARCHAR}, gender = #{gender,jdbcType=VARCHAR}, role = #{role,jdbcType=CHAR},",
+            "gmt_create = #{gmtCreate,jdbcType=TIMESTAMP}, gmt_modified = #{gmtModified,jdbcType=TIMESTAMP} where id = #{id,jdbcType=VARCHAR}"
+    })
+
+    int update(User user);
+
+    /**
      * 根据主键直接删除用户（一般不用）
      * @param id
      * @return 删除是否成功
@@ -39,7 +63,7 @@ public interface UserMapper extends BaseMapper<User> {
     /**
      * 根据主键逻辑删除用户
      * @param id
-     * @return 被逻辑删除的用户id
+     * @return 被逻辑删除的数据id
      */
     @Update({
             "update user_info",
@@ -69,7 +93,6 @@ public interface UserMapper extends BaseMapper<User> {
 
     /**
      * 查询全部用户信息
-     * @param User
      * @return 全部用户信息列表
      */
     @Select({
@@ -90,7 +113,7 @@ public interface UserMapper extends BaseMapper<User> {
             @Result(column="gmt_create", property="gmtCreate", jdbcType=JdbcType.TIMESTAMP),
             @Result(column="gmt_modified", property="gmtModified", jdbcType=JdbcType.TIMESTAMP),
     })
-    List<User> selectAll(User User);
+    List<User> selectAll();
 
     /**
      * 根据id查询用户信息
@@ -107,7 +130,7 @@ public interface UserMapper extends BaseMapper<User> {
             @Result(column="id", property="id", jdbcType= JdbcType.BIGINT, id=true),
             @Result(column="userid", property="userId", jdbcType=JdbcType.VARCHAR),
             @Result(column="username", property="userName", jdbcType=JdbcType.VARCHAR),
-            @Result(column="yuanxi", property="yuanXi", jdbcType=JdbcType.LONGVARCHAR),
+            @Result(column="yuanxi", property="yuanXi", jdbcType=JdbcType.VARCHAR),
             @Result(column="ptype", property="pType", jdbcType=JdbcType.VARCHAR),
             @Result(column="pstatus", property="pStatus", jdbcType=JdbcType.VARCHAR),
             @Result(column="gender", property="gender", jdbcType=JdbcType.VARCHAR),
@@ -117,5 +140,7 @@ public interface UserMapper extends BaseMapper<User> {
             @Result(column="gmt_modified", property="gmtModified", jdbcType=JdbcType.TIMESTAMP),
     })
     User selectById(Long id);
+
+
 
 }
