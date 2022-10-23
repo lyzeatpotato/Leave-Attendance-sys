@@ -1,11 +1,14 @@
 package com.shu.leave.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.util.Date;
 
 @Data
+@TableName("leave")
 public class Leave {
 
     // 主键id 自增
@@ -13,6 +16,9 @@ public class Leave {
 
     // 提交信息表的用户id
     private Long userId;
+
+
+    //用户详细信息
 
     private User user;
 
