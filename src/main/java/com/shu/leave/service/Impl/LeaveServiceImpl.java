@@ -1,5 +1,8 @@
 package com.shu.leave.service.Impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.github.pagehelper.IPage;
+import com.github.pagehelper.Page;
 import com.shu.leave.entity.Leave;
 import com.shu.leave.mapper.LeaveMapper;
 import com.shu.leave.service.LeaveService;
@@ -10,6 +13,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class LeaveServiceImpl implements LeaveService {
@@ -40,5 +44,35 @@ public class LeaveServiceImpl implements LeaveService {
         leaveForm.setGmtCreate(timeStamp);
         leaveForm.setGmtModified(timeStamp);
         return leaveMapper.insert(leaveForm);
+    }
+
+    @Override
+    public List<Leave> findLeaveFormByUserDept(String department) {
+
+        return leaveMapper.selectByUserDept(department);
+    }
+
+    @Override
+    public List<Leave> findLeaveFormByUsername(String username) {
+        return leaveMapper.selectByUsername(username);
+    }
+
+    @Override
+    public List<Leave> findLeaveFormByUserid(Long userid) {
+        return leaveMapper.selectByUserid(userid);
+    }
+
+    @Override
+    public IPage findAllLeaveFormPagination() {
+        Page<Leave> page = new Page<>(0, 10);
+        QueryWrapper<Leave> queryWrapper = new QueryWrapper<Leave>();
+        queryWrapper.eq("is_deleted", "0");
+        IPage iPage = leaveMapper.selectPage(page, queryWrapper);
+        return iPage;
+    }
+
+    @Override
+    public Leave findLeaveFormById(Long id) {
+        return leaveMapper.selectById(id);
     }
 }

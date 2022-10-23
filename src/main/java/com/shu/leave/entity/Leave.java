@@ -1,5 +1,6 @@
 package com.shu.leave.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.util.Date;
@@ -13,13 +14,17 @@ public class Leave {
     // 提交信息表的用户id
     private Long userId;
 
+    private User user;
+
     // 请假类型
     private String leaveType;
 
     // 请假起始时间
+    @JsonFormat(pattern = "yyyy-MM-dd HH", timezone="GMT+8")
     private Date leaveStartTime;
 
     // 请假结束时间
+    @JsonFormat(pattern = "yyyy-MM-dd HH", timezone="GMT+8")
     private Date leaveEndTime;
 
     // 请假事由
@@ -44,8 +49,12 @@ public class Leave {
     private String isDeleted;
 
     // 创建时间
+    @JsonFormat(pattern = "yyyy-MM-dd HH", timezone="GMT+8")
     private Date gmtCreate;
 
     // 修改时间
+    @JsonFormat(pattern = "yyyy-MM-dd HH", timezone="GMT+8")
     private Date gmtModified;
+
+
 }
