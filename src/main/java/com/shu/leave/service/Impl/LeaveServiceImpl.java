@@ -1,8 +1,6 @@
 package com.shu.leave.service.Impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-// import com.github.pagehelper.IPage;
-// import com.github.pagehelper.Page;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -321,35 +319,9 @@ public class LeaveServiceImpl implements LeaveService {
         }
         return 1;
     }
-
-    @Override
-    public List<Leave> findLeaveFormByUserDept(String department) {
-
-        return leaveMapper.selectByUserDept(department);
-    }
-
     @Override
     public List<Leave> findLeaveFormByUsername(String username) {
         return leaveMapper.selectByUsername(username);
-    }
-
-    @Override
-    public List<Leave> findLeaveFormByUserid(Long userid) {
-        return leaveMapper.selectByUserid(userid);
-    }
-
-    @Override
-    public IPage findAllLeaveFormPagination() {
-        Page<Leave> page = new Page<>(0, 10);
-        QueryWrapper<Leave> queryWrapper = new QueryWrapper<Leave>();
-        queryWrapper.eq("is_deleted", "0");
-        IPage iPage = leaveMapper.selectPage(page, queryWrapper);
-        return iPage;
-    }
-
-    @Override
-    public Leave findLeaveFormById(Long id) {
-        return leaveMapper.selectById(id);
     }
 }
 
