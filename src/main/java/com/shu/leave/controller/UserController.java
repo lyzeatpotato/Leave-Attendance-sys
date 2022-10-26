@@ -65,4 +65,6 @@ public class UserController {
         String[] param = new String[]{id, userid, username, yuanxi, ptype, pstatus, gender};
         return BasicResponseUtils.success(userService.updateUser(param));
     }
+
+
 }

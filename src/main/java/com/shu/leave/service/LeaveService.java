@@ -3,8 +3,11 @@ package com.shu.leave.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.shu.leave.entity.Leave;
+import com.shu.leave.vo.SingleLeaveStepVo;
+import com.shu.leave.vo.SingleLeaveVo;
 import org.springframework.stereotype.Service;
 
+import javax.print.DocFlavor;
 import java.text.ParseException;
 import java.util.List;
 
@@ -42,7 +45,7 @@ public interface LeaveService {
      * @param userid
      * @return 对应id用户的全部请假表列表
      */
-    List<Leave> findLeaveFormByUserid(Long userid);
+    List<Leave> findLeaveFormByUserid(String userid);
 
     /**
      * 按部门查询: 查询某一部门下的全部请假记录
@@ -70,4 +73,16 @@ public interface LeaveService {
      * @return 对应的请假列表
      */
     List<Leave> findAllLeaveFormByUnfinishedHR();
+    /**
+     * 查询单个请假信息
+     */
+    SingleLeaveVo selectSingleLeave(String role, String yuanxi, long id);
+    /*
+    查询步骤信息
+     */
+    SingleLeaveStepVo selectSingleLeaveStep(String role,long id,String step);
+    /*
+    单个信息审核
+     */
+    int singleLeaveAudit(String role, String userid, long id,String result,String recommend);
 }

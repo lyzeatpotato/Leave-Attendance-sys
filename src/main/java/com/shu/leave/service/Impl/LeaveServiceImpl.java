@@ -9,8 +9,12 @@ import com.shu.leave.entity.Leave;
 import com.shu.leave.mapper.HistoryMapper;
 import com.shu.leave.mapper.LeaveMapper;
 import com.shu.leave.mapper.UserMapper;
+import com.shu.leave.service.CalenderService;
 import com.shu.leave.service.LeaveService;
 import com.shu.leave.utils.UnitedUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import com.shu.leave.vo.SingleLeaveStepVo;
+import com.shu.leave.vo.SingleLeaveVo;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -24,28 +28,52 @@ import java.util.List;
 @Service
 public class LeaveServiceImpl implements LeaveService {
 
-    @Resource
+    @Autowired
     UserMapper userMapper;
-
-    @Resource
+    @Autowired
     LeaveMapper leaveMapper;
-
-    @Resource
+    @Autowired
     HistoryMapper historyMapper;
+    @Autowired
+    CalenderService calenderService;
 
     @Override
     public int addLeaveForm(String[] params) throws ParseException {
         Leave leaveForm = new Leave();
         long userPrimaryKey = userMapper.getUserPrimaryKeyByUserId(params[0]);
         leaveForm.setUserId(userPrimaryKey);
-        leaveForm.setLeaveType(params[1]);  // 前端输入的请假类型
+        String leaveType = params[1];
+        leaveForm.setLeaveType(leaveType);  // 前端输入的请假类型
         SimpleDateFormat df0 = new SimpleDateFormat("yyyy-MM-dd HH");
         Date startDate = df0.parse(params[2]);
         Date endDate = df0.parse(params[3]);
-        int dayDiffer = UnitedUtils.getDayDiffer(startDate, endDate);   // 计算总计请假天数
         leaveForm.setLeaveStartTime(startDate);
         leaveForm.setLeaveEndTime(endDate);
         System.out.println(leaveForm.getLeaveStartTime());
+        /**
+         * 根据请假类型判断假期是否需要顺延，并根据校历信息对请假起止时间进行修改（暂未考虑补休）
+         * 规则：1.病假遇寒暑假、公休日和法定节假日不顺延；
+         *      2.事假、丧假遇到公休日和法定节假日顺延；
+         *      3.婚假、产假、生育假与配偶陪产假遇寒暑假和法定节假日顺延。
+         */
+
+        int dayDiffer = 0;
+        if (leaveType.equals("事假") || leaveType.equals("丧假")) {
+            // 事假、丧假 判别公休日和法定节假日
+            int holidayExtends = calenderService.totalExtendHolidays(startDate, endDate);   // 遇到法定节假日需要顺延的天数
+            if (holidayExtends != -1) {     // =>此处判断不等于-1是确认用户选择的请假范围未被某一个假期范围所包含，如被包含则不记录请假时长(dayDiffer=0)
+                // 请假天数=当前申请天数-遇到公休/法定节假日顺延的天数
+                dayDiffer = UnitedUtils.getDayDiffer(startDate, endDate) - holidayExtends;
+            }
+        } else if (leaveType.equals("婚假") || leaveType.equals("产假") || leaveType.equals("陪产假")) {
+            // 婚假、产假、陪产假 判别法定节假日和寒暑假
+            int holidayExtends = calenderService.totalExtendHolidays(startDate, endDate);   // 遇到法定节假日需要顺延的天数
+            int vocationExtends = calenderService.totalExtendVocation(startDate, endDate);  // 遇到寒暑假需要顺延的天数
+            if (holidayExtends != -1 && vocationExtends != -1) {
+                // 请假天数=当前申请天数-遇到法定节假日/寒暑假顺延的天数
+                dayDiffer = UnitedUtils.getDayDiffer(startDate, endDate) - holidayExtends - vocationExtends;
+            }
+        }
         leaveForm.setLeaveReason(params[4]);
         leaveForm.setLeaveMaterial(params[5]);
         leaveForm.setStatus("0");
@@ -62,56 +90,47 @@ public class LeaveServiceImpl implements LeaveService {
         // 对考勤表的对应请假类型进行修改
         LocalDate current_date = LocalDate.now();
         try {
-            History historyArr = historyMapper.selectWithMonthYear(Long.valueOf(params[0]), String.valueOf(current_date.getMonthValue()), String.valueOf(current_date.getYear()));
+            History historyArr = historyMapper.selectWithMonthYear(userPrimaryKey, String.valueOf(current_date.getMonthValue()), String.valueOf(current_date.getYear()));
             // 若根据当前年月查询到了对应的用户记录，则根据请假类型对之修改
-            int leaveTypeIndex = UnitedUtils.getLeaveTypeIndex(params[1]);
+//            int leaveTypeIndex = UnitedUtils.getLeaveTypeIndex(leaveType);
             UpdateWrapper<History> updateWrapper = new UpdateWrapper<>();
             updateWrapper.eq("id", historyArr.getId());
-            switch (params[1]) {
+            switch (leaveType) {
                 case "事假":
-                    String shijiaDays = historyArr.getShijiaDays();
-                    int shijia = Integer.valueOf(shijiaDays) + dayDiffer;
-                    updateWrapper.set("shijia_days", String.valueOf(shijia));
+                    int shijia = historyArr.getShijiaDays() + dayDiffer;
+                    updateWrapper.set("shijia_days", shijia);
                     break;
                 case "病假":
-                    String bingjiaDays = historyArr.getBingjiaDays();
-                    int bingjia = Integer.valueOf(bingjiaDays) + dayDiffer;
-                    updateWrapper.set("bingjia_days", String.valueOf(bingjia));
+                    int bingjia = historyArr.getBingjiaDays() + dayDiffer;
+                    updateWrapper.set("bingjia_days", bingjia);
                     break;
                 case "婚假":
-                    String hunjiaDays = historyArr.getHunjiaDays();
-                    int hunjia = Integer.valueOf(hunjiaDays) + dayDiffer;
-                    updateWrapper.set("hunjia_days", String.valueOf(hunjia));
+                    int hunjia = historyArr.getHunjiaDays() + dayDiffer;
+                    updateWrapper.set("hunjia_days", hunjia);
                     break;
                 case "产假":
-                    String chanjiaDays = historyArr.getShengyujiaDays();
-                    int chanjia = Integer.valueOf(chanjiaDays) + dayDiffer;
-                    updateWrapper.set("shengyujia_days", String.valueOf(chanjia));
+                    int chanjia = historyArr.getShengyujiaDays() + dayDiffer;
+                    updateWrapper.set("shengyujia_days", chanjia);
                     break;
                 case "陪产假":
-                    String peichanjiaDays = historyArr.getShengyujiaDays();
-                    int peichanjia = Integer.valueOf(peichanjiaDays) + dayDiffer;
-                    updateWrapper.set("shengyujia_days", String.valueOf(peichanjia));   // 产假与陪产假都归为生育假
+                    int peichanjia = historyArr.getShengyujiaDays() + dayDiffer;
+                    updateWrapper.set("shengyujia_days", peichanjia);   // 产假与陪产假都归为生育假
                     break;
                 case "探亲假":
-                    String tanqinjiaDays = historyArr.getSangjiaDays();
-                    int tanqinjia = Integer.valueOf(tanqinjiaDays) + dayDiffer;
-                    updateWrapper.set("tanqinjia_days", String.valueOf(tanqinjia));
+                    int tanqinjia = historyArr.getSangjiaDays() + dayDiffer;
+                    updateWrapper.set("tanqinjia_days", tanqinjia);
                     break;
                 case "丧假":
-                    String sangjiaDays = historyArr.getSangjiaDays();
-                    int sangjia = Integer.valueOf(sangjiaDays) + dayDiffer;
-                    updateWrapper.set("sangjia_days", String.valueOf(sangjia));
+                    int sangjia = historyArr.getSangjiaDays() + dayDiffer;
+                    updateWrapper.set("sangjia_days", sangjia);
                     break;
                 case "因公出差":
-                    String gongchaiDays = historyArr.getGongchaiDays();
-                    int gongchai = Integer.valueOf(gongchaiDays) + dayDiffer;
-                    updateWrapper.set("gongchai_days", String.valueOf(gongchai));
+                    int gongchai = historyArr.getGongchaiDays() + dayDiffer;
+                    updateWrapper.set("gongchai_days", gongchai);
                     break;
                 case "工伤假":
-                    String gongshangDays = historyArr.getGongshangjiaDays();
-                    int gongshang = Integer.valueOf(gongshangDays) + dayDiffer;
-                    updateWrapper.set("gongshangjia_days", String.valueOf(gongshang));
+                    int gongshang = historyArr.getGongshangjiaDays() + dayDiffer;
+                    updateWrapper.set("gongshangjia_days", gongshang);
                     break;
             }
             historyMapper.update(null, updateWrapper);
@@ -119,54 +138,54 @@ public class LeaveServiceImpl implements LeaveService {
             e.printStackTrace();
             // 若根据当前年月查询不到对应用户的考勤记录，说明该用户本年本月度没有请假记录，则新增一条考勤记录
             History history = new History();
-            history.setUserId(Long.valueOf(params[0]));
+            history.setUserId(userPrimaryKey);
             history.setYear(String.valueOf(current_date.getYear()));
             history.setMonth(String.valueOf(current_date.getMonthValue()));
-            history.setShijiaDays("0");
-            history.setBingjiaDays("0");
-            history.setHunjiaDays("0");
-            history.setShengyujiaDays("0");
-            history.setTanqinjiaDays("0");
-            history.setSangjiaDays("0");
-            history.setGongshangjiaDays("0");
-            history.setGongchaiDays("0");
-            history.setKuanggongDays("0");
-            history.setInactiveDays("0");
+            history.setShijiaDays(0);
+            history.setBingjiaDays(0);
+            history.setHunjiaDays(0);
+            history.setShengyujiaDays(0);
+            history.setTanqinjiaDays(0);
+            history.setSangjiaDays(0);
+            history.setGongshangjiaDays(0);
+            history.setGongchaiDays(0);
+            history.setKuanggongDays(0);
+            history.setInactiveDays(0);
             history.setIsDeleted("0");
             history.setGmtCreate(timeStamp);
             history.setGmtModified(timeStamp);
-            switch (params[1]) {
+            switch (leaveType) {
                 case "事假":
-                    history.setShijiaDays(String.valueOf(dayDiffer));
+                    history.setShijiaDays(dayDiffer);
                     break;
                 case "病假":
-                    history.setBingjiaDays(String.valueOf(dayDiffer));
+                    history.setBingjiaDays(dayDiffer);
                     break;
                 case "婚假":
-                    history.setHunjiaDays(String.valueOf(dayDiffer));
+                    history.setHunjiaDays(dayDiffer);
                     break;
                 case "产假":
-                    history.setShengyujiaDays(String.valueOf(dayDiffer));
+                    history.setShengyujiaDays(dayDiffer);
                     break;
                 case "陪产假":
-                    history.setShengyujiaDays(String.valueOf(dayDiffer));   // 产假与陪产假都归为生育假
+                    history.setShengyujiaDays(dayDiffer);   // 产假与陪产假都归为生育假
                     break;
                 case "探亲假":
-                    history.setTanqinjiaDays(String.valueOf(dayDiffer));
+                    history.setTanqinjiaDays(dayDiffer);
                     break;
                 case "丧假":
-                    history.setSangjiaDays(String.valueOf(dayDiffer));
+                    history.setSangjiaDays(dayDiffer);
                     break;
                 case "因公出差":
-                    history.setGongchaiDays(String.valueOf(dayDiffer));
+                    history.setGongchaiDays(dayDiffer);
                     break;
                 case "工伤假":
-                    history.setGongshangjiaDays(String.valueOf(dayDiffer));
+                    history.setGongshangjiaDays(dayDiffer);
                     break;
             }
             historyMapper.addHistory(history);
         }
-        return leaveMapper.insert(leaveForm);
+        return leaveMapper.addLeave(leaveForm);
     }
 
     @Override
@@ -175,7 +194,7 @@ public class LeaveServiceImpl implements LeaveService {
     }
 
     @Override
-    public IPage<Leave> findAllLeaveFormPagination() {
+    public IPage findAllLeaveFormPagination() {
         Page<Leave> page = new Page<>(0, 10);
         QueryWrapper<Leave> queryWrapper = new QueryWrapper<Leave>();
         queryWrapper.eq("is_deleted", "0");
@@ -185,12 +204,12 @@ public class LeaveServiceImpl implements LeaveService {
 
     @Override
     public Leave findLeaveFormById(Long id) {
-        return leaveMapper.selectById(id);
+        return leaveMapper.findById(id);
     }
 
     @Override
-    public List<Leave> findLeaveFormByUserid(Long userid) {
-        return leaveMapper.selectByUserid(userid);
+    public List<Leave> findLeaveFormByUserid(String userid) {
+        return leaveMapper.selectByUserid(userMapper.getUserPrimaryKeyByUserId(userid));
     }
 
     @Override
@@ -213,4 +232,92 @@ public class LeaveServiceImpl implements LeaveService {
     public List<Leave> findAllLeaveFormByUnfinishedHR() {
         return leaveMapper.selectAllByUnfinishedHR();
     }
+
+    @Override
+    public SingleLeaveVo selectSingleLeave(String role, String yuanxi, long id){
+        SingleLeaveVo singleLeaveVo = leaveMapper.selectSingleLeave(yuanxi,id);
+        return singleLeaveVo;
+    }
+    @Override
+    public SingleLeaveStepVo selectSingleLeaveStep(String role,long id,String step){
+        if (step=="1") {
+            SingleLeaveStepVo singleLeaveStepVo= leaveMapper.electSingleLeaveStepOne(role, id);
+            return singleLeaveStepVo;
+        }
+        else if (step=="2"){
+            SingleLeaveStepVo singleLeaveStepVo= leaveMapper.electSingleLeaveStepOne(role, id);
+            return singleLeaveStepVo;
+        }
+        else if (step=="3"){
+            SingleLeaveStepVo singleLeaveStepVo= leaveMapper.electSingleLeaveStepOne(role, id);
+            return singleLeaveStepVo;
+        }
+        else if (step=="4"){
+            SingleLeaveStepVo singleLeaveStepVo= leaveMapper.electSingleLeaveStepOne(role, id);
+            return singleLeaveStepVo;
+        }
+        else {
+            SingleLeaveStepVo singleLeaveStepVo= leaveMapper.electSingleLeaveStepOne(role, id);
+            return singleLeaveStepVo;
+        }
+    }
+    /*
+    审核工作
+     */
+    @Override
+    public int singleLeaveAudit(String role, String userid, long id, String result, String recommend) {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        String time = df.format(System.currentTimeMillis());
+        switch (role) {
+            case "1": {
+                leaveMapper.dpOfficerAudit(userid, id, result, recommend, time);
+                if (result=="通过")
+                    //通过就修改状态
+                    leaveMapper.dpOfficerAudity(id,time);
+                else
+                    leaveMapper.dpOfficerAuditn(id,time);
+                break;
+            }
+            case "2": {
+                leaveMapper.dpLeaderAudit(userid, id, result, recommend, time);
+                if (result=="通过")
+                    //通过就修改状态
+                    leaveMapper.dpLeaderAudity(id,time);
+                else
+                    leaveMapper.dpLeaderAuditn(id,time);
+                break;
+            }
+            case "3": {
+                leaveMapper.hrOfficerAudit(userid, id, result, recommend, time);
+                if (result=="通过")
+                    //通过就修改状态
+                    leaveMapper.hrOfficerAudity(id,time);
+                else
+                    leaveMapper.hrLeaderAuditn(id,time);
+                break;
+            }
+            case "4": {
+                leaveMapper.hrLeaderAudit(userid, id, result, recommend, time);
+                if (result=="通过")
+                    //通过就修改状态
+                    leaveMapper.hrLeaderAudity(id,time);
+                else
+                    leaveMapper.hrLeaderAuditn(id,time);
+                break;
+            }
+            case "5": {
+                leaveMapper.scLeaderAudit(userid, id, result, recommend, time);
+                if (result=="通过")
+                    //通过就修改状态
+                    leaveMapper.scLeaderAudity(id,time);
+                else
+                    leaveMapper.scLeaderAuditn(id,time);
+                break;
+            }
+            default:
+                return 0;
+        }
+        return 1;
+    }
 }
+

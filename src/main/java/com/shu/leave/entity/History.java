@@ -22,34 +22,34 @@ public class History {
     private String month;
 
     // 本月累计事假总天数
-    private String shijiaDays;
+    private Integer shijiaDays;
 
     // 本月累计病假总天数
-    private String bingjiaDays;
+    private Integer bingjiaDays;
 
     // 本月累计婚嫁总天数
-    private String hunjiaDays;
+    private Integer hunjiaDays;
 
     // 本月累计生育假总天数
-    private String shengyujiaDays;
+    private Integer shengyujiaDays;
 
     // 本月累计探亲假总天数
-    private String tanqinjiaDays;
+    private Integer tanqinjiaDays;
 
     // 本月累计丧假总天数
-    private String sangjiaDays;
+    private Integer sangjiaDays;
 
     // 本月累计工伤假总天数
-    private String gongshangjiaDays;
+    private Integer gongshangjiaDays;
 
     // 本月累计公差数
-    private String gongchaiDays;
+    private Integer gongchaiDays;
 
     // 本月累计旷工总天数
-    private String kuanggongDays;
+    private Integer kuanggongDays;
 
     // 本月累计活跃度为0总天数
-    private String inactiveDays;
+    private Integer inactiveDays;
 
     // 逻辑删除
     private String isDeleted;

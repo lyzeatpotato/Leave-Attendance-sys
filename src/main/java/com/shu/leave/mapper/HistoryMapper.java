@@ -34,16 +34,21 @@ public interface HistoryMapper extends BaseMapper<History> {
      * @return 某一用户在某年某月下的考勤情况
      */
     @Select({
-            "select id, userid, shijia_days, bingjia_days, hunjia_days, shengyujia_days, tanqinjia_days, sangjia_days, gongshangjia_days, gongchai_days, kuanggong_days, inactive_days",
+            "select id, userid, year, month, shijia_days, bingjia_days, hunjia_days, shengyujia_days, tanqinjia_days, sangjia_days, gongshangjia_days, gongchai_days, kuanggong_days, inactive_days",
             "from absence_history where is_deleted=0 and userid=#{userid,jdbcType=BIGINT} and month=#{month,jdbcType=VARCHAR} and year=#{year,jdbcType=VARCHAR}"
     })
     History selectWithMonthYear(long userid, String month, String year);
 
 
+    /**
+     * 根据用户工号查看某教师的全部考勤信息
+     * @param userid
+     * @return 当前工号的全部考勤信息
+     */
     @Select({
             "select userid, year, month, shijia_days, bingjia_days, hunjia_days, shengyujia_days, tanqinjia_days,",
             "sangjia_days, gongshangjia_days, gongchai_days, kuanggong_days, inactive_days, is_deleted, gmt_create, gmt_modified",
-            "from absence_history where is_deleted = 0 and userid=#{userid,jdbcType=BIGINT}"
+            "from absence_history where is_deleted = 0 and userid=#{userid,jdbcType=BIGINT} order by year DESC, month ASC"
     })
     @Results(id = "HistoryMapper", value = {
             @Result(column = "id", property = "id", jdbcType = JdbcType.BIGINT),
@@ -51,7 +56,7 @@ public interface HistoryMapper extends BaseMapper<History> {
             @Result(column = "year", property = "year", jdbcType = JdbcType.VARCHAR),
             @Result(column = "month", property = "month", jdbcType = JdbcType.VARCHAR),
             @Result(column = "shijia_days", property = "shijiaDays", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "bingjia_days", property = "shijiaDays", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "bingjia_days", property = "bingjiaDays", jdbcType = JdbcType.VARCHAR),
             @Result(column = "hunjia_days", property = "hunjiaDays", jdbcType = JdbcType.VARCHAR),
             @Result(column = "shengyujia_days", property = "shengyujiaDays", jdbcType = JdbcType.VARCHAR),
             @Result(column = "tanqinjia_days", property = "tanqinjiaDays", jdbcType = JdbcType.VARCHAR),
@@ -65,4 +70,17 @@ public interface HistoryMapper extends BaseMapper<History> {
             @Result(column="gmt_modified", property="gmtModified", jdbcType=JdbcType.TIMESTAMP),
     })
     List<History> selectWithUserId(long userid);
+
+    /**
+     * 根据工号查询某用户在某年度某请假类型所对应的总天数
+     * @param userId
+     * @param leaveType
+     * @param year
+     * @return 用户某年度下某请假类型的总天数
+     */
+    @Select({
+            "select sum(${leaveType}) from absence_history ",
+            "where userid=#{userId,jdbcType=BIGINT} and year=#{year,jdbcType=VARCHAR}"
+    })
+    int selectByTypeYear(Long userId, String leaveType, String year);
 }

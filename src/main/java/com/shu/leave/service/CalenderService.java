@@ -5,6 +5,7 @@ import com.shu.leave.entity.Calender;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -38,4 +39,20 @@ public interface CalenderService {
      * @return 未被逻辑删除的校历数据
      */
     List<Calender> findAllCalender();
+
+    /**
+     * 统计当前用户提交的请假申请中，所包含的法定节假日总天数
+     * @param leaveStartDate
+     * @param leaveEndDate
+     * @return 需要顺延的法定节假日总天数
+     */
+    int totalExtendHolidays(Date leaveStartDate, Date leaveEndDate);
+
+    /**
+     * 统计当前用户提交的请假申请中，所包含的寒暑假总天数
+     * @param leaveStartDate
+     * @param leaveEndDate
+     * @return 需要顺延的寒暑假总天数
+     */
+    int totalExtendVocation(Date leaveStartDate, Date leaveEndDate);
 }
