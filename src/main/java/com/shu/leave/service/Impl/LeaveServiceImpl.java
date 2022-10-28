@@ -319,5 +319,9 @@ public class LeaveServiceImpl implements LeaveService {
         }
         return 1;
     }
+    @Override
+    public List<Leave> findLeaveFormByUsername(String username) {
+        return leaveMapper.selectByUsername(username);
+    }
 }
 

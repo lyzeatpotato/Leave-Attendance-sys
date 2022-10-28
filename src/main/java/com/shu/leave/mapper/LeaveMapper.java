@@ -101,6 +101,10 @@ public interface LeaveMapper extends BaseMapper<Leave> {
             @Result(column="is_deleted", property="isDeleted", jdbcType=JdbcType.CHAR),
             @Result(column="gmt_create", property="gmtCreate", jdbcType=JdbcType.TIMESTAMP),
             @Result(column="gmt_modified", property="gmtModified", jdbcType=JdbcType.TIMESTAMP),
+            @Result(
+                    column = "userid",property = "user",  javaType = User.class,
+                    one = @One(select = "com.shu.leave.mapper.UserMapper.selectById")
+            )
     })
     List<Leave> selectByUserid(Long userid);
 
@@ -228,4 +232,38 @@ public interface LeaveMapper extends BaseMapper<Leave> {
      */
     void scLeaderAudity(@Param("id") long id,@Param("time") String time);
     void scLeaderAuditn(@Param("id") long id,@Param("time") String time);
+    /**
+     * liugai
+     * 根据教师名字查询其对应的请假申请表信息
+     * @param username
+     * @return 当前username的教师对应的全部请假申请表
+     */
+    @Select({
+            "SELECT leave.id, leave.userid, leave.leave_type, leave.leave_start_time, leave.leave_end_time, " +
+            "leave.leave_reason, leave.leave_material, leave.status, leave.department_status, " +
+            "leave.hr_status, leave.school_status, leave.is_deleted, leave.gmt_create, leave.gmt_modified " +
+            "FROM leave, user_info " +
+            "WHERE leave.userid = user_info.id " + " and user_info.username=#{username,jdbcType=VARCHAR} "+"and leave.is_deleted=0"
+    })
+    @Results( {
+            @Result(column="id", property="id", jdbcType= JdbcType.BIGINT, id=true),
+            @Result(column="userid", property="userId", jdbcType=JdbcType.VARCHAR),
+            @Result(column="leave_type", property="leaveType", jdbcType=JdbcType.VARCHAR),
+            @Result(column="leave_start_time", property="leaveStartTime", jdbcType=JdbcType.VARCHAR),
+            @Result(column="leave_end_time", property="leaveEndTime", jdbcType=JdbcType.VARCHAR),
+            @Result(column="leave_reason", property="leaveReason", jdbcType=JdbcType.VARCHAR),
+            @Result(column="leave_material", property="leaveMaterial", jdbcType=JdbcType.VARCHAR),
+            @Result(column="status", property="status", jdbcType=JdbcType.CHAR),
+            @Result(column="department_status", property="departmentStatus", jdbcType=JdbcType.CHAR),
+            @Result(column="hr_status", property="hrStatus", jdbcType=JdbcType.CHAR),
+            @Result(column="school_status", property="schoolStatus", jdbcType=JdbcType.CHAR),
+            @Result(column="is_deleted", property="isDeleted", jdbcType=JdbcType.CHAR),
+            @Result(column="gmt_create", property="gmtCreate", jdbcType=JdbcType.TIMESTAMP),
+            @Result(column="gmt_modified", property="gmtModified", jdbcType= JdbcType.TIMESTAMP),
+            @Result(
+                    column = "userid",property = "user",  javaType = User.class,
+                    one = @One(select = "com.shu.leave.mapper.UserMapper.selectById")
+            )
+    })
+    List<Leave> selectByUsername(String username);
 }
