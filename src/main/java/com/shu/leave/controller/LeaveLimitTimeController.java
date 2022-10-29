@@ -10,12 +10,13 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
-@Api(tags = "5.请假时间限制")
-@ApiSupport(order = 5)
+@Api(tags = "6.请假时间限制")
+@ApiSupport(order = 6)
 @RestController
 @RequestMapping("leave_audit_limit_time")
 public class LeaveLimitTimeController {
@@ -28,5 +29,12 @@ public class LeaveLimitTimeController {
     @GetMapping("findAllLimitTimeBySystem")
     public ResultEntity findAllLimitTimeBySystem(){
         return BasicResponseUtils.success(limitTimeService.findAllLimitTimeBySystem());
+    }
+
+    @ApiOperation(value = "查询请假类型最大天数——按照role_id")
+    @ApiOperationSupport(order = 11)
+    @GetMapping("findAllLimitTimeByRoleId")
+    public ResultEntity findAllLimitTimeBySystem(@RequestParam("roleid")String roleId){
+        return BasicResponseUtils.success(limitTimeService.findAllLimitTimeByRoleId(roleId));
     }
 }

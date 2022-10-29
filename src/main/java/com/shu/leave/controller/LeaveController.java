@@ -131,5 +131,4 @@ public class LeaveController {
     public ResultEntity SingleleaveAudit(@RequestParam("role") String role, @RequestParam("userid") String userid, @RequestParam("id") long id, @Param("result") String result,@Param("recommend")String recommend){
         return BasicResponseUtils.success(leaveService.singleLeaveAudit(role,userid,id,result,recommend));
     }
-
 }

@@ -17,4 +17,9 @@ public class LeaveLimitTimeServiceImpl implements LeaveLimitTimeService {
     public List<LeaveAuditLimitTime> findAllLimitTimeBySystem() {
         return leaveAuditLimitTimeMapper.selectAllBySystem();
     }
+
+    @Override
+    public List<LeaveAuditLimitTime> findAllLimitTimeByRoleId(String roleId) {
+        return leaveAuditLimitTimeMapper.selectAllByRoleId(Long.parseLong(roleId));
+    }
 }
