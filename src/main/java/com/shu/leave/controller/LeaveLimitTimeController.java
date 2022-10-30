@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-
+/**
+ * author:王仕杰
+ */
 @Api(tags = "6.请假时间限制")
 @ApiSupport(order = 6)
 @RestController
@@ -22,7 +24,6 @@ import javax.annotation.Resource;
 public class LeaveLimitTimeController {
     @Resource
     LeaveLimitTimeService limitTimeService;
-
 
     @ApiOperation(value = "查询所有请假类型最大天数——系统默认")
     @ApiOperationSupport(order = 10)
