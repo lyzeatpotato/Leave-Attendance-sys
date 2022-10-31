@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
-
+/**
+ * author：王仕杰
+ */
 @Service
 public class LeaveLimitTimeServiceImpl implements LeaveLimitTimeService {
     @Resource
@@ -16,5 +18,19 @@ public class LeaveLimitTimeServiceImpl implements LeaveLimitTimeService {
     @Override
     public List<LeaveAuditLimitTime> findAllLimitTimeBySystem() {
         return leaveAuditLimitTimeMapper.selectAllBySystem();
+    }
+
+    @Override
+    public List<LeaveAuditLimitTime> findAllLimitTimeByRoleId(String roleId) {
+        return leaveAuditLimitTimeMapper.selectAllByRoleId(Long.parseLong(roleId));
+    }
+
+    @Override
+    public int updateLimitTimeById(String[] params) {
+        LeaveAuditLimitTime leaveAuditLimitTime = new LeaveAuditLimitTime();
+        leaveAuditLimitTime.setId(Long.parseLong(params[0]));
+        leaveAuditLimitTime.setType(params[1]);
+        leaveAuditLimitTime.setLimitTime(Integer.parseInt(params[2]));
+        return leaveAuditLimitTimeMapper.updateLimitTimeById(leaveAuditLimitTime);
     }
 }

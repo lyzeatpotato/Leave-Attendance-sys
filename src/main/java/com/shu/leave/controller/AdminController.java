@@ -23,10 +23,10 @@ public class AdminController {
     @Resource
     AdminService adminService;
 
-    @ApiOperation(value = "新增管理数据", notes = "要求完整输入全部管理信息 [Userid, Username]")
+    @ApiOperation(value = "新增管理数据", notes = "要求完整输入全部管理信息 [userid, username]")
     @ApiOperationSupport(order = 1)
     @GetMapping("addAdmin")
-    public ResultEntity addAdmin(@RequestParam("Userid") String Adminid, @RequestParam("Username") String Username){
+    public ResultEntity addAdmin(@RequestParam("userid") String Adminid, @RequestParam("username") String Username){
         String[] param = new String[]{Adminid, Username};
         return BasicResponseUtils.success(adminService.addAdmin(param));
     }
@@ -54,7 +54,7 @@ public class AdminController {
 
     @ApiOperation(value = "修改管理员信息", notes = "要求完整输入修改后的管理信息 [id, userid, username]")
     @ApiOperationSupport(order = 5)
-    @GetMapping("updateUser")
+    @GetMapping("updateAdmin")
     public ResultEntity updateUser( @RequestParam("id") String id,
                                     @RequestParam("userid") String userid, @RequestParam("username") String username){
 
