@@ -73,6 +73,8 @@ public class LeaveServiceImpl implements LeaveService {
                 // 请假天数=当前申请天数-遇到法定节假日/寒暑假顺延的天数
                 dayDiffer = UnitedUtils.getDayDiffer(startDate, endDate) - holidayExtends - vocationExtends;
             }
+        } else {
+            dayDiffer = UnitedUtils.getDayDiffer(startDate, endDate);
         }
         leaveForm.setLeaveReason(params[4]);
         leaveForm.setLeaveMaterial(params[5]);
