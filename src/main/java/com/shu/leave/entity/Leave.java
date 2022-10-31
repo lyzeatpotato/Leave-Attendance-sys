@@ -1,6 +1,7 @@
 package com.shu.leave.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
@@ -16,7 +17,9 @@ public class Leave {
     // 提交信息表的用户id
     private Long userId;
 
+
     //用户详细信息
+
     private User user;
 
     // 请假类型
@@ -58,4 +61,6 @@ public class Leave {
     // 修改时间
     @JsonFormat(pattern = "yyyy-MM-dd HH", timezone="GMT+8")
     private Date gmtModified;
+
+
 }

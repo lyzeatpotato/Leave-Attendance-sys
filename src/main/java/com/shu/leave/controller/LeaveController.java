@@ -131,4 +131,13 @@ public class LeaveController {
     public ResultEntity SingleleaveAudit(@RequestParam("role") String role, @RequestParam("userid") String userid, @RequestParam("id") long id, @Param("result") String result,@Param("recommend")String recommend){
         return BasicResponseUtils.success(leaveService.singleLeaveAudit(role,userid,id,result,recommend));
     }
+    @ApiOperation(value = "查询用户名字对应的请假表列表", notes = "根据用户username查询该用户提交的全部请假表列表")
+    @ApiOperationSupport(order = 13)
+    @GetMapping("findLeaveFormByUsername")
+    public ResultEntity findLeaveFormByUsername(@RequestParam("username") String username) {
+        // 对前端传入数据做数据类型转换
+        String userName = String.valueOf(username);
+        return BasicResponseUtils.success(leaveService.findLeaveFormByUsername(userName));
+    }
+
 }
