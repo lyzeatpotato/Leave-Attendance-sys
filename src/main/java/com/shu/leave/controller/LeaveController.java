@@ -139,5 +139,47 @@ public class LeaveController {
         String userName = String.valueOf(username);
         return BasicResponseUtils.success(leaveService.findLeaveFormByUsername(userName));
     }
+    @ApiOperation(value = "查询需要部门审核，且根据工号查询的请假列表", notes = "根据id查询部门需要审核的请假表列表")
+    @ApiOperationSupport(order = 14)
+    @GetMapping("findLeaveFormByUseridInDept")
+    public ResultEntity findLeaveFormByUseridInDept(@RequestParam("userid") String userid,@RequestParam("department") String department) {
+        // 对前端传入数据做数据类型转换
+        return BasicResponseUtils.success(leaveService.findLeaveFormByUseridInDept(userid,department));
+    }
+    @ApiOperation(value = "查询需要部门审核，且根据名字查询的请假列表", notes = "根据name查询部门需要审核的请假表列表")
+    @ApiOperationSupport(order = 15)
+    @GetMapping("findLeaveFormByUsernameInDept")
+    public ResultEntity findLeaveFormByUsernameInDept(@RequestParam("username") String username,@RequestParam("department") String department) {
+        // 对前端传入数据做数据类型转换
+        return BasicResponseUtils.success(leaveService.findLeaveFormByUsernameInDept(username,department));
+    }
+    @ApiOperation(value = "查询需要人事处审核，且根据工号查询的请假列表", notes = "根据id查询部门需要审核的请假表列表")
+    @ApiOperationSupport(order = 16)
+    @GetMapping("findLeaveFormByUseridInHR")
+    public ResultEntity findLeaveFormByUseridInHR(@RequestParam("userid") String userid) {
+        // 对前端传入数据做数据类型转换
+        return BasicResponseUtils.success(leaveService.findLeaveFormByUseridInHR(userid));
+    }
+    @ApiOperation(value = "查询需要人事处审核，且根据名字查询的请假列表", notes = "根据name查询部门需要审核的请假表列表")
+    @ApiOperationSupport(order = 17)
+    @GetMapping("findLeaveFormByUsernameInHR")
+    public ResultEntity findLeaveFormByUsernameInHR(@RequestParam("username") String username) {
+        // 对前端传入数据做数据类型转换
+        return BasicResponseUtils.success(leaveService.findLeaveFormByUsernameInHR(username));
+    }
+    @ApiOperation(value = "查询需要校领导审核，且根据工号查询的请假列表", notes = "根据id查询部门需要审核的请假表列表")
+    @ApiOperationSupport(order = 18)
+    @GetMapping("findLeaveFormByUseridInSchool")
+    public ResultEntity findLeaveFormByUseridInSchool(@RequestParam("userid") String userid,@RequestParam("department") String department) {
+        // 对前端传入数据做数据类型转换
+        return BasicResponseUtils.success(leaveService.findLeaveFormByUseridInSchool(userid,department));
+    }
+    @ApiOperation(value = "查询需要校领导审核，且根据名字查询的请假列表", notes = "根据name查询部门需要审核的请假表列表")
+    @ApiOperationSupport(order = 19)
+    @GetMapping("findLeaveFormByUsernameInSchool")
+    public ResultEntity findLeaveFormByUsernameInSchool(@RequestParam("username") String username,@RequestParam("department") String department) {
+        // 对前端传入数据做数据类型转换
+        return BasicResponseUtils.success(leaveService.findLeaveFormByUsernameInSchool(username,department));
+    }
 
 }

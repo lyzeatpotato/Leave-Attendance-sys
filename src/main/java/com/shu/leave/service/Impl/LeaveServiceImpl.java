@@ -323,5 +323,30 @@ public class LeaveServiceImpl implements LeaveService {
     public List<Leave> findLeaveFormByUsername(String username) {
         return leaveMapper.selectByUsername(username);
     }
+    @Override
+    public List<Leave> findLeaveFormByUseridInDept(String userid,String department) {
+        return leaveMapper.selectByUseridInDept(userid,department);
+    }
+    @Override
+    public List<Leave> findLeaveFormByUsernameInDept(String username,String department) {
+        return leaveMapper.selectByUsernameInDept(username,department);
+    }
+    @Override
+    public List<Leave> findLeaveFormByUseridInHR(String userid) {
+        return leaveMapper.selectByUseridInHR(userid);
+    }
+    @Override
+    public List<Leave> findLeaveFormByUsernameInHR(String username) {
+        return leaveMapper.selectByUsernameInHR(username);
+    }
+    @Override
+    public List<Leave> findLeaveFormByUseridInSchool(String userid,String department) {
+        return leaveMapper.selectByUseridInSchool(userid,department);
+    }
+    @Override
+    public List<Leave> findLeaveFormByUsernameInSchool(String username,String department) {
+        return leaveMapper.selectByUsernameInSchool(username,department);
+    }
+
 }
 
