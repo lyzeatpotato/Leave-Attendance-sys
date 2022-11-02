@@ -9,11 +9,15 @@ import com.shu.leave.vo.SingleLeaveVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 
 import javax.annotation.Resource;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 import static com.shu.leave.common.ResponseCodeEnums.RANGE_ERROR;
@@ -140,5 +144,20 @@ public class LeaveController {
         return BasicResponseUtils.success(leaveService.findLeaveFormByUsername(userName));
     }
 
+
+    @ApiOperation(value = "根据时间范围筛选请假列表", notes = "传入起止时间, 格式yyyy-MM-dd HH:mm:ss")
+    @ApiOperationSupport(order = 14)
+    @GetMapping("findLeaveFromTimePeriod")
+    public ResultEntity findLeaveFromTimePeriod(@RequestParam("startTime") String startTime, @RequestParam("endTime") String endTime){
+        return BasicResponseUtils.success(leaveService.findLeaveFromTimePeriod(startTime, endTime));
+    }
+
+
+    @ApiOperation(value = "根据审核状态筛选请假列表", notes = "0:未审核-1:已审核通过-2:已审核不通过-3:已撤销")
+    @ApiOperationSupport(order = 15)
+    @GetMapping("findLeaveFromAuditStatus")
+    public ResultEntity findLeaveFromAuditStatus(@RequestParam("status") int status){
+        return BasicResponseUtils.success(leaveService.findLeaveFromAuditStatus(status));
+    }
 }
 

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import javax.print.DocFlavor;
 import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -92,5 +93,24 @@ public interface LeaveService {
      */
     List<Leave> findLeaveFormByUsername(String username);
 
+
+    /**
+     * 根据时间范围筛选请假列表
+     * @author xieyuying
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @return 对应的请假列表
+     */
+    List<Leave> findLeaveFromTimePeriod(String startTime, String endTime);
+
+    /**
+     根据审核状态筛选请假列表
+     * @author xieyuying
+     * @param status 审核状态 0:未审核-1:已审核通过-2:已审核不通过-3:已撤销
+     * @return对应的请假列表
+     */
+    List<Leave> findLeaveFromAuditStatus(int status);
+
+//    public int[] judgeAuditFlow(Long userId, String leaveType, Date leaveStartTime, Date leaveEndTime);
 }
 

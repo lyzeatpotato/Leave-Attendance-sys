@@ -1,11 +1,10 @@
 package com.shu.leave.mapper;
 
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.type.JdbcType;
 
 @Mapper
-public interface AbsenceHistory {
+public interface AbsenceHistoryMapper {
 
     /**
      * 查询某个用户某年事假累积天数
@@ -14,7 +13,7 @@ public interface AbsenceHistory {
      * @param year 年份
      * @return
      */
-    @Select("select bingjia_days from absence_history where userid = #{userId} and year = #{year}")
+    @Select("select shijia_days from absence_history where userid = #{userId} and year = #{year}")
     int selectShiJiaDaysByUidAndYear(@Param("userId") Long userId, @Param("year") String year);
 
     /**
@@ -24,7 +23,7 @@ public interface AbsenceHistory {
      * @param year 年份
      * @return
      */
-    @Select("select shijia_days from absence_history where userid = #{userId} and year = #{year}")
+    @Select("select bingjia_days from absence_history where userid = #{userId} and year = #{year}")
     int selectBingJiaDaysByUidAndYear(@Param("userId") Long userId, @Param("year") String year);
 
 }

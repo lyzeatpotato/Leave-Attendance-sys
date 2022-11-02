@@ -82,4 +82,15 @@ public class UnitedUtils {
         }
         return inputDateArray;
     }
+
+
+    /**
+     * 获取当年年份
+     * @return
+     */
+    public static String getCurrentYear(){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+        Date date = new Date();
+        return sdf.format(date);
+    }
 }
