@@ -126,5 +126,11 @@ public interface LeaveService {
      * @return 对应name用户的全部请假表列表
      */
     List<Leave> findLeaveFormByUsernameInSchool(String username,String department);
+    /**
+     * 按部门查询: 查询需要部门审核的全部请假记录
+     * @param department
+     * @return 对应部门的全部请假列表
+     */
+    List<Leave> findLeaveFormByUserDeptCheck(String department);
 
 }

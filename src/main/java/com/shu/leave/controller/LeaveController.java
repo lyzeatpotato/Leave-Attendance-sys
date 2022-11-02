@@ -112,7 +112,6 @@ public class LeaveController {
         return BasicResponseUtils.success(leaveService.findAllLeaveFormByUnfinishedHR());
     }
 
-
     @ApiOperation(value ="显示查询某个请假的详细信息", notes = "显示查询某个请假的详细信息")
     @ApiOperationSupport(order = 10)
     @GetMapping("SingleleaveDetail")
@@ -176,6 +175,12 @@ public class LeaveController {
     public ResultEntity findLeaveFormByUsernameInSchool(@RequestParam("username") String username,@RequestParam("department") String department) {
         // 对前端传入数据做数据类型转换
         return BasicResponseUtils.success(leaveService.findLeaveFormByUsernameInSchool(username,department));
+    }
+    @ApiOperation(value = "查询需要部门审核的请假表列表", notes = "传入对应部门")
+    @ApiOperationSupport(order = 20)
+    @GetMapping("findLeaveFormByDeptCheck")
+    public ResultEntity findLeaveFormByDeptCheck(@RequestParam("department") String department){
+        return BasicResponseUtils.success(leaveService.findLeaveFormByUserDeptCheck(department));
     }
 
 }
