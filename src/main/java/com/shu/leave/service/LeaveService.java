@@ -73,16 +73,14 @@ public interface LeaveService {
      * @return 对应的请假列表
      */
     List<Leave> findAllLeaveFormByUnfinishedHR();
-    /**
+
+
+    /*
      * 查询单个请假信息
      */
-    SingleLeaveVo selectSingleLeave(String role, String yuanxi, long id);
+    SingleLeaveVo selectSingleLeave(String role, String yuanxi, Long id);
     /*
     查询步骤信息
      */
-    SingleLeaveStepVo selectSingleLeaveStep(String role,long id,String step);
-    /*
-    单个信息审核
-     */
-    int singleLeaveAudit(String role, String userid, long id,String result,String recommend);
+    SingleLeaveStepVo selectSingleLeaveStep(String role,Long id,String step);
 }
