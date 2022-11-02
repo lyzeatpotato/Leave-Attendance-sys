@@ -33,4 +33,9 @@ public class LeaveLimitTimeServiceImpl implements LeaveLimitTimeService {
         leaveAuditLimitTime.setLimitTime(Integer.parseInt(params[2]));
         return leaveAuditLimitTimeMapper.updateLimitTimeById(leaveAuditLimitTime);
     }
+
+    @Override
+    public int getLimitTimeByRoleIdAndLeaveType(Long roleId, String leaveType) {
+        return leaveAuditLimitTimeMapper.selectByRoleAndType(roleId, leaveType);
+    }
 }
