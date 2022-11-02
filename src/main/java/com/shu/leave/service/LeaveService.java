@@ -74,24 +74,65 @@ public interface LeaveService {
      * @return 对应的请假列表
      */
     List<Leave> findAllLeaveFormByUnfinishedHR();
-    /**
+
+
+    /*
      * 查询单个请假信息
      */
-    SingleLeaveVo selectSingleLeave(String role, String yuanxi, long id);
+    SingleLeaveVo selectSingleLeave(String role, String yuanxi, Long id);
     /*
     查询步骤信息
      */
-    SingleLeaveStepVo selectSingleLeaveStep(String role,long id,String step);
-    /*
-    单个信息审核
-     */
-    int singleLeaveAudit(String role, String userid, long id,String result,String recommend);
+    SingleLeaveStepVo selectSingleLeaveStep(String role,Long id,String step);
+
     /**
      * 根据用户名字查询请假表信息
      * @param username
      * @return 对应用户的全部请假表列表
      */
     List<Leave> findLeaveFormByUsername(String username);
+    /**
+     * 需要部门审核的根据用户id查询请假表信息
+     * @param userid
+     * @return 对应id用户的全部请假表列表
+     */
+    List<Leave> findLeaveFormByUseridInDept(String userid,String department);
+    /**
+     * 需要部门审核的根据用户name查询请假表信息
+     * @param username
+     * @return 对应name用户的全部请假表列表
+     */
+    List<Leave> findLeaveFormByUsernameInDept(String username,String department);
+    /**
+     * 需要人事处审核的根据用户id查询请假表信息
+     * @param userid
+     * @return 对应id用户的全部请假表列表
+     */
+    List<Leave> findLeaveFormByUseridInHR(String userid);
+    /**
+     * 需要人事处审核的根据用户name查询请假表信息
+     * @param username
+     * @return 对应name用户的全部请假表列表
+     */
+    List<Leave> findLeaveFormByUsernameInHR(String username);
+    /**
+     * 需要校领导审核的根据用户id查询请假表信息
+     * @param userid
+     * @return 对应id用户的全部请假表列表
+     */
+    List<Leave> findLeaveFormByUseridInSchool(String userid,String department);
+    /**
+     * 需要校领导审核的根据用户name查询请假表信息
+     * @param username
+     * @return 对应name用户的全部请假表列表
+     */
+    List<Leave> findLeaveFormByUsernameInSchool(String username,String department);
+    /**
+     * 按部门查询: 查询需要部门审核的全部请假记录
+     * @param department
+     * @return 对应部门的全部请假列表
+     */
+    List<Leave> findLeaveFormByUserDeptCheck(String department);
 
 
     /**
@@ -111,6 +152,5 @@ public interface LeaveService {
      */
     List<Leave> findLeaveFromAuditStatus(int status);
 
-//    public int[] judgeAuditFlow(Long userId, String leaveType, Date leaveStartTime, Date leaveEndTime);
+    public int[] judgeAuditFlow(Long userId, String leaveType, Date leaveStartTime, Date leaveEndTime) throws ParseException;
 }
-

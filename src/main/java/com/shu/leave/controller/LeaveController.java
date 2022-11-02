@@ -116,24 +116,19 @@ public class LeaveController {
         return BasicResponseUtils.success(leaveService.findAllLeaveFormByUnfinishedHR());
     }
 
-
     @ApiOperation(value ="显示查询某个请假的详细信息", notes = "显示查询某个请假的详细信息")
     @ApiOperationSupport(order = 10)
     @GetMapping("SingleleaveDetail")
-    public ResultEntity SingleleaveDetail(@RequestParam("role") String role,@RequestParam("yuanxi") String yuanxi,@RequestParam("id") long id){
-        return BasicResponseUtils.success(leaveService.selectSingleLeave(role,yuanxi,id));
+    public ResultEntity SingleleaveDetail(@RequestParam("role") String role,@RequestParam("yuanxi") String yuanxi,@RequestParam("id") String id){
+        Long Id = Long.valueOf(id);
+        return BasicResponseUtils.success(leaveService.selectSingleLeave(role,yuanxi,Id));
     }
     @ApiOperation(value ="查询某个步骤的信息", notes = "查询某个步骤的信息")
     @ApiOperationSupport(order = 11)
     @GetMapping("SingleleaveStep")
-    public ResultEntity SingleleaveStep(@RequestParam("role") String role,@RequestParam("id") long id,@RequestParam("step") String step ){
-        return BasicResponseUtils.success(leaveService.selectSingleLeaveStep(role,id,step));
-    }
-    @ApiOperation(value ="完成该部分审核", notes = "完成该部分审核")
-    @ApiOperationSupport(order = 12)
-    @GetMapping("SingleleaveAudit")
-    public ResultEntity SingleleaveAudit(@RequestParam("role") String role, @RequestParam("userid") String userid, @RequestParam("id") long id, @Param("result") String result,@Param("recommend")String recommend){
-        return BasicResponseUtils.success(leaveService.singleLeaveAudit(role,userid,id,result,recommend));
+    public ResultEntity SingleleaveStep(@RequestParam("role") String role,@RequestParam("id") String id,@RequestParam("step") String step ){
+        Long Id = Long.valueOf(id);
+        return BasicResponseUtils.success(leaveService.selectSingleLeaveStep(role,Id,step));
     }
     @ApiOperation(value = "查询用户名字对应的请假表列表", notes = "根据用户username查询该用户提交的全部请假表列表")
     @ApiOperationSupport(order = 13)
@@ -143,10 +138,58 @@ public class LeaveController {
         String userName = String.valueOf(username);
         return BasicResponseUtils.success(leaveService.findLeaveFormByUsername(userName));
     }
+    @ApiOperation(value = "查询需要部门审核，且根据工号查询的请假列表", notes = "根据id查询部门需要审核的请假表列表")
+    @ApiOperationSupport(order = 14)
+    @GetMapping("findLeaveFormByUseridInDept")
+    public ResultEntity findLeaveFormByUseridInDept(@RequestParam("userid") String userid,@RequestParam("department") String department) {
+        // 对前端传入数据做数据类型转换
+        return BasicResponseUtils.success(leaveService.findLeaveFormByUseridInDept(userid,department));
+    }
+    @ApiOperation(value = "查询需要部门审核，且根据名字查询的请假列表", notes = "根据name查询部门需要审核的请假表列表")
+    @ApiOperationSupport(order = 15)
+    @GetMapping("findLeaveFormByUsernameInDept")
+    public ResultEntity findLeaveFormByUsernameInDept(@RequestParam("username") String username,@RequestParam("department") String department) {
+        // 对前端传入数据做数据类型转换
+        return BasicResponseUtils.success(leaveService.findLeaveFormByUsernameInDept(username,department));
+    }
+    @ApiOperation(value = "查询需要人事处审核，且根据工号查询的请假列表", notes = "根据id查询部门需要审核的请假表列表")
+    @ApiOperationSupport(order = 16)
+    @GetMapping("findLeaveFormByUseridInHR")
+    public ResultEntity findLeaveFormByUseridInHR(@RequestParam("userid") String userid) {
+        // 对前端传入数据做数据类型转换
+        return BasicResponseUtils.success(leaveService.findLeaveFormByUseridInHR(userid));
+    }
+    @ApiOperation(value = "查询需要人事处审核，且根据名字查询的请假列表", notes = "根据name查询部门需要审核的请假表列表")
+    @ApiOperationSupport(order = 17)
+    @GetMapping("findLeaveFormByUsernameInHR")
+    public ResultEntity findLeaveFormByUsernameInHR(@RequestParam("username") String username) {
+        // 对前端传入数据做数据类型转换
+        return BasicResponseUtils.success(leaveService.findLeaveFormByUsernameInHR(username));
+    }
+    @ApiOperation(value = "查询需要校领导审核，且根据工号查询的请假列表", notes = "根据id查询部门需要审核的请假表列表")
+    @ApiOperationSupport(order = 18)
+    @GetMapping("findLeaveFormByUseridInSchool")
+    public ResultEntity findLeaveFormByUseridInSchool(@RequestParam("userid") String userid,@RequestParam("department") String department) {
+        // 对前端传入数据做数据类型转换
+        return BasicResponseUtils.success(leaveService.findLeaveFormByUseridInSchool(userid,department));
+    }
+    @ApiOperation(value = "查询需要校领导审核，且根据名字查询的请假列表", notes = "根据name查询部门需要审核的请假表列表")
+    @ApiOperationSupport(order = 19)
+    @GetMapping("findLeaveFormByUsernameInSchool")
+    public ResultEntity findLeaveFormByUsernameInSchool(@RequestParam("username") String username,@RequestParam("department") String department) {
+        // 对前端传入数据做数据类型转换
+        return BasicResponseUtils.success(leaveService.findLeaveFormByUsernameInSchool(username,department));
+    }
+    @ApiOperation(value = "查询需要部门审核的请假表列表", notes = "传入对应部门")
+    @ApiOperationSupport(order = 20)
+    @GetMapping("findLeaveFormByDeptCheck")
+    public ResultEntity findLeaveFormByDeptCheck(@RequestParam("department") String department){
+        return BasicResponseUtils.success(leaveService.findLeaveFormByUserDeptCheck(department));
+    }
 
 
     @ApiOperation(value = "根据时间范围筛选请假列表", notes = "传入起止时间, 格式yyyy-MM-dd HH:mm:ss")
-    @ApiOperationSupport(order = 14)
+    @ApiOperationSupport(order = 21)
     @GetMapping("findLeaveFromTimePeriod")
     public ResultEntity findLeaveFromTimePeriod(@RequestParam("startTime") String startTime, @RequestParam("endTime") String endTime){
         return BasicResponseUtils.success(leaveService.findLeaveFromTimePeriod(startTime, endTime));
@@ -154,7 +197,7 @@ public class LeaveController {
 
 
     @ApiOperation(value = "根据审核状态筛选请假列表", notes = "0:未审核-1:已审核通过-2:已审核不通过-3:已撤销")
-    @ApiOperationSupport(order = 15)
+    @ApiOperationSupport(order = 22)
     @GetMapping("findLeaveFromAuditStatus")
     public ResultEntity findLeaveFromAuditStatus(@RequestParam("status") int status){
         return BasicResponseUtils.success(leaveService.findLeaveFromAuditStatus(status));

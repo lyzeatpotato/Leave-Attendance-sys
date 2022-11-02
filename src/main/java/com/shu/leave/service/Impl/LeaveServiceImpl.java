@@ -6,12 +6,14 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.shu.leave.entity.History;
 import com.shu.leave.entity.Leave;
+import com.shu.leave.enums.AuditLimitTimeRoleEnum;
 import com.shu.leave.mapper.AbsenceHistoryMapper;
 import com.shu.leave.mapper.HistoryMapper;
 import com.shu.leave.mapper.LeaveMapper;
 import com.shu.leave.mapper.UserMapper;
 import com.shu.leave.service.CalenderService;
 import com.shu.leave.service.HistoryService;
+import com.shu.leave.service.LeaveLimitTimeService;
 import com.shu.leave.service.LeaveService;
 import com.shu.leave.utils.UnitedUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +42,8 @@ public class LeaveServiceImpl implements LeaveService {
     CalenderService calenderService;
     @Autowired
     HistoryService historyService;
+    @Autowired
+    LeaveLimitTimeService limitTimeService;
     @Resource
     AbsenceHistoryMapper absenceHistoryMapper;
 
@@ -79,6 +83,8 @@ public class LeaveServiceImpl implements LeaveService {
                 // 请假天数=当前申请天数-遇到法定节假日/寒暑假顺延的天数
                 dayDiffer = UnitedUtils.getDayDiffer(startDate, endDate) - holidayExtends - vocationExtends;
             }
+        } else {
+            dayDiffer = UnitedUtils.getDayDiffer(startDate, endDate);
         }
         leaveForm.setLeaveReason(params[4]);
         leaveForm.setLeaveMaterial(params[5]);
@@ -224,18 +230,18 @@ public class LeaveServiceImpl implements LeaveService {
      * @return
      */
     public int judgeHRAudit(Long userId, String leaveType, Date leaveStartTime, Date leaveEndTime) throws ParseException {
-        int leaveDays = UnitedUtils.getDayDiffer(leaveStartTime, leaveEndTime);
+        int leaveDayDistence = UnitedUtils.getDayDiffer(leaveStartTime, leaveEndTime);
         if(leaveType.equals("事假")){
-            if(leaveDays >= 10){
+            int limitTime = limitTimeService.getLimitTimeByRoleIdAndLeaveType(AuditLimitTimeRoleEnum.HR.getId(),leaveType);
+            if(leaveDayDistence >= limitTime){
                 return 0;
             }else{
                 return 2;
             }
         }else if(leaveType.equals("病假")){
             int yearAccumulate = historyService.sumHistoryLeaveType(""+userId, UnitedUtils.getCurrentYear(),leaveType);
-
-//            int yearAccumulate = absenceHistoryMapper.selectBingJiaDaysByUidAndYear(userId, UnitedUtils.getCurrentYear());
-            if(yearAccumulate >= 60){
+            int limitTimeYear = limitTimeService.getLimitTimeByRoleIdAndLeaveType(AuditLimitTimeRoleEnum.HR_YEAR.getId(),leaveType);
+            if(yearAccumulate >= limitTimeYear){
                 return 0;
             }else{
                 return 2;
@@ -243,7 +249,8 @@ public class LeaveServiceImpl implements LeaveService {
         }else if(leaveType.equals("产假")){
             return 0;
         }else if(leaveType.equals("因公出差")){
-            if(leaveDays >= 20){
+            int limitTime = limitTimeService.getLimitTimeByRoleIdAndLeaveType(AuditLimitTimeRoleEnum.HR.getId(),leaveType);
+            if(leaveDayDistence >= limitTime){
                 //todo 处理20个工作日
                 return 0;
             }else{
@@ -265,9 +272,12 @@ public class LeaveServiceImpl implements LeaveService {
      */
     public int judgeSchoolAudit(Long userId, String leaveType, Date leaveStartTime, Date leaveEndTime) throws ParseException {
         if(leaveType.equals("事假")) {
-            int leaveDays = UnitedUtils.getDayDiffer(leaveStartTime, leaveEndTime);
-            int yearAccumulate = absenceHistoryMapper.selectShiJiaDaysByUidAndYear(userId, UnitedUtils.getCurrentYear());
-            if (leaveDays >= 30 || yearAccumulate >= 60) {
+            int leaveDayDistence = UnitedUtils.getDayDiffer(leaveStartTime, leaveEndTime);
+            int yearAccumulate = historyService.sumHistoryLeaveType(""+userId, UnitedUtils.getCurrentYear(),leaveType);
+//            int yearAccumulate = absenceHistoryMapper.selectShiJiaDaysByUidAndYear(userId, UnitedUtils.getCurrentYear());
+            int limitTime = limitTimeService.getLimitTimeByRoleIdAndLeaveType(AuditLimitTimeRoleEnum.SCHOOL.getId(),leaveType);
+            int limitTimeYear = limitTimeService.getLimitTimeByRoleIdAndLeaveType(AuditLimitTimeRoleEnum.SCHOOL_YEAR.getId(),leaveType);
+            if (leaveDayDistence >= limitTime || yearAccumulate >= limitTimeYear) {
                 return 0;
             } else {
                 return 2;
@@ -325,12 +335,12 @@ public class LeaveServiceImpl implements LeaveService {
     }
 
     @Override
-    public SingleLeaveVo selectSingleLeave(String role, String yuanxi, long id){
+    public SingleLeaveVo selectSingleLeave(String role, String yuanxi, Long id){
         SingleLeaveVo singleLeaveVo = leaveMapper.selectSingleLeave(yuanxi,id);
         return singleLeaveVo;
     }
     @Override
-    public SingleLeaveStepVo selectSingleLeaveStep(String role,long id,String step){
+    public SingleLeaveStepVo selectSingleLeaveStep(String role,Long id,String step){
         if (step=="1") {
             SingleLeaveStepVo singleLeaveStepVo= leaveMapper.electSingleLeaveStepOne(role, id);
             return singleLeaveStepVo;
@@ -352,64 +362,7 @@ public class LeaveServiceImpl implements LeaveService {
             return singleLeaveStepVo;
         }
     }
-    /*
-    审核工作
-     */
-    @Override
-    public int singleLeaveAudit(String role, String userid, long id, String result, String recommend) {
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-        String time = df.format(System.currentTimeMillis());
-        switch (role) {
-            case "1": {
-                leaveMapper.dpOfficerAudit(userid, id, result, recommend, time);
-                if (result=="通过")
-                    //通过就修改状态
-                    leaveMapper.dpOfficerAudity(id,time);
-                else
-                    leaveMapper.dpOfficerAuditn(id,time);
-                break;
-            }
-            case "2": {
-                leaveMapper.dpLeaderAudit(userid, id, result, recommend, time);
-                if (result=="通过")
-                    //通过就修改状态
-                    leaveMapper.dpLeaderAudity(id,time);
-                else
-                    leaveMapper.dpLeaderAuditn(id,time);
-                break;
-            }
-            case "3": {
-                leaveMapper.hrOfficerAudit(userid, id, result, recommend, time);
-                if (result=="通过")
-                    //通过就修改状态
-                    leaveMapper.hrOfficerAudity(id,time);
-                else
-                    leaveMapper.hrLeaderAuditn(id,time);
-                break;
-            }
-            case "4": {
-                leaveMapper.hrLeaderAudit(userid, id, result, recommend, time);
-                if (result=="通过")
-                    //通过就修改状态
-                    leaveMapper.hrLeaderAudity(id,time);
-                else
-                    leaveMapper.hrLeaderAuditn(id,time);
-                break;
-            }
-            case "5": {
-                leaveMapper.scLeaderAudit(userid, id, result, recommend, time);
-                if (result=="通过")
-                    //通过就修改状态
-                    leaveMapper.scLeaderAudity(id,time);
-                else
-                    leaveMapper.scLeaderAuditn(id,time);
-                break;
-            }
-            default:
-                return 0;
-        }
-        return 1;
-    }
+
     @Override
     public List<Leave> findLeaveFormByUsername(String username) {
         return leaveMapper.selectByUsername(username);
@@ -424,5 +377,34 @@ public class LeaveServiceImpl implements LeaveService {
     public List<Leave> findLeaveFromAuditStatus(int status) {
         return leaveMapper.selectByAuditStatus(status);
     }
+    @Override
+    public List<Leave> findLeaveFormByUseridInDept(String userid,String department) {
+        return leaveMapper.selectByUseridInDept(userid,department);
+    }
+    @Override
+    public List<Leave> findLeaveFormByUsernameInDept(String username,String department) {
+        return leaveMapper.selectByUsernameInDept(username,department);
+    }
+    @Override
+    public List<Leave> findLeaveFormByUseridInHR(String userid) {
+        return leaveMapper.selectByUseridInHR(userid);
+    }
+    @Override
+    public List<Leave> findLeaveFormByUsernameInHR(String username) {
+        return leaveMapper.selectByUsernameInHR(username);
+    }
+    @Override
+    public List<Leave> findLeaveFormByUseridInSchool(String userid,String department) {
+        return leaveMapper.selectByUseridInSchool(userid,department);
+    }
+    @Override
+    public List<Leave> findLeaveFormByUsernameInSchool(String username,String department) {
+        return leaveMapper.selectByUsernameInSchool(username,department);
+    }
+    @Override
+    public List<Leave> findLeaveFormByUserDeptCheck(String department) {
+        return leaveMapper.selectByUserDeptCheck(department);
+    }
+
 }
 
