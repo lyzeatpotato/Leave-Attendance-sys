@@ -33,4 +33,17 @@ public interface LeaveAuditLimitTimeMapper {
      */
     @Update("update leave_audit_limit_time set limit_time =  #{limitTime,jdbcType=VARCHAR} where id = #{id,jdbcType=VARCHAR} AND type=#{type,jdbcType=VARCHAR}")
     int updateLimitTimeById(LeaveAuditLimitTime leaveAuditLimitTime);
+
+
+    /**根据角色id和请假类型查询最长时限
+     * @author 谢煜颖
+     * @param roleId 角色id，系统审核、HR审核、School审核
+     * @param leaveType 请假类型
+     * @return
+     */
+    @Select({
+            "select limit_time from leave_audit_limit_time ",
+            "where role_id=#{roleId,jdbcType=BIGINT} and type=#{leaveType,jdbcType=VARCHAR}"
+    })
+    int selectByRoleAndType(Long roleId, String leaveType);
 }

@@ -27,4 +27,13 @@ public interface LeaveLimitTimeService {
      * @return 对应时限列表
      */
     int updateLimitTimeById(String[] params);
+
+    /**
+     * 根据审核角色和请假类型查询最长时限
+     * @Author xieyuying
+     * @param roleId 审核角色
+     * @param leaveType 请假类型
+     * @return
+     */
+    int getLimitTimeByRoleIdAndLeaveType(Long roleId, String leaveType);
 }
