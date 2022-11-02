@@ -148,7 +148,7 @@ public interface LeaveMapper extends BaseMapper<Leave> {
             "FROM leave, user_info " +
             "WHERE leave.userid = user_info.id " +
             "and user_info.yuanxi = #{department, jdbcType=VARCHAR} " +
-            "and leave.hr_status = 0")
+            "and leave.hr_status != 2" + " and leave.status=0" )
     @ResultMap(value = "leaveDeptRelatedMapper")
     List<Leave> selectByUserDeptAndUnfinishedHR(String department);
 
@@ -163,7 +163,7 @@ public interface LeaveMapper extends BaseMapper<Leave> {
             "FROM leave, user_info " +
             "WHERE leave.userid = user_info.id " +
             "and user_info.yuanxi = #{department, jdbcType=VARCHAR} " +
-            "and leave.school_status = 0")
+            "and leave.school_status != 2" + " and leave.status=0" )
     @ResultMap(value = "leaveDeptRelatedMapper")
     List<Leave> selectByUserDeptAndUnfinishedSchool(String department);
 
@@ -177,7 +177,7 @@ public interface LeaveMapper extends BaseMapper<Leave> {
             "FROM leave, user_info " +
             "WHERE leave.userid = user_info.id " +
             "and leave.department_status = 1 "+
-            "and leave.hr_status = 0")
+            "and leave.hr_status = 0 ")
     @ResultMap(value = "leaveDeptRelatedMapper")
     List<Leave> selectAllByUnfinishedHR();
 
@@ -273,7 +273,7 @@ public interface LeaveMapper extends BaseMapper<Leave> {
                     "leave.leave_reason, leave.leave_material, leave.status, leave.department_status, " +
                     "leave.hr_status, leave.school_status, leave.is_deleted, leave.gmt_create, leave.gmt_modified " +
                     "FROM leave, user_info " +
-                    "WHERE leave.userid = user_info.id " + "and user_info.userid=#{userid,jdbcType=BIGINT} " + " and user_info.yuanxi = #{department, jdbcType=VARCHAR}"+ " and leave.department_status = 0"
+                    "WHERE leave.userid = user_info.id " + "and user_info.userid=#{userid,jdbcType=BIGINT} " + " and user_info.yuanxi = #{department, jdbcType=VARCHAR}" + " and leave.status= 0"
     })
     @Results( {
             @Result(column="id", property="id", jdbcType= JdbcType.BIGINT, id=true),
@@ -307,7 +307,7 @@ public interface LeaveMapper extends BaseMapper<Leave> {
                     "leave.leave_reason, leave.leave_material, leave.status, leave.department_status, " +
                     "leave.hr_status, leave.school_status, leave.is_deleted, leave.gmt_create, leave.gmt_modified " +
                     "FROM leave, user_info " +
-                    "WHERE leave.userid = user_info.id " + "and user_info.username = #{username,jdbcType=VARCHAR} " + " and user_info.yuanxi = #{department, jdbcType=VARCHAR}" + " and leave.department_status = 0"
+                    "WHERE leave.userid = user_info.id " + "and user_info.username = #{username,jdbcType=VARCHAR} " + " and user_info.yuanxi = #{department, jdbcType=VARCHAR}" + " and leave.status= 0"
     })
     @Results( {
             @Result(column="id", property="id", jdbcType= JdbcType.BIGINT, id=true),
@@ -341,7 +341,7 @@ public interface LeaveMapper extends BaseMapper<Leave> {
                     "leave.leave_reason, leave.leave_material, leave.status, leave.department_status, " +
                     "leave.hr_status, leave.school_status, leave.is_deleted, leave.gmt_create, leave.gmt_modified " +
                     "FROM leave, user_info " +
-                    "WHERE leave.userid = user_info.id " + "and user_info.userid=#{userid,jdbcType=BIGINT} " + " and leave.hr_status = 0"
+                    "WHERE leave.userid = user_info.id " + "and user_info.userid=#{userid,jdbcType=BIGINT} " + " and leave.hr_status !=2" + "and leave.status = 0"
     })
     @Results( {
             @Result(column="id", property="id", jdbcType= JdbcType.BIGINT, id=true),
@@ -375,7 +375,7 @@ public interface LeaveMapper extends BaseMapper<Leave> {
                     "leave.leave_reason, leave.leave_material, leave.status, leave.department_status, " +
                     "leave.hr_status, leave.school_status, leave.is_deleted, leave.gmt_create, leave.gmt_modified " +
                     "FROM leave, user_info " +
-                    "WHERE leave.userid = user_info.id " + " and user_info.username=#{username,jdbcType=VARCHAR} " + " and leave.hr_status = 0"
+                    "WHERE leave.userid = user_info.id " + " and user_info.username=#{username,jdbcType=VARCHAR} " + " and leave.hr_status !=2"+ "and leave.status = 0"
     })
     @Results( {
             @Result(column="id", property="id", jdbcType= JdbcType.BIGINT, id=true),
@@ -409,7 +409,7 @@ public interface LeaveMapper extends BaseMapper<Leave> {
                     "leave.leave_reason, leave.leave_material, leave.status, leave.department_status, " +
                     "leave.hr_status, leave.school_status, leave.is_deleted, leave.gmt_create, leave.gmt_modified " +
                     "FROM leave, user_info " +
-                    "WHERE leave.userid = user_info.id " + "and user_info.userid=#{userid,jdbcType=BIGINT} " + " and user_info.yuanxi = #{department, jdbcType=VARCHAR}"+ " and leave.school_status = 0"
+                    "WHERE leave.userid = user_info.id " + "and user_info.userid=#{userid,jdbcType=BIGINT} " + " and user_info.yuanxi = #{department, jdbcType=VARCHAR}"+ " and leave.school_status !=2" + "and leave.status = 0"
     })
     @Results( {
             @Result(column="id", property="id", jdbcType= JdbcType.BIGINT, id=true),
@@ -443,7 +443,7 @@ public interface LeaveMapper extends BaseMapper<Leave> {
                     "leave.leave_reason, leave.leave_material, leave.status, leave.department_status, " +
                     "leave.hr_status, leave.school_status, leave.is_deleted, leave.gmt_create, leave.gmt_modified " +
                     "FROM leave, user_info " +
-                    "WHERE leave.userid = user_info.id " + "and user_info.username=#{username,jdbcType=VARCHAR}  " + " and user_info.yuanxi = #{department, jdbcType=VARCHAR}"+ " and leave.school_status = 0"
+                    "WHERE leave.userid = user_info.id " + "and user_info.username=#{username,jdbcType=VARCHAR}  " + " and user_info.yuanxi = #{department, jdbcType=VARCHAR}"+ " and leave.school_status !=2" + "and leave.status = 0"
     })
     @Results( {
             @Result(column="id", property="id", jdbcType= JdbcType.BIGINT, id=true),
@@ -466,5 +466,39 @@ public interface LeaveMapper extends BaseMapper<Leave> {
             )
     })
     List<Leave> selectByUsernameInSchool(String username,String department);
+    /**
+     * liugai
+     * 按部门查询: 查询需要部门审核的全部请假记录(根据status状态)
+     * @param department
+     * @return 返回请假列表
+     */
+    @Select({
+            "SELECT leave.id, leave.userid, leave.leave_type, leave.leave_start_time, leave.leave_end_time, " +
+                    "leave.leave_reason, leave.leave_material, leave.status, leave.department_status, " +
+                    "leave.hr_status, leave.school_status, leave.is_deleted, leave.gmt_create, leave.gmt_modified " +
+                    "FROM leave, user_info " +
+                    "WHERE leave.userid = user_info.id "  + " and user_info.yuanxi = #{department, jdbcType=VARCHAR}" + " and leave.status= 0"
+    })
+    @Results( {
+            @Result(column="id", property="id", jdbcType= JdbcType.BIGINT, id=true),
+            @Result(column="userid", property="userId", jdbcType=JdbcType.VARCHAR),
+            @Result(column="leave_type", property="leaveType", jdbcType=JdbcType.VARCHAR),
+            @Result(column="leave_start_time", property="leaveStartTime", jdbcType=JdbcType.VARCHAR),
+            @Result(column="leave_end_time", property="leaveEndTime", jdbcType=JdbcType.VARCHAR),
+            @Result(column="leave_reason", property="leaveReason", jdbcType=JdbcType.VARCHAR),
+            @Result(column="leave_material", property="leaveMaterial", jdbcType=JdbcType.VARCHAR),
+            @Result(column="status", property="status", jdbcType=JdbcType.CHAR),
+            @Result(column="department_status", property="departmentStatus", jdbcType=JdbcType.CHAR),
+            @Result(column="hr_status", property="hrStatus", jdbcType=JdbcType.CHAR),
+            @Result(column="school_status", property="schoolStatus", jdbcType=JdbcType.CHAR),
+            @Result(column="is_deleted", property="isDeleted", jdbcType=JdbcType.CHAR),
+            @Result(column="gmt_create", property="gmtCreate", jdbcType=JdbcType.TIMESTAMP),
+            @Result(column="gmt_modified", property="gmtModified", jdbcType= JdbcType.TIMESTAMP),
+            @Result(
+                    column = "userid",property = "user",  javaType = User.class,
+                    one = @One(select = "com.shu.leave.mapper.UserMapper.selectById")
+            )
+    })
+    List<Leave> selectByUserDeptCheck(String department);
 
 }
