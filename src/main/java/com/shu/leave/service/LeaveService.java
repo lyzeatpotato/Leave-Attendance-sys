@@ -85,4 +85,12 @@ public interface LeaveService {
     单个信息审核
      */
     int singleLeaveAudit(String role, String userid, long id,String result,String recommend);
+    /**
+     * 根据用户名字查询请假表信息
+     * @param username
+     * @return 对应用户的全部请假表列表
+     */
+    List<Leave> findLeaveFormByUsername(String username);
+
 }
+

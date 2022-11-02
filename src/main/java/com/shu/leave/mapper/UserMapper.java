@@ -141,6 +141,4 @@ public interface UserMapper extends BaseMapper<User> {
     })
     User selectById(Long id);
 
-
-
 }
