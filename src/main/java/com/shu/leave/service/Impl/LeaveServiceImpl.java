@@ -209,7 +209,7 @@ public class LeaveServiceImpl implements LeaveService {
      * @param leaveEndTime 结束时间
      * @return
      */
-    public int[] judgeAuditFlow(Long userId, String leaveType, Date leaveStartTime, Date leaveEndTime) throws ParseException {
+    public int[] judgeAuditFlow(String userId, String leaveType, Date leaveStartTime, Date leaveEndTime) throws ParseException {
         int[] audies = new int[3];
         //部门审核均需
         audies[0] = 0;
@@ -229,7 +229,7 @@ public class LeaveServiceImpl implements LeaveService {
      * @param leaveEndTime 结束时间
      * @return
      */
-    public int judgeHRAudit(Long userId, String leaveType, Date leaveStartTime, Date leaveEndTime) throws ParseException {
+    public int judgeHRAudit(String userId, String leaveType, Date leaveStartTime, Date leaveEndTime) throws ParseException {
         int leaveDayDistence = UnitedUtils.getDayDiffer(leaveStartTime, leaveEndTime);
         if(leaveType.equals("事假")){
             int limitTime = limitTimeService.getLimitTimeByRoleIdAndLeaveType(AuditLimitTimeRoleEnum.HR.getId(),leaveType);
@@ -239,7 +239,7 @@ public class LeaveServiceImpl implements LeaveService {
                 return 2;
             }
         }else if(leaveType.equals("病假")){
-            int yearAccumulate = historyService.sumHistoryLeaveType(""+userId, UnitedUtils.getCurrentYear(),leaveType);
+            int yearAccumulate = historyService.sumHistoryLeaveType(userId, UnitedUtils.getCurrentYear(),leaveType);
             int limitTimeYear = limitTimeService.getLimitTimeByRoleIdAndLeaveType(AuditLimitTimeRoleEnum.HR_YEAR.getId(),leaveType);
             if(yearAccumulate >= limitTimeYear){
                 return 0;
@@ -270,11 +270,10 @@ public class LeaveServiceImpl implements LeaveService {
      * @param leaveEndTime 结束时间
      * @return
      */
-    public int judgeSchoolAudit(Long userId, String leaveType, Date leaveStartTime, Date leaveEndTime) throws ParseException {
+    public int judgeSchoolAudit(String userId, String leaveType, Date leaveStartTime, Date leaveEndTime) throws ParseException {
         if(leaveType.equals("事假")) {
             int leaveDayDistence = UnitedUtils.getDayDiffer(leaveStartTime, leaveEndTime);
-            int yearAccumulate = historyService.sumHistoryLeaveType(""+userId, UnitedUtils.getCurrentYear(),leaveType);
-//            int yearAccumulate = absenceHistoryMapper.selectShiJiaDaysByUidAndYear(userId, UnitedUtils.getCurrentYear());
+            int yearAccumulate = historyService.sumHistoryLeaveType(userId, UnitedUtils.getCurrentYear(),leaveType);
             int limitTime = limitTimeService.getLimitTimeByRoleIdAndLeaveType(AuditLimitTimeRoleEnum.SCHOOL.getId(),leaveType);
             int limitTimeYear = limitTimeService.getLimitTimeByRoleIdAndLeaveType(AuditLimitTimeRoleEnum.SCHOOL_YEAR.getId(),leaveType);
             if (leaveDayDistence >= limitTime || yearAccumulate >= limitTimeYear) {

@@ -152,5 +152,5 @@ public interface LeaveService {
      */
     List<Leave> findLeaveFromAuditStatus(int status);
 
-    public int[] judgeAuditFlow(Long userId, String leaveType, Date leaveStartTime, Date leaveEndTime) throws ParseException;
+//    public int[] judgeAuditFlow(String userId, String leaveType, Date leaveStartTime, Date leaveEndTime) throws ParseException;
 }
