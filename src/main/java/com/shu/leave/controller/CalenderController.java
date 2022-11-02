@@ -3,6 +3,7 @@ package com.shu.leave.controller;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.shu.leave.common.ResultEntity;
+import com.shu.leave.service.CalenderAdjustService;
 import com.shu.leave.service.CalenderService;
 import com.shu.leave.utils.BasicResponseUtils;
 import io.swagger.annotations.Api;
@@ -23,6 +24,8 @@ public class CalenderController {
 
     @Resource
     CalenderService calenderService;
+    @Resource
+    CalenderAdjustService calenderAdjustService;
     @ApiOperation(value = "新增校历假期数据", notes = "要求给出以下校历假期数据 [adminid, holiday_name, holiday_start_date, holiday_end_date, description]")
     @ApiOperationSupport(order = 1)
     @GetMapping("addCalender")
@@ -58,5 +61,11 @@ public class CalenderController {
         return BasicResponseUtils.success(calenderService.findAllCalender());
     }
 
+    @ApiOperation(value = "调休查询", notes = "根据所给的假期id显示对应假期的调休安排 ")
+    @ApiOperationSupport(order = 4)
+    @GetMapping("findAdjustById")
+    public ResultEntity findAdjustById(@RequestParam("id") String calenderid, @RequestParam("holiday_name") String holidayName)  throws ParseException{
+        return BasicResponseUtils.success(calenderAdjustService.findAdjustById(Long.parseLong(calenderid),holidayName));
+    }
 
 }

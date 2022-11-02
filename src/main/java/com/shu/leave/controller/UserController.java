@@ -60,9 +60,10 @@ public class UserController {
     public ResultEntity updateUser( @RequestParam("id") String id,
                                     @RequestParam("userid") String userid, @RequestParam("username") String username,
                                     @RequestParam("yuanxi") String yuanxi, @RequestParam("ptype") String ptype,
-                                    @RequestParam("pstatus") String pstatus,  @RequestParam("gender") String gender){
+                                    @RequestParam("pstatus") String pstatus,  @RequestParam("gender") String gender,
+                                    @RequestParam("role") String role){
 
-        String[] param = new String[]{id, userid, username, yuanxi, ptype, pstatus, gender};
+        String[] param = new String[]{id, userid, username, yuanxi, ptype, pstatus, gender, role};
         return BasicResponseUtils.success(userService.updateUser(param));
     }
 

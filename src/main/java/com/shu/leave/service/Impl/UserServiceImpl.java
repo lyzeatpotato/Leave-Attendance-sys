@@ -67,8 +67,8 @@ public class UserServiceImpl implements UserService {
         user.setPType(params[4]);
         user.setPStatus(params[5]);
         user.setGender(params[6]);
-        user.setRole("0");  // 此处默认初始新建的用户权限都为“基本教师权限”
-        user.setIsDeleted("0");
+        user.setRole(params[7]);  // 此处默认初始新建的用户权限都为“基本教师权限”
+
         /***
          * 时间转换逻辑：
          * util.Date获取的时间能够精确到时分秒，但转换成sql.Date则只能保留日期
