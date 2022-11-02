@@ -55,4 +55,12 @@ public interface CalenderService {
      * @return 需要顺延的寒暑假总天数
      */
     int totalExtendVocation(Date leaveStartDate, Date leaveEndDate);
+
+    /**
+     * 统计当前用户提交的请假申请中，所包含的寒暑假总天数
+     * @param leaveStartDate
+     * @param leaveEndDate
+     * @return 需要顺延的寒暑假总天数
+     */
+    int totalExtendVocation(Date leaveStartDate, Date leaveEndDate, String description);
 }

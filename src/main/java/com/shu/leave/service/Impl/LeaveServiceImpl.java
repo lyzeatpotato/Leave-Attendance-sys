@@ -73,6 +73,8 @@ public class LeaveServiceImpl implements LeaveService {
                 // 请假天数=当前申请天数-遇到法定节假日/寒暑假顺延的天数
                 dayDiffer = UnitedUtils.getDayDiffer(startDate, endDate) - holidayExtends - vocationExtends;
             }
+        } else {
+            dayDiffer = UnitedUtils.getDayDiffer(startDate, endDate);
         }
         leaveForm.setLeaveReason(params[4]);
         leaveForm.setLeaveMaterial(params[5]);
@@ -233,8 +235,6 @@ public class LeaveServiceImpl implements LeaveService {
         return leaveMapper.selectAllByUnfinishedHR();
     }
 
-
-
     @Override
     public SingleLeaveVo selectSingleLeave(String role, String yuanxi, Long id){
         SingleLeaveVo singleLeaveVo = leaveMapper.selectSingleLeave(yuanxi,id);
@@ -262,6 +262,35 @@ public class LeaveServiceImpl implements LeaveService {
             SingleLeaveStepVo singleLeaveStepVo= leaveMapper.electSingleLeaveStepOne(role, id);
             return singleLeaveStepVo;
         }
+    }
+
+    @Override
+    public List<Leave> findLeaveFormByUsername(String username) {
+        return leaveMapper.selectByUsername(username);
+    }
+    @Override
+    public List<Leave> findLeaveFormByUseridInDept(String userid,String department) {
+        return leaveMapper.selectByUseridInDept(userid,department);
+    }
+    @Override
+    public List<Leave> findLeaveFormByUsernameInDept(String username,String department) {
+        return leaveMapper.selectByUsernameInDept(username,department);
+    }
+    @Override
+    public List<Leave> findLeaveFormByUseridInHR(String userid) {
+        return leaveMapper.selectByUseridInHR(userid);
+    }
+    @Override
+    public List<Leave> findLeaveFormByUsernameInHR(String username) {
+        return leaveMapper.selectByUsernameInHR(username);
+    }
+    @Override
+    public List<Leave> findLeaveFormByUseridInSchool(String userid,String department) {
+        return leaveMapper.selectByUseridInSchool(userid,department);
+    }
+    @Override
+    public List<Leave> findLeaveFormByUsernameInSchool(String username,String department) {
+        return leaveMapper.selectByUsernameInSchool(username,department);
     }
 
 }

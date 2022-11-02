@@ -83,4 +83,48 @@ public interface LeaveService {
     查询步骤信息
      */
     SingleLeaveStepVo selectSingleLeaveStep(String role,Long id,String step);
+
+    /**
+     * 根据用户名字查询请假表信息
+     * @param username
+     * @return 对应用户的全部请假表列表
+     */
+    List<Leave> findLeaveFormByUsername(String username);
+    /**
+     * 需要部门审核的根据用户id查询请假表信息
+     * @param userid
+     * @return 对应id用户的全部请假表列表
+     */
+    List<Leave> findLeaveFormByUseridInDept(String userid,String department);
+    /**
+     * 需要部门审核的根据用户name查询请假表信息
+     * @param username
+     * @return 对应name用户的全部请假表列表
+     */
+    List<Leave> findLeaveFormByUsernameInDept(String username,String department);
+    /**
+     * 需要人事处审核的根据用户id查询请假表信息
+     * @param userid
+     * @return 对应id用户的全部请假表列表
+     */
+    List<Leave> findLeaveFormByUseridInHR(String userid);
+    /**
+     * 需要人事处审核的根据用户name查询请假表信息
+     * @param username
+     * @return 对应name用户的全部请假表列表
+     */
+    List<Leave> findLeaveFormByUsernameInHR(String username);
+    /**
+     * 需要校领导审核的根据用户id查询请假表信息
+     * @param userid
+     * @return 对应id用户的全部请假表列表
+     */
+    List<Leave> findLeaveFormByUseridInSchool(String userid,String department);
+    /**
+     * 需要校领导审核的根据用户name查询请假表信息
+     * @param username
+     * @return 对应name用户的全部请假表列表
+     */
+    List<Leave> findLeaveFormByUsernameInSchool(String username,String department);
+
 }
