@@ -153,7 +153,7 @@ public interface CalenderMapper extends BaseMapper<Calender> {
             "or (holiday_end_date between #{leaveStartTime,jdbcType=TIMESTAMP} and #{leaveEndTime,jdbcType=TIMESTAMP})",
             "and description = #{description,jdbcType=VARCHAR} and is_deleted = 0"
     })
-    List<Calender> selectHolidayByStartEndTimeInner(Date leaveStartTime, Date leaveEndTime, String description);
+    List<Calender> selectHolidayByStartEndTimeDiscribtionInner(Date leaveStartTime, Date leaveEndTime, String description);
 
 
     /**
@@ -169,5 +169,5 @@ public interface CalenderMapper extends BaseMapper<Calender> {
             "and (holiday_end_date >= #{leaveEndTime,jdbcType=TIMESTAMP})",
             "and description = #{description,jdbcType=VARCHAR} and is_deleted = 0"
     })
-    List<Calender> selectHolidayByStartEndTimeContainer(Date leaveStartTime, Date leaveEndTime, String description);
+    List<Calender> selectHolidayByStartEndTimeDiscribtionContainer(Date leaveStartTime, Date leaveEndTime, String description);
 }

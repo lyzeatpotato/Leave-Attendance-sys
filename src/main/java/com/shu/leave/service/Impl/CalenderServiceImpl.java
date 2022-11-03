@@ -147,16 +147,16 @@ public class CalenderServiceImpl implements CalenderService {
     }
 
     @Override
-    public int totalExtendVocation(Date leaveStartDate, Date leaveEndDate, String description) {
+    public int totalExtendDiscribtionVocation(Date leaveStartDate, Date leaveEndDate, String description) {
         /**
          * 此处判断逻辑：
          * 1.首先判断用户提交的请假起止时间范围内，是否有寒暑假
          * 2.如不存在数据，则进一步判断请假起止时间是否落在了某个寒暑假范围内
          */
-        List<Calender> calendersInScope = calenderMapper.selectHolidayByStartEndTimeInner(leaveStartDate, leaveEndDate, description);
+        List<Calender> calendersInScope = calenderMapper.selectHolidayByStartEndTimeDiscribtionInner(leaveStartDate, leaveEndDate, description);
         if (calendersInScope.isEmpty()) {
             // 当前用户选择的请假起止时间不包含法定节假日
-            List<Calender> calendersConScope = calenderMapper.selectHolidayByStartEndTimeContainer(leaveStartDate, leaveEndDate, description);
+            List<Calender> calendersConScope = calenderMapper.selectHolidayByStartEndTimeDiscribtionContainer(leaveStartDate, leaveEndDate, description);
             if (calendersConScope.isEmpty()) {
                 // 如也没有落在某个假期范围内，则说明不需要顺延
                 return 0;
