@@ -44,13 +44,13 @@ class LeaveAttendanceApplicationTests {
     @Test
     void testSelectLeaveFromDept(){
 
-        int[] res = new int[0];
-        try {
-            res = leaveService.judgeAuditFlow( "20221111","病假",strToDate("2022-10-29 00:00:00"),strToDate("2022-12-30 00:00:00"));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        System.out.println(""+res[0]+"  "+res[1]+"  "+res[2]);
+//        int[] res = new int[0];
+//        try {
+//            res = leaveService.judgeAuditFlow( "20221111","病假",strToDate("2022-10-29 00:00:00"),strToDate("2022-12-30 00:00:00"));
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//        System.out.println(""+res[0]+"  "+res[1]+"  "+res[2]);
 
     }
 
