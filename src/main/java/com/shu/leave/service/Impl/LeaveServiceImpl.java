@@ -367,14 +367,31 @@ public class LeaveServiceImpl implements LeaveService {
     }
 
     @Override
-    public List<Leave> findLeaveFromTimePeriod(String startTime, String endTime) {
-        return leaveMapper.selectByTimePeriod(startTime, endTime);
+    public List<Leave> findLeaveFromTimePeriod(Long userId, String startTime, String endTime) {
+        return leaveMapper.selectByTimePeriod(userId,startTime, endTime);
     }
 
     @Override
-    public List<Leave> findLeaveFromAuditStatus(int status) {
-        return leaveMapper.selectByAuditStatus(status);
+    public List<Leave> findLeaveFromAuditStatus(Long userId, int status) {
+        return leaveMapper.selectByAuditStatus(userId,status);
     }
+
+    @Override
+    public List<Leave> findLeaveFromTimePeriodAndAuditStatus(String id, String startTime, String endTime, int status) {
+        long userId = userMapper.getUserPrimaryKeyByUserId(id);
+        System.out.println(userId);
+        if((startTime == null || endTime == null || startTime.equals("") || endTime.equals("")) && status==-1){
+            return leaveMapper.selectByUserid(userId);
+        }
+        if(startTime == null || endTime == null || startTime.equals("") || endTime.equals("")){
+            return leaveMapper.selectByAuditStatus(userId,status);
+        }
+        if(status==-1){
+            return leaveMapper.selectByTimePeriod(userId,startTime, endTime);
+        }
+        return leaveMapper.selectByTimePeriodAndAuditStatus(userId,startTime, endTime,status);
+    }
+
     @Override
     public List<Leave> findLeaveFormByUseridInDept(String userid,String department) {
         return leaveMapper.selectByUseridInDept(userid,department);

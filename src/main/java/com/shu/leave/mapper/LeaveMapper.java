@@ -236,7 +236,7 @@ public interface LeaveMapper extends BaseMapper<Leave> {
 
 
     /**
-     根据时间范围查询请假列表
+     根据请假时间范围查询某个用户请假列表
      * @author xieyuying
      * @param startTime 请假开始时间
      * @param endTime 请假结束时间
@@ -245,19 +245,36 @@ public interface LeaveMapper extends BaseMapper<Leave> {
     @Select( "select id, userid, leave_type, leave_start_time, leave_end_time, leave_reason, leave_material, "+
             "status, department_status, hr_status, school_status, is_deleted, gmt_create, gmt_modified "+
             "from leave where leave_start_time >= #{startTime} and leave_end_time <= #{endTime} " +
-            " and is_deleted=0")
-    List<Leave> selectByTimePeriod(@Param("startTime")String startTime, @Param("endTime")String endTime);
+            "and userid = #{userId} and is_deleted=0")
+    List<Leave> selectByTimePeriod(@Param("userId")Long userId,@Param("startTime")String startTime, @Param("endTime")String endTime);
 
     /**
-     * 根据审核状态查询请假列表
+     * 根据审核状态查询某个用户请假列表
      * @author xieyuying
      * @param status 审核状态
      * @return 请假列表
      */
     @Select( "select id, userid, leave_type, leave_start_time, leave_end_time, leave_reason, leave_material, "+
             "status, department_status, hr_status, school_status, is_deleted, gmt_create, gmt_modified "+
-            "from leave where status = #{status}")
-    List<Leave> selectByAuditStatus(int status);
+            "from leave where status = #{status}  and userid = #{userId} and is_deleted=0")
+    List<Leave> selectByAuditStatus(@Param("userId")Long userId, @Param("status")int status);
+
+    /**
+     * 根据请假时间范围和审核状态查询某个用户请假列表
+     * @author xieyuying
+     * @param userId
+     * @param startTime
+     * @param endTime
+     * @param status
+     * @return
+     */
+    @Select( "select id, userid, leave_type, leave_start_time, leave_end_time, leave_reason, leave_material, "+
+            "status, department_status, hr_status, school_status, is_deleted, gmt_create, gmt_modified "+
+            "from leave where leave_start_time >= #{startTime} and leave_end_time <= #{endTime} " +
+            "and status = #{status}  and userid = #{userId} and is_deleted=0")
+    List<Leave> selectByTimePeriodAndAuditStatus(@Param("userId")Long userId, @Param("startTime") String startTime,
+                                                 @Param("endTime")String endTime, @Param("status")int status);
+
 
     /**
      * liugai
@@ -507,4 +524,5 @@ public interface LeaveMapper extends BaseMapper<Leave> {
     SingleLeaveStepVo electSingleLeaveStepFour(@Param("role") String role, @Param("id") Long id);
 
     SingleLeaveStepVo electSingleLeaveStepFive(@Param("role") String role, @Param("id") Long id);
+
 }
