@@ -1,8 +1,12 @@
 package com.shu.leave;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.shu.leave.entity.Leave;
+import com.shu.leave.entity.User;
 import com.shu.leave.mapper.AbsenceHistoryMapper;
 import com.shu.leave.mapper.LeaveMapper;
+import com.shu.leave.mapper.UserMapper;
 import com.shu.leave.service.Impl.LeaveServiceImpl;
 import com.shu.leave.service.LeaveService;
 import org.junit.jupiter.api.Test;
@@ -30,6 +34,9 @@ class LeaveAttendanceApplicationTests {
     @Autowired
     AbsenceHistoryMapper absenceHistoryMapper;
 
+    @Autowired
+    UserMapper userMapper;
+
     public Date strToDate(String str){
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = null;
@@ -41,18 +48,18 @@ class LeaveAttendanceApplicationTests {
         return date;
     }
 
-    @Test
-    void testSelectLeaveFromDept(){
-
-        int[] res = new int[0];
-        try {
-            res = leaveService.judgeAuditFlow( "20221111","病假",strToDate("2022-10-29 00:00:00"),strToDate("2022-12-30 00:00:00"));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        System.out.println(""+res[0]+"  "+res[1]+"  "+res[2]);
-
-    }
+//    @Test
+//    void testSelectLeaveFromDept(){
+//
+//        int[] res = new int[0];
+//        try {
+//            res = leaveService.judgeAuditFlow( "20221111","病假",strToDate("2022-10-29 00:00:00"),strToDate("2022-12-30 00:00:00"));
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//        System.out.println(""+res[0]+"  "+res[1]+"  "+res[2]);
+//
+//    }
 
     public String getCurrentYear(){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
@@ -64,5 +71,23 @@ class LeaveAttendanceApplicationTests {
     void testAuditFlow(){
        int i =  absenceHistoryMapper.selectShiJiaDaysByUidAndYear(new Long(1), getCurrentYear());
         System.out.println(i);
+    }
+
+    @Test
+    public void testLeaveService() {
+        Page<User> page = new Page<>(1, 3);
+        userMapper.selectPage(page, null);
+        System.out.println(page.getRecords());
+        System.out.println(page.getPages());
+        System.out.println(page.getCurrent());
+    }
+
+    @Test
+    public void testLeave() {
+        Page<User> page = new Page<>(1, 3);
+        userMapper.selectPage(page, null);
+        System.out.println(page.getRecords());
+        System.out.println(page.getPages());
+        System.out.println(page.getCurrent());
     }
 }

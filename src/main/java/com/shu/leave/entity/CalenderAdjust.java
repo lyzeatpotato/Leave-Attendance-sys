@@ -13,13 +13,13 @@ public class CalenderAdjust {
     private Long calenderId;
 
     // 调休名称
-    private String holidayName;
+    private String adjustName;
 
     // 调休开始日期
-    private Date holidayStartDate;
+    private Date adjustStartDate;
 
     // 调休结束日期
-    private Date holidayEndDate;
+    private Date adjustEndDate;
 
     // 逻辑删除
     private String isDeleted;

@@ -44,6 +44,13 @@ public class UserController {
         return BasicResponseUtils.success(userService.findAllUser());
     }
 
+    @ApiOperation(value = "分页查询全部用户", notes = "分页显示全体未被逻辑删除的用户信息")
+    @ApiOperationSupport(order = 6)
+    @GetMapping("findAllUserPagination")
+    public ResultEntity findAllUserPagination(){
+        return BasicResponseUtils.success(userService.findAllUserFormPagination());
+    }
+
     @ApiOperation(value = "根据主键查询用户", notes = "显示id条件下的用户详细信息")
     @ApiOperationSupport(order = 4)
     @GetMapping("findUserById")

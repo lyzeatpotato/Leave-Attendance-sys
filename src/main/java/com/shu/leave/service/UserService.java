@@ -30,6 +30,12 @@ public interface UserService {
     List<User> findAllUser();
 
     /**
+     * 分页查询全部用户
+     * @return 用户信息列表
+     */
+    public IPage findAllUserFormPagination();
+
+    /**
      * 根据id查询用户
      * @param id
      * @return id对应的用户信息

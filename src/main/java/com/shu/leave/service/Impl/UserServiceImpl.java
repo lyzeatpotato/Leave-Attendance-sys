@@ -1,7 +1,9 @@
 package com.shu.leave.service.Impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.shu.leave.entity.Leave;
 import com.shu.leave.entity.User;
 import com.shu.leave.mapper.UserMapper;
 import com.shu.leave.service.UserService;
@@ -50,6 +52,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findAllUser() {
         return userMapper.selectAll();
+    }
+
+    @Override
+    public IPage findAllUserFormPagination() {
+        Page<User> page = new Page<>(0, 2);
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("is_deleted", "0");
+        IPage iPage =userMapper.selectPage(page, queryWrapper);
+        return iPage;
     }
 
     @Override
