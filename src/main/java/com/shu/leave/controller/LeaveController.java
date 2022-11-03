@@ -188,19 +188,27 @@ public class LeaveController {
     }
 
 
-    @ApiOperation(value = "根据时间范围筛选请假列表", notes = "传入起止时间, 格式yyyy-MM-dd HH:mm:ss")
-    @ApiOperationSupport(order = 21)
-    @GetMapping("findLeaveFromTimePeriod")
-    public ResultEntity findLeaveFromTimePeriod(@RequestParam("startTime") String startTime, @RequestParam("endTime") String endTime){
-        return BasicResponseUtils.success(leaveService.findLeaveFromTimePeriod(startTime, endTime));
-    }
+//    @ApiOperation(value = "根据时间范围筛选某个用户请假列表", notes = "传入起止时间, 格式yyyy-MM-dd HH:mm:ss")
+//    @ApiOperationSupport(order = 21)
+//    @GetMapping("findLeaveFromTimePeriod")
+//    public ResultEntity findLeaveFromTimePeriod(@RequestParam("userId") Long userId,@RequestParam("startTime") String startTime, @RequestParam("endTime") String endTime){
+//        return BasicResponseUtils.success(leaveService.findLeaveFromTimePeriod(userId,startTime, endTime));
+//    }
+//
+//
+//    @ApiOperation(value = "根据审核状态筛选某个用户请假列表", notes = "-1:全部，0:未审核，1:已审核通过，2:已审核不通过，3:已撤销")
+//    @ApiOperationSupport(order = 22)
+//    @GetMapping("findLeaveFromAuditStatus")
+//    public ResultEntity findLeaveFromAuditStatus(@RequestParam("userId") Long userId, @RequestParam("status") int status){
+//        return BasicResponseUtils.success(leaveService.findLeaveFromAuditStatus(userId, status));
+//    }
 
 
-    @ApiOperation(value = "根据审核状态筛选请假列表", notes = "0:未审核-1:已审核通过-2:已审核不通过-3:已撤销")
+    @ApiOperation(value = "根据时间范围和审核状态筛选某个用户请假列表", notes = "userId是工号，传入起止时间, 格式yyyy-MM-dd HH:mm:ss;status:-1:全部，0:未审核，1:已审核通过，2:已审核不通过，3:已撤销")
     @ApiOperationSupport(order = 22)
-    @GetMapping("findLeaveFromAuditStatus")
-    public ResultEntity findLeaveFromAuditStatus(@RequestParam("status") int status){
-        return BasicResponseUtils.success(leaveService.findLeaveFromAuditStatus(status));
+    @GetMapping("findLeaveFromTimePeriodAndAuditStatus")
+    public ResultEntity findLeaveFromTimePeriodAndAuditStatus(@RequestParam("userId") String userId,@RequestParam("startTime") String startTime, @RequestParam("endTime") String endTime,@RequestParam("status") int status){
+        return BasicResponseUtils.success(leaveService.findLeaveFromTimePeriodAndAuditStatus(userId,startTime, endTime, status));
     }
 }
 

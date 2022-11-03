@@ -136,21 +136,33 @@ public interface LeaveService {
 
 
     /**
-     * 根据时间范围筛选请假列表
+     * 根据时间范围筛选某个用户请假列表
      * @author xieyuying
+     * @param userId
      * @param startTime 开始时间
      * @param endTime 结束时间
      * @return 对应的请假列表
      */
-    List<Leave> findLeaveFromTimePeriod(String startTime, String endTime);
+    List<Leave> findLeaveFromTimePeriod(Long userId, String startTime, String endTime);
 
     /**
-     根据审核状态筛选请假列表
+     根据审核状态筛选某个用户请假列表
      * @author xieyuying
+     * @param userId
      * @param status 审核状态 0:未审核-1:已审核通过-2:已审核不通过-3:已撤销
      * @return对应的请假列表
      */
-    List<Leave> findLeaveFromAuditStatus(int status);
+    List<Leave> findLeaveFromAuditStatus(Long userId, int status);
+
+    /**
+     根据请假时间范围和审核状态筛选某个用户请假列表
+     * @param userId
+     * @param startTime
+     * @param endTime
+     * @param status
+     * @return
+     */
+    List<Leave> findLeaveFromTimePeriodAndAuditStatus(String userId, String startTime, String endTime, int status);
 
 //    public int[] judgeAuditFlow(String userId, String leaveType, Date leaveStartTime, Date leaveEndTime) throws ParseException;
 }
