@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.shu.leave.entity.History;
 import com.shu.leave.entity.Leave;
 import com.shu.leave.enums.AuditLimitTimeRoleEnum;
-import com.shu.leave.mapper.AbsenceHistoryMapper;
 import com.shu.leave.mapper.HistoryMapper;
 import com.shu.leave.mapper.LeaveMapper;
 import com.shu.leave.mapper.UserMapper;
@@ -38,21 +37,20 @@ public class LeaveServiceImpl implements LeaveService {
     LeaveMapper leaveMapper;
     @Autowired
     HistoryMapper historyMapper;
-    @Autowired
-    CalenderService calenderService;
-    @Autowired
-    HistoryService historyService;
-    @Autowired
-    LeaveLimitTimeService limitTimeService;
     @Resource
-    AbsenceHistoryMapper absenceHistoryMapper;
+    CalenderService calenderService;
+    @Resource
+    HistoryService historyService;
+    @Resource
+    LeaveLimitTimeService limitTimeService;
 
     @Override
     public int addLeaveForm(String[] params) throws ParseException {
         Leave leaveForm = new Leave();
-        long userPrimaryKey = userMapper.getUserPrimaryKeyByUserId(params[0]);
-        leaveForm.setUserId(userPrimaryKey);
+        String userId = params[0];
         String leaveType = params[1];
+        long userPrimaryKey = userMapper.getUserPrimaryKeyByUserId(userId);
+        leaveForm.setUserId(userPrimaryKey);
         leaveForm.setLeaveType(leaveType);  // 前端输入的请假类型
         SimpleDateFormat df0 = new SimpleDateFormat("yyyy-MM-dd HH");
         Date startDate = df0.parse(params[2]);
@@ -90,9 +88,10 @@ public class LeaveServiceImpl implements LeaveService {
         leaveForm.setLeaveMaterial(params[5]);
         leaveForm.setStatus("0");
         // 进行当前请假信息状态的判别（需要进行到部门审核/人事处审核/校领导审核哪一个步骤）
-        leaveForm.setDepartmentStatus("0");
-        leaveForm.setHrStatus("2");
-        leaveForm.setSchoolStatus("2");
+        int[] ints = judgeAuditFlow(userId, leaveType, startDate, endDate);
+        leaveForm.setDepartmentStatus(String.valueOf(ints[0]));
+        leaveForm.setHrStatus(String.valueOf(ints[1]));
+        leaveForm.setSchoolStatus(String.valueOf(ints[2]));
         leaveForm.setIsDeleted("0");
         Date date = new Date();
         SimpleDateFormat df1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

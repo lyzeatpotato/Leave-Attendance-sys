@@ -15,7 +15,7 @@ public interface LeaveAuditLimitTimeMapper {
      * 查询系统默认的各项请假事项的最长时限
      * @return 时限列表
      */
-    @Select("select id, type, limit_time from leave_audit_limit_time")
+    @Select("select id, type, limit_time from leave_audit_limit_time where role_id = 1")
     List<LeaveAuditLimitTime> selectAllBySystem();
 
     /**
