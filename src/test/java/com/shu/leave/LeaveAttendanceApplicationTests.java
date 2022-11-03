@@ -48,9 +48,9 @@ class LeaveAttendanceApplicationTests {
         return date;
     }
 
-//    @Test
-//    void testSelectLeaveFromDept(){
-//
+
+    @Test
+    void testSelectLeaveFromDept(){
 //        int[] res = new int[0];
 //        try {
 //            res = leaveService.judgeAuditFlow( "20221111","病假",strToDate("2022-10-29 00:00:00"),strToDate("2022-12-30 00:00:00"));
@@ -58,8 +58,10 @@ class LeaveAttendanceApplicationTests {
 //            e.printStackTrace();
 //        }
 //        System.out.println(""+res[0]+"  "+res[1]+"  "+res[2]);
-//
-//    }
+
+
+    }
+
 
     public String getCurrentYear(){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
