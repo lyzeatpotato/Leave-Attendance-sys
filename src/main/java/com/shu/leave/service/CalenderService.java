@@ -62,5 +62,5 @@ public interface CalenderService {
      * @param leaveEndDate
      * @return 需要顺延的寒暑假总天数
      */
-    int totalExtendVocation(Date leaveStartDate, Date leaveEndDate, String description);
+    int totalExtendDiscribtionVocation(Date leaveStartDate, Date leaveEndDate, String description);
 }
