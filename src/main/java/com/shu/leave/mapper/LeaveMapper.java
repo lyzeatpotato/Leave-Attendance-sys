@@ -184,19 +184,63 @@ public interface LeaveMapper extends BaseMapper<Leave> {
     int insert(Leave leave);
 
 
+    /**
+     * 查询单个信息的实现方式
+     * @author zhangshao
+     * @param id
+     * @return
+     */
+    @Select({
+            "SELECT leave.id, leave.userid, leave.leave_type, leave.leave_start_time, leave.leave_end_time, " +
+            "leave.leave_reason, leave.leave_material, leave.status, leave.department_status, " +
+            "leave.hr_status, leave.school_status, leave.is_deleted, leave.gmt_create, leave.gmt_modified " +
+            "FROM leave, user_info " +
+            "WHERE leave.userid = user_info.id " + " and leave.id=#{id,jdbcType=BIGINT} "+"and leave.is_deleted=0"
+    })
+    @Results( {
+            @Result(column="id", property="id", jdbcType= JdbcType.BIGINT, id=true),
+            @Result(column="userid", property="userId", jdbcType=JdbcType.VARCHAR),
+            @Result(column="leave_type", property="leaveType", jdbcType=JdbcType.VARCHAR),
+            @Result(column="leave_start_time", property="leaveStartTime", jdbcType=JdbcType.VARCHAR),
+            @Result(column="leave_end_time", property="leaveEndTime", jdbcType=JdbcType.VARCHAR),
+            @Result(column="leave_reason", property="leaveReason", jdbcType=JdbcType.VARCHAR),
+            @Result(column="leave_material", property="leaveMaterial", jdbcType=JdbcType.VARCHAR),
+            @Result(column="status", property="status", jdbcType=JdbcType.CHAR),
+            @Result(column="department_status", property="departmentStatus", jdbcType=JdbcType.CHAR),
+            @Result(column="hr_status", property="hrStatus", jdbcType=JdbcType.CHAR),
+            @Result(column="school_status", property="schoolStatus", jdbcType=JdbcType.CHAR),
+            @Result(column="is_deleted", property="isDeleted", jdbcType=JdbcType.CHAR),
+            @Result(column="gmt_create", property="gmtCreate", jdbcType=JdbcType.TIMESTAMP),
+            @Result(column="gmt_modified", property="gmtModified", jdbcType= JdbcType.TIMESTAMP),
+            @Result(
+                    column = "userid",property = "user",  javaType = User.class,
+                    one = @One(select = "com.shu.leave.mapper.UserMapper.selectById")
+            )
+    })
+    Leave selectSingleLeave(@Param("id") Long id);
     /*
      * 查询单个信息
      */
-    SingleLeaveVo selectSingleLeave(@Param("yuanxi") String yuanxi, @Param("id") Long id);
+    //SingleLeaveVo selectSingleLeave(@Param("yuanxi") String yuanxi, @Param("id") Long id);
 
     /*
     查询步骤信息,五个步骤
      */
-    SingleLeaveStepVo electSingleLeaveStepOne(@Param("role") String role,@Param("id") long id);
-    SingleLeaveStepVo electSingleLeaveStepTwo(@Param("role") String role,@Param("id") long id);
-    SingleLeaveStepVo electSingleLeaveStepThree(@Param("role") String role,@Param("id") long id);
-    SingleLeaveStepVo electSingleLeaveStepFour(@Param("role") String role,@Param("id") long id);
-    SingleLeaveStepVo electSingleLeaveStepFive(@Param("role") String role,@Param("id") long id);
+    SingleLeaveStepVo electSingleLeaveStepOne(@Param("role") String role, @Param("id") Long id);
+
+    SingleLeaveStepVo electSingleLeaveStepTwo(@Param("role") String role, @Param("id") Long id);
+
+    SingleLeaveStepVo electSingleLeaveStepThree(@Param("role") String role, @Param("id") Long id);
+
+    SingleLeaveStepVo electSingleLeaveStepFour(@Param("role") String role, @Param("id") Long id);
+
+    SingleLeaveStepVo electSingleLeaveStepFive(@Param("role") String role, @Param("id") Long id);
+
+    //SingleLeaveStepVo electSingleLeaveStepOne(@Param("role") String role,@Param("id") long id);
+    //SingleLeaveStepVo electSingleLeaveStepTwo(@Param("role") String role,@Param("id") long id);
+    //SingleLeaveStepVo electSingleLeaveStepThree(@Param("role") String role,@Param("id") long id);
+    //SingleLeaveStepVo electSingleLeaveStepFour(@Param("role") String role,@Param("id") long id);
+    //SingleLeaveStepVo electSingleLeaveStepFive(@Param("role") String role,@Param("id") long id);
 
     /**
      * liugai
@@ -515,14 +559,5 @@ public interface LeaveMapper extends BaseMapper<Leave> {
     })
     List<Leave> selectByUserDeptCheck(String department);
 
-    SingleLeaveStepVo electSingleLeaveStepOne(@Param("role") String role, @Param("id") Long id);
-
-    SingleLeaveStepVo electSingleLeaveStepTwo(@Param("role") String role, @Param("id") Long id);
-
-    SingleLeaveStepVo electSingleLeaveStepThree(@Param("role") String role, @Param("id") Long id);
-
-    SingleLeaveStepVo electSingleLeaveStepFour(@Param("role") String role, @Param("id") Long id);
-
-    SingleLeaveStepVo electSingleLeaveStepFive(@Param("role") String role, @Param("id") Long id);
 
 }
