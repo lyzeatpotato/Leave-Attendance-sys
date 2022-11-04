@@ -119,9 +119,9 @@ public class LeaveController {
     @ApiOperation(value ="显示查询某个请假的详细信息", notes = "显示查询某个请假的详细信息")
     @ApiOperationSupport(order = 10)
     @GetMapping("SingleleaveDetail")
-    public ResultEntity SingleleaveDetail(@RequestParam("role") String role,@RequestParam("yuanxi") String yuanxi,@RequestParam("id") String id){
+    public ResultEntity SingleleaveDetail(@RequestParam("id") String id){
         Long Id = Long.valueOf(id);
-        return BasicResponseUtils.success(leaveService.selectSingleLeave(role,yuanxi,Id));
+        return BasicResponseUtils.success(leaveService.selectSingleLeave(Id));
     }
     @ApiOperation(value ="查询某个步骤的信息", notes = "查询某个步骤的信息")
     @ApiOperationSupport(order = 11)

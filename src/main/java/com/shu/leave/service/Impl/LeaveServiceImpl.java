@@ -333,8 +333,8 @@ public class LeaveServiceImpl implements LeaveService {
     }
 
     @Override
-    public SingleLeaveVo selectSingleLeave(String role, String yuanxi, Long id){
-        SingleLeaveVo singleLeaveVo = leaveMapper.selectSingleLeave(yuanxi,id);
+    public Leave selectSingleLeave(Long id){
+        Leave singleLeaveVo = leaveMapper.selectSingleLeave(id);
         return singleLeaveVo;
     }
     @Override
