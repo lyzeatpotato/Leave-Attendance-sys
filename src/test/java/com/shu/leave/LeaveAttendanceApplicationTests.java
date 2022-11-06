@@ -41,7 +41,7 @@ class LeaveAttendanceApplicationTests {
         return date;
     }
 
-    @Test
+    /*@Test
     void testSelectLeaveFromDept(){
 
 //        int[] res = new int[0];
@@ -52,7 +52,7 @@ class LeaveAttendanceApplicationTests {
 //        }
 //        System.out.println(""+res[0]+"  "+res[1]+"  "+res[2]);
 
-    }
+    }*/
 
     public String getCurrentYear(){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy");

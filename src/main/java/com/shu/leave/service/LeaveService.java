@@ -79,7 +79,7 @@ public interface LeaveService {
     /*
      * 查询单个请假信息
      */
-    SingleLeaveVo selectSingleLeave(String role, String yuanxi, Long id);
+    Leave selectSingleLeave(Long id);
     /*
     查询步骤信息
      */

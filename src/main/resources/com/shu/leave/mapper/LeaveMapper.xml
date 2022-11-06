@@ -20,14 +20,6 @@
         <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
     </resultMap>
 
-    <!--查询某个详细的请假信息-->
-    <select id="selectSingleLeave" resultType="com.shu.leave.vo.SingleLeaveVo">
-        select
-        a.id,b.username,b.yuanxi,a.leave_type,a.leave_start_time,a.leave_end_time,a.leave_reason,a.leave_material,a.department_status,a.hr_status,a.school_status
-        from leave as a,user_info as b
-        where a.id='${id}' and b.yuanxi like '%${yuanxi}%' and a.userid =b.id
-    </select>
-
 
     <!--查询某个步骤的审核信息-->
     <select id="electSingleLeaveStepOne" resultType="com.shu.leave.vo.SingleLeaveStepVo">
