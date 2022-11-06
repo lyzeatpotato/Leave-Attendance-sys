@@ -3,6 +3,7 @@ package com.shu.leave.controller;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.shu.leave.common.ResultEntity;
+import com.shu.leave.entity.LeaveAuditLimitTime;
 import com.shu.leave.service.LeaveLimitTimeService;
 import com.shu.leave.service.LeaveService;
 import com.shu.leave.utils.BasicResponseUtils;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.List;
+
 /**
  * author:王仕杰
  */
@@ -35,7 +38,17 @@ public class LeaveLimitTimeController {
     @ApiOperation(value = "查询请假类型最大天数——按照role_id")
     @ApiOperationSupport(order = 11)
     @GetMapping("findAllLimitTimeByRoleId")
-    public ResultEntity findAllLimitTimeBySystem(@RequestParam("roleid")String roleId){
+    public ResultEntity findAllLimitTimeBySystem(@RequestParam("role_id")String roleId){
+//        if (Long.parseLong(roleId)==2) {
+//            List<LeaveAuditLimitTime> leaveLimitTimesList= limitTimeService.findAllLimitTimeByRoleId(roleId);
+//            leaveLimitTimesList.addAll(limitTimeService.findAllLimitTimeByRoleId(Integer.toString(3)));
+//            return BasicResponseUtils.success(leaveLimitTimesList);
+//        }
+//        if (Long.parseLong(roleId)==4) {
+//            List<LeaveAuditLimitTime> leaveLimitTimesList= limitTimeService.findAllLimitTimeByRoleId(roleId);
+//            leaveLimitTimesList.addAll(limitTimeService.findAllLimitTimeByRoleId(Integer.toString(5)));
+//            return BasicResponseUtils.success(leaveLimitTimesList);
+//        }
         return BasicResponseUtils.success(limitTimeService.findAllLimitTimeByRoleId(roleId));
     }
 

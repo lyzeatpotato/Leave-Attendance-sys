@@ -1,11 +1,14 @@
 package com.shu.leave.service.Impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.shu.leave.entity.Leave;
 import com.shu.leave.entity.User;
 import com.shu.leave.mapper.UserMapper;
 import com.shu.leave.service.UserService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.sql.Timestamp;
@@ -52,6 +55,16 @@ public class UserServiceImpl implements UserService {
         return userMapper.selectAll();
     }
 
+    @Transactional
+    @Override
+    public IPage findAllUserFormPagination() {
+        Page<User> page = new Page<>(1, 10);
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("is_deleted", "0");
+        IPage<User> iPage =userMapper.selectPage(page, queryWrapper);
+        return iPage;
+    }
+
     @Override
     public User findUserById(Long id) {
         return userMapper.selectById(id);
@@ -67,8 +80,8 @@ public class UserServiceImpl implements UserService {
         user.setPType(params[4]);
         user.setPStatus(params[5]);
         user.setGender(params[6]);
-        user.setRole("0");  // 此处默认初始新建的用户权限都为“基本教师权限”
-        user.setIsDeleted("0");
+        user.setRole(params[7]);  // 此处默认初始新建的用户权限都为“基本教师权限”
+
         /***
          * 时间转换逻辑：
          * util.Date获取的时间能够精确到时分秒，但转换成sql.Date则只能保留日期

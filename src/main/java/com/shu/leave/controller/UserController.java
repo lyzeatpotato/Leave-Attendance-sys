@@ -44,6 +44,13 @@ public class UserController {
         return BasicResponseUtils.success(userService.findAllUser());
     }
 
+    @ApiOperation(value = "分页查询全部用户", notes = "分页显示全体未被逻辑删除的用户信息")
+    @ApiOperationSupport(order = 6)
+    @GetMapping("findAllUserPagination")
+    public ResultEntity findAllUserPagination(){
+        return BasicResponseUtils.success(userService.findAllUserFormPagination());
+    }
+
     @ApiOperation(value = "根据主键查询用户", notes = "显示id条件下的用户详细信息")
     @ApiOperationSupport(order = 4)
     @GetMapping("findUserById")
@@ -60,9 +67,10 @@ public class UserController {
     public ResultEntity updateUser( @RequestParam("id") String id,
                                     @RequestParam("userid") String userid, @RequestParam("username") String username,
                                     @RequestParam("yuanxi") String yuanxi, @RequestParam("ptype") String ptype,
-                                    @RequestParam("pstatus") String pstatus,  @RequestParam("gender") String gender){
+                                    @RequestParam("pstatus") String pstatus,  @RequestParam("gender") String gender,
+                                    @RequestParam("role") String role){
 
-        String[] param = new String[]{id, userid, username, yuanxi, ptype, pstatus, gender};
+        String[] param = new String[]{id, userid, username, yuanxi, ptype, pstatus, gender, role};
         return BasicResponseUtils.success(userService.updateUser(param));
     }
 

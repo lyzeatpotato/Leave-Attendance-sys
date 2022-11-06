@@ -3,6 +3,7 @@ package com.shu.leave.controller;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.shu.leave.common.ResultEntity;
+import com.shu.leave.service.CalenderAdjustService;
 import com.shu.leave.service.CalenderService;
 import com.shu.leave.utils.BasicResponseUtils;
 import io.swagger.annotations.Api;
@@ -23,6 +24,8 @@ public class CalenderController {
 
     @Resource
     CalenderService calenderService;
+    @Resource
+    CalenderAdjustService calenderAdjustService;
     @ApiOperation(value = "新增校历假期数据", notes = "要求给出以下校历假期数据 [adminid, holiday_name, holiday_start_date, holiday_end_date, description]")
     @ApiOperationSupport(order = 1)
     @GetMapping("addCalender")
@@ -56,6 +59,41 @@ public class CalenderController {
     @GetMapping("findAllCalender")
     public ResultEntity findAllCalenderForm()  {
         return BasicResponseUtils.success(calenderService.findAllCalender());
+    }
+
+    @ApiOperation(value = "调休查询", notes = "根据所给的假期id显示对应假期的调休安排 ")
+    @ApiOperationSupport(order = 5)
+    @GetMapping("findAdjustById")
+    public ResultEntity findAdjustById(@RequestParam("id") String calenderid, @RequestParam("adjust_name") String adjustName)  throws ParseException{
+        return BasicResponseUtils.success(calenderAdjustService.findAdjustById(Long.parseLong(calenderid),adjustName));
+    }
+
+    @ApiOperation(value = "新增调休数据", notes = "要求给出以下调休数据 {calenderid, adjust_name, adjust_start_date, adjust_end_date]")
+    @ApiOperationSupport(order = 6)
+    @GetMapping("addCalenderAdjust")
+    public ResultEntity addCalenderAdjust(@RequestParam("calenderid") String calenderId, @RequestParam("adjust_name") String adjustName,
+                                        @RequestParam("adjust_start_date") String adjustStartDate, @RequestParam("adjust_end_date") String adjustEndDate
+                                        ) throws ParseException {
+        String[] params = new String[]{calenderId,adjustName, adjustStartDate, adjustEndDate};
+        return BasicResponseUtils.success(calenderAdjustService.addCalenderAdjust(params));
+    }
+
+    @ApiOperation(value = "修改调休数据", notes = "要求给出以下调休数据 [id, calenderid, adjust_name, adjust_start_date, adjust_end_date]")
+    @ApiOperationSupport(order = 7)
+    @GetMapping("updateCalenderAdjust")
+    public ResultEntity updateCalenderAdjust(@RequestParam("id") String id,
+                                           @RequestParam("calenderid") String calenderId, @RequestParam("adjust_name") String adjustName,
+                                           @RequestParam("adjust_start_date") String adjustStartDate, @RequestParam("adjust_end_date") String adjustEndDate
+                                           ) throws ParseException {
+        String[] params = new String[]{id,calenderId,adjustName, adjustStartDate, adjustEndDate,};
+        return BasicResponseUtils.success(calenderAdjustService.updateCalenderAdjust(params));
+    }
+
+    @ApiOperation(value = "逻辑删除调休数据", notes = "要求给出要删除的id ")
+    @ApiOperationSupport(order = 8)
+    @GetMapping("deleteCalenderAdjust")
+    public ResultEntity deleteCalenderAdjust(@RequestParam("id") String id) throws ParseException {
+        return BasicResponseUtils.success(calenderAdjustService.deleteCalenderAdjust(Long.parseLong(id)));
     }
 
 
