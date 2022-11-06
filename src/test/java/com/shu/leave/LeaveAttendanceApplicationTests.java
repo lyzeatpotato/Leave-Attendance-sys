@@ -1,8 +1,13 @@
 package com.shu.leave;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.shu.leave.entity.Leave;
+import com.shu.leave.entity.SchoolDepartment;
 import com.shu.leave.mapper.AbsenceHistoryMapper;
 import com.shu.leave.mapper.LeaveMapper;
+import com.shu.leave.mapper.SchoolDepartmentMapper;
 import com.shu.leave.service.Impl.LeaveServiceImpl;
 import com.shu.leave.service.LeaveService;
 import org.junit.jupiter.api.Test;
@@ -29,6 +34,9 @@ class LeaveAttendanceApplicationTests {
 
     @Autowired
     AbsenceHistoryMapper absenceHistoryMapper;
+
+    @Autowired
+    SchoolDepartmentMapper schoolDepartmentMapper;
 
     public Date strToDate(String str){
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

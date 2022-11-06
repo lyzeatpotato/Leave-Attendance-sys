@@ -8,6 +8,7 @@ import com.shu.leave.entity.User;
 import com.shu.leave.mapper.UserMapper;
 import com.shu.leave.service.UserService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.sql.Timestamp;
@@ -54,12 +55,13 @@ public class UserServiceImpl implements UserService {
         return userMapper.selectAll();
     }
 
+    @Transactional
     @Override
     public IPage findAllUserFormPagination() {
-        Page<User> page = new Page<>(0, 2);
+        Page<User> page = new Page<>(1, 10);
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("is_deleted", "0");
-        IPage iPage =userMapper.selectPage(page, queryWrapper);
+        IPage<User> iPage =userMapper.selectPage(page, queryWrapper);
         return iPage;
     }
 

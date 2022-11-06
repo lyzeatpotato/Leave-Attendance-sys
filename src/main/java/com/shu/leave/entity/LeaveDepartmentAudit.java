@@ -10,7 +10,7 @@ import java.util.Date;
 
 @Data
 @TableName("leave_department_audit")
-public class LeaveDepartmentAudit {
+public class    LeaveDepartmentAudit {
     //主键，自增，唯一标识id
     //@TableId(value = "id",type = IdType.AUTO)
     private Long id;
