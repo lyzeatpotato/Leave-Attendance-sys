@@ -98,7 +98,6 @@ public interface UserMapper extends BaseMapper<User> {
     @Select({
             "select",
             "id, userid, username, yuanxi, ptype, pstatus, gender, role, is_deleted, gmt_create, gmt_modified",
-            "from user_info where is_deleted = 0"
             "from user_info where is_deleted = 0 AND role <> 0"
     })
     @Results({
