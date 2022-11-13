@@ -71,6 +71,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User findByUserId(String userId) {return userMapper.selectByUserId(userId); }
+
+    @Override
     public int updateUser(String[] params ) {
         User user = new User();
         user.setId(Long.parseLong(params[0]));
