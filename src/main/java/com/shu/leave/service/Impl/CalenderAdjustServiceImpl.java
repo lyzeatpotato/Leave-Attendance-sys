@@ -20,12 +20,11 @@ public class CalenderAdjustServiceImpl implements CalenderAdjustService {
      * author:王仕杰
      * 按照id查询某个假期对应的调休安排
      * @param calenderId
-     * @param adjustName
      * @return 对应假期调休时间安排
      */
     @Override
-    public List<CalenderAdjust> findAdjustById(Long calenderId, String adjustName) {
-        return calenderAdjustMapper.selectAdjustById(calenderId, adjustName);
+    public List<CalenderAdjust> findAdjustById(Long calenderId) {
+        return calenderAdjustMapper.selectAdjustById(calenderId);
     }
 
     /**

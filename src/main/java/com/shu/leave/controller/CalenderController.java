@@ -64,8 +64,8 @@ public class CalenderController {
     @ApiOperation(value = "调休查询", notes = "根据所给的假期id显示对应假期的调休安排 ")
     @ApiOperationSupport(order = 5)
     @GetMapping("findAdjustById")
-    public ResultEntity findAdjustById(@RequestParam("id") String calenderid, @RequestParam("adjust_name") String adjustName)  throws ParseException{
-        return BasicResponseUtils.success(calenderAdjustService.findAdjustById(Long.parseLong(calenderid),adjustName));
+    public ResultEntity findAdjustById(@RequestParam("id") String calenderid)  throws ParseException{
+        return BasicResponseUtils.success(calenderAdjustService.findAdjustById(Long.parseLong(calenderid)));
     }
 
     @ApiOperation(value = "新增调休数据", notes = "要求给出以下调休数据 {calenderid, adjust_name, adjust_start_date, adjust_end_date]")

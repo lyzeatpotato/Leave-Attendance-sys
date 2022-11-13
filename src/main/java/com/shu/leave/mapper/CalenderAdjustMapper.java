@@ -22,7 +22,7 @@ public interface CalenderAdjustMapper extends BaseMapper<CalenderAdjust>{
             "select",
             "id, calender_id, adjust_name, adjust_start_date, adjust_end_date",
             "from calender_leave_adjust where is_deleted = 0 ",
-            "and calender_id = #{calenderId,jdbcType=VARCHAR} and adjust_name = #{adjustName, jdbcType=VARCHAR}"
+            "and calender_id = #{calenderId,jdbcType=VARCHAR} and is_deleted = 0"
     })
     @Results({
             @Result(column="id", property="id", jdbcType= JdbcType.BIGINT, id=true),
@@ -35,7 +35,7 @@ public interface CalenderAdjustMapper extends BaseMapper<CalenderAdjust>{
 //            @Result(column="gmt_create", property="gmtCreate", jdbcType=JdbcType.TIMESTAMP),
 //            @Result(column="gmt_modified", property="gmtModified", jdbcType=JdbcType.TIMESTAMP),
     })
-    List<CalenderAdjust> selectAdjustById(Long calenderId, String adjustName);
+    List<CalenderAdjust> selectAdjustById(Long calenderId);
 
     /**
      * author:王仕杰
