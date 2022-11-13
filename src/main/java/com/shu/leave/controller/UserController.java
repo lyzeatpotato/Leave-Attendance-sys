@@ -54,11 +54,17 @@ public class UserController {
     @ApiOperation(value = "根据主键查询用户", notes = "显示id条件下的用户详细信息")
     @ApiOperationSupport(order = 4)
     @GetMapping("findUserById")
-    public ResultEntity findUserById(@RequestParam("id") String userid){
-        System.out.println(userid);
+    public ResultEntity findUserById(@RequestParam("id") String key_id){
         // 进行前端传入数据的类型转换
-        Long userId = Long.valueOf(userid);
-        return BasicResponseUtils.success(userService.findUserById(userId));
+        Long id = Long.valueOf(key_id);
+        return BasicResponseUtils.success(userService.findUserById(id));
+    }
+
+    @ApiOperation(value = "根据工号查询用户", notes = "显示工号条件下的用户详细信息")
+    @ApiOperationSupport(order = 4)
+    @GetMapping("selectByUserId")
+    public ResultEntity selectByUserId(@RequestParam("userid") String userId){
+        return BasicResponseUtils.success(userService.findByUserId(userId));
     }
 
     @ApiOperation(value = "修改用户信息", notes = "要求完整输入修改后的用户信息 [id, userid, username, yuanxi, ptype, pstatus, gender]")
