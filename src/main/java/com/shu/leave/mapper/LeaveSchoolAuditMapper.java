@@ -27,12 +27,12 @@ public interface LeaveSchoolAuditMapper extends BaseMapper<LeaveSchoolAudit> {
             "set status='1',school_status='1',gmt_modified=#{time,jdbcType=TIMESTAMP}",
             "where id=#{id,jdbcType=BIGINT}"
     })
-    void scLeaderAudity(Long id, Date time);
+    void scLeaderAudityy(Long id, Date time);
     @Update({
             "update leave",
             "set status='2',school_status='1',gmt_modified=#{time,jdbcType=TIMESTAMP}",
             "where id=#{id,jdbcType=BIGINT}"
     })
-    void scLeaderAuditn(Long id,Date time);
+    void scLeaderAuditnn(Long id,Date time);
 
 }

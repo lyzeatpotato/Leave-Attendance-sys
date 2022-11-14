@@ -10,6 +10,7 @@ import com.shu.leave.mapper.LeaveSchoolAuditMapper;
 import com.shu.leave.service.AuditService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.sql.Timestamp;
@@ -35,6 +36,7 @@ public class AuditSercicelmpl implements AuditService {
     审核工作
     */
     @Override
+    @Transactional
     public int singleLeaveAudit(String role, String userid, Long id, String result, String recommend) {
         //SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         //String time = df.format(System.currentTimeMillis());
@@ -46,7 +48,6 @@ public class AuditSercicelmpl implements AuditService {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         Timestamp timeStamp = Timestamp.valueOf(df.format(date));
         String time = df.format(timeStamp);
-
         switch (role) {
             case "1": {
                 LeaveDepartmentAudit leaveDepartmentAudit = new LeaveDepartmentAudit();
@@ -67,21 +68,31 @@ public class AuditSercicelmpl implements AuditService {
                 leaveDepartmentAudit.setGmtModified(timeStamp);
 
                 leaveDepartmentAuditMapper.addLeaveDepartmentAudit(leaveDepartmentAudit);
-
-                if (result=="通过")
-                    //通过就修改leave表状态
-                    leaveDepartmentAuditMapper.dpOfficerAudity(id,timeStamp);
-                else
-                    leaveDepartmentAuditMapper.dpOfficerAuditn(id,timeStamp);
+                System.out.println("123");
+                switch (result){
+                    case "通过":{
+                        leaveDepartmentAuditMapper.dpOfficerAudityy(id, timeStamp);
+                        break;
+                    }
+                    case "不通过":{
+                        leaveDepartmentAuditMapper.dpOfficerAuditnn(id,timeStamp);
+                        break;
+                    }
+                }
                 break;
             }
             case "2": {
                 leaveDepartmentAuditMapper.updateLeaveDepartmentAudit(userid,id,result,recommend,timeStamp);
-                if (result=="通过")
-                    //通过就修改状态
-                    leaveDepartmentAuditMapper.dpLeaderAudity(id,timeStamp);
-                else
-                    leaveDepartmentAuditMapper.dpLeaderAuditn(id,timeStamp);
+                switch (result){
+                    case "通过":{
+                        leaveDepartmentAuditMapper.dpLeaderAudityy(id, timeStamp);
+                        break;
+                    }
+                    case "不通过":{
+                        leaveDepartmentAuditMapper.dpLeaderAuditnn(id,timeStamp);
+                        break;
+                    }
+                }
                 break;
             }
             case "3": {
@@ -103,20 +114,30 @@ public class AuditSercicelmpl implements AuditService {
                 leaveHrAuditMapper.addLeaveHrAudit(leaveHrAudit);
 
                 //leaveMapper.hrOfficerAudit(userid, id, result, recommend, time);
-                if (result=="通过")
-                    //通过就修改leave表状态
-                    leaveHrAuditMapper.hrOfficerAudity(id,timeStamp);
-                else
-                    leaveHrAuditMapper.hrOfficerAuditn(id,timeStamp);
+                switch (result){
+                    case "通过":{
+                        leaveHrAuditMapper.hrOfficerAudityy(id, timeStamp);
+                        break;
+                    }
+                    case "不通过":{
+                        leaveHrAuditMapper.hrOfficerAuditnn(id, timeStamp);
+                        break;
+                    }
+                }
                 break;
             }
             case "4": {
                 leaveHrAuditMapper.updateLeaveHrAudit(userid, id, result, recommend, timeStamp);
-                if (result=="通过")
-                    //通过就修改状态
-                    leaveHrAuditMapper.hrLeaderAudity(id,timeStamp);
-                else
-                    leaveHrAuditMapper.hrLeaderAuditn(id,timeStamp);
+                switch (result){
+                    case "通过":{
+                        leaveHrAuditMapper.hrLeaderAudityy(id, timeStamp);
+                        break;
+                    }
+                    case "不通过":{
+                        leaveHrAuditMapper.hrLeaderAuditnn(id, timeStamp);
+                        break;
+                    }
+                }
                 break;
             }
             case "5": {
@@ -132,15 +153,18 @@ public class AuditSercicelmpl implements AuditService {
                 leaveSchoolAudit.setGmtModified(timeStamp);
                 leaveSchoolAuditMapper.addSchoolAudit(leaveSchoolAudit);
 
-                if (result=="通过")
-                    //通过就修改状态
-                    leaveSchoolAuditMapper.scLeaderAudity(id,timeStamp);
-                else
-                    leaveSchoolAuditMapper.scLeaderAuditn(id,timeStamp);
+                switch (result){
+                    case "通过":{
+                        leaveSchoolAuditMapper.scLeaderAudityy(id, timeStamp);
+                        break;
+                    }
+                    case "不通过":{
+                        leaveSchoolAuditMapper.scLeaderAuditnn(id, timeStamp);
+                        break;
+                    }
+                }
                 break;
             }
-            default:
-                return 0;
         }
         return 1;
     }
