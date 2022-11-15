@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
-@Api(tags = "7.请假审核")
-@ApiSupport(order = 7)
+@Api(tags = "8.请假审核")
+@ApiSupport(order = 8)
 @RestController
 @RequestMapping("audit")
 public class AuditController {
@@ -26,7 +26,8 @@ public class AuditController {
     @ApiOperation(value = "审核请假单", notes = "所需参数[role,userid,id,result,recommend]")
     @ApiOperationSupport(order = 1)
     @PostMapping("SingleleaveAudit")
-    public ResultEntity SingleleaveAudit(@RequestParam("role") String role, @RequestParam("userid") String userid, @RequestParam("id") String id, @Param("result") String result, @Param("recommend")String recommend){
+    public ResultEntity SingleleaveAudit(@RequestParam("role") String role, @RequestParam("userid") String userid,
+                                         @RequestParam("id") String id, @Param("result") String result, @Param("recommend")String recommend){
         Long Id = Long.valueOf(id);
         return BasicResponseUtils.success(auditService.singleLeaveAudit(role,userid,Id,result,recommend));
     }
