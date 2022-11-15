@@ -1,26 +1,19 @@
 package com.shu.leave.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.shu.leave.common.ResultEntity;
+import com.shu.leave.entity.Leave;
 import com.shu.leave.service.LeaveService;
 import com.shu.leave.utils.BasicResponseUtils;
-import com.shu.leave.vo.SingleLeaveVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.ibatis.annotations.Param;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 
 import javax.annotation.Resource;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
-
-import static com.shu.leave.common.ResponseCodeEnums.RANGE_ERROR;
 
 @Api(tags = "2.请假申请表")
 @ApiSupport(order = 2)
@@ -66,11 +59,12 @@ public class LeaveController {
         return BasicResponseUtils.success(leaveService.findLeaveFormById(formId));
     }
 
-    @ApiOperation(value = "根据工号查询用户的全部请假记录", notes = "传入用户工号")
+    @ApiOperation(value = "根据工号分页查询用户的全部请假记录", notes = "传入用户工号与页码")
     @ApiOperationSupport(order = 5)
     @GetMapping("findLeaveFormByUserid")
-    public ResultEntity findLeaveFormByUserid(@RequestParam("userid") String userid) {
-        return BasicResponseUtils.success(leaveService.findLeaveFormByUserid(userid));
+    public ResultEntity findLeaveFormByUserid(@RequestParam(value = "pageNum", defaultValue = "1") int pageNum, @RequestParam("userid") String userid) {
+        Page<Leave> page = new Page(pageNum, 10);
+        return BasicResponseUtils.success(leaveService.findLeaveFormByUserid(page, userid));
     }
 
 //    @ApiOperation(value = "查询部门下的请假表列表", notes = "传入对应部门和查询type：type=0,查询全部；type=1,查询部门下人事处尚未审核记录；type=2,查询部门下校领导尚未审核记录")

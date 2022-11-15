@@ -1,7 +1,9 @@
 package com.shu.leave.entity;
 
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.util.Date;
@@ -30,13 +32,18 @@ public class LeaveSchoolAudit {
     //校领导审核完成情况(0表示未完成，1表示已完成)
     private String scLeaderStatus;
 
-    //逻辑删除字段（1表示删除，0表示未删除）
+    // 逻辑删除
+    @TableField(value = "is_deleted")
     private String isDeleted;
 
-    //创建时间
+    // 创建时间
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
+    @TableField(value = "gmt_create")
     private Date gmtCreate;
 
-    //修改时间
+    // 修改时间
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
+    @TableField(value = "gmt_modified")
     private Date gmtModified;
 }
 

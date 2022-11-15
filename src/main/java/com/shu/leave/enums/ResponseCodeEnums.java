@@ -1,4 +1,4 @@
-package com.shu.leave.common;
+package com.shu.leave.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

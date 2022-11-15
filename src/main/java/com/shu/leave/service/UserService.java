@@ -43,6 +43,13 @@ public interface UserService {
     User findUserById(Long id);
 
     /**
+     * 根据userId查询用户
+     * @param userId
+     * @return 用户个人信息
+     */
+    User findUserByUserid(String userId);
+
+    /**
      * 根据id查询用户
      * @param params -> [id, userid, username, yuanxi, ptype, pstatus, gender]
      * @return id对应的用户信息
