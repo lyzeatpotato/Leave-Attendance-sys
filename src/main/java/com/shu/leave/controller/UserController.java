@@ -86,20 +86,13 @@ public class UserController {
         return BasicResponseUtils.success(userService.findUserById(id));
     }
 
-    @ApiOperation(value = "根据工号查询用户", notes = "显示工号条件下的用户详细信息")
-    @ApiOperationSupport(order = 4)
-    @GetMapping("selectByUserId")
-    public ResultEntity selectByUserId(@RequestParam("userid") String userId){
-        return BasicResponseUtils.success(userService.findByUserId(userId));
-    }
-
     @ApiOperation(value = "根据工号查询用户", notes = "显示某一用户的详细信息")
     @ApiOperationSupport(order = 5)
     @GetMapping("findUserByUserid")
     //@ApiImplicitParams({@ApiImplicitParam(name = "token", value = "token", required = true, paramType = "header")})
     //@AuthToken
     public ResultEntity findUserByUserid(@RequestParam("userid") String userId) {
-        return BasicResponseUtils.success(userService.findUserByUserid(userId));
+        return BasicResponseUtils.success(userService.findUserByUserId(userId));
     }
 
     @ApiOperation(value = "修改用户信息", notes = "要求完整输入修改后的用户信息 [id, userid, username, yuanxi, ptype, pstatus, gender]")

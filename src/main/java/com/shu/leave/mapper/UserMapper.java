@@ -68,7 +68,7 @@ public interface UserMapper extends BaseMapper<User> {
     @Update({
             "update user_info",
             "set is_deleted=1",
-            "where id = #{id,jdbcType=BIGINT}"
+            "where id = #{id,jdbcType=BIGINT} "
     })
     int deleteLogicallyById(Long id);
 
@@ -86,7 +86,7 @@ public interface UserMapper extends BaseMapper<User> {
             "pstatus = #{pStatus,jdbcType=VARCHAR},",
             "gender = #{gender,jdbcType=VARCHAR},",
             "role = #{role,jdbcType=CHAR}",
-            "where id = #{id,jdbcType=BIGINT}"
+            "where id = #{id,jdbcType=BIGINT} and is_deleted = 0 "
     })
     int updateUserById(User id);
 
@@ -124,7 +124,7 @@ public interface UserMapper extends BaseMapper<User> {
             "select",
             "id, userid, username, yuanxi, ptype, pstatus, gender, role, is_deleted, gmt_create, gmt_modified",
             "from user_info",
-            "where id = #{id,jdbcType=BIGINT}"
+            "where id = #{id,jdbcType=BIGINT} AND is_deleted = 0"
     })
     @ResultMap(value = "userInfoMapper")
     User findById(Long id);
@@ -139,34 +139,8 @@ public interface UserMapper extends BaseMapper<User> {
             "select",
             "id, userid, username, yuanxi, ptype, pstatus, gender, role, is_deleted, gmt_create, gmt_modified",
             "from user_info",
-            "where userid = #{userid,jdbcType=BIGINT}"
+            "where userid = #{userid,jdbcType=BIGINT} and is_deleted = 0 "
     })
     @ResultMap(value = "userInfoMapper")
     User findByUserid(String userid);
-
-    /**
-     * 根据id查询用户信息
-     * @param id
-     * @return 单个用户的全部信息
-     */
-    @Select({
-            "select",
-            "id, userid, username, yuanxi, ptype, pstatus, gender, role, is_deleted, gmt_create, gmt_modified",
-            "from user_info",
-            "where userid = #{userId,jdbcType=VARCHAR} AND is_deleted=0"
-    })
-    @Results({
-            @Result(column="id", property="id", jdbcType= JdbcType.BIGINT, id=true),
-            @Result(column="userid", property="userId", jdbcType=JdbcType.VARCHAR),
-            @Result(column="username", property="userName", jdbcType=JdbcType.VARCHAR),
-            @Result(column="yuanxi", property="yuanXi", jdbcType=JdbcType.VARCHAR),
-            @Result(column="ptype", property="pType", jdbcType=JdbcType.VARCHAR),
-            @Result(column="pstatus", property="pStatus", jdbcType=JdbcType.VARCHAR),
-            @Result(column="gender", property="gender", jdbcType=JdbcType.VARCHAR),
-            @Result(column="role", property="role", jdbcType=JdbcType.CHAR),
-            @Result(column="is_deleted", property="isDeleted", jdbcType=JdbcType.CHAR),
-            @Result(column="gmt_create", property="gmtCreate", jdbcType=JdbcType.TIMESTAMP),
-            @Result(column="gmt_modified", property="gmtModified", jdbcType=JdbcType.TIMESTAMP),
-    })
-    User selectByUserId(String userId);
 }

@@ -47,7 +47,7 @@ public interface UserService {
      * @param userId
      * @return id对应的用户信息
      */
-    User findByUserId(String userId);
+    User findUserByUserId(String userId);
 
     /**
      * 根据id查询用户
