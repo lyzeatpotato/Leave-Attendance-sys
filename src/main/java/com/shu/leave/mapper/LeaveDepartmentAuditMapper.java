@@ -4,11 +4,12 @@ package com.shu.leave.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.shu.leave.entity.LeaveDepartmentAudit;
 import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.type.JdbcType;
 
 import java.util.Date;
-
+//extends BaseMapper<LeaveDepartmentAudit>
 @Mapper
-public interface LeaveDepartmentAuditMapper extends BaseMapper<LeaveDepartmentAudit> {
+public interface LeaveDepartmentAuditMapper {
     //部门人事审核
     @Insert({
             "insert into leave_department_audit",
@@ -34,15 +35,17 @@ public interface LeaveDepartmentAuditMapper extends BaseMapper<LeaveDepartmentAu
     @Update({
             "update leave",
             "set status='0',department_status='3',hr_status='0',school_status='0',gmt_modified=#{time,jdbcType=TIMESTAMP}",
-            "where id=#{id,jdbcType=BIGINT}"
+            "where id=#{id,jdbcType=BIGINT} and 1=1"
     })
-    void dpOfficerAudity(Long id,Date time);
+    void dpOfficerAudityy(Long id,Date time);
+
+
     @Update({
             "update leave",
             "set status='2',department_status='1',hr_status='2',school_status='2',gmt_modified=#{time,jdbcType=TIMESTAMP}",
             "where id=#{id,jdbcType=BIGINT}"
     })
-    void dpOfficerAuditn(Long id,Date time);
+    void dpOfficerAuditnn(Long id,Date time);
 
     /*
     部门负责人审核通过与否对应得到leave表的修改
@@ -52,11 +55,11 @@ public interface LeaveDepartmentAuditMapper extends BaseMapper<LeaveDepartmentAu
             "set status='0',department_status='1',hr_status='0',school_status='0',gmt_modified=#{time,jdbcType=TIMESTAMP}",
             "where id=#{id,jdbcType=BIGINT}"
     })
-    void dpLeaderAudity(Long id,Date time);
+    void dpLeaderAudityy(Long id,Date time);
     @Update({
             "update leave",
             "set status='2',department_status='1',hr_status='2',school_status='2',gmt_modified=#{time,jdbcType=TIMESTAMP}",
             "where id=#{id,jdbcType=BIGINT}"
     })
-    void dpLeaderAuditn(Long id,Date time);
+    void dpLeaderAuditnn(Long id,Date time);
 }

@@ -1,6 +1,6 @@
 package com.shu.leave.utils;
 
-import com.shu.leave.common.ResponseCodeEnums;
+import com.shu.leave.enums.ResponseCodeEnums;
 import com.shu.leave.common.ResultEntity;
 
 /**

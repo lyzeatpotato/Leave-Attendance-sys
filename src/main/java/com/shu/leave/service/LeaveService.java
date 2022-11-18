@@ -46,7 +46,7 @@ public interface LeaveService {
      * @param userid
      * @return 对应id用户的全部请假表列表
      */
-    List<Leave> findLeaveFormByUserid(String userid);
+    Page<Leave> findLeaveFormByUserid(Page<Leave> page, String userid);
 
     /**
      * 按部门查询: 查询某一部门下的全部请假记录

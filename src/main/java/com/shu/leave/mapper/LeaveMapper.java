@@ -8,14 +8,10 @@ import org.apache.ibatis.type.JdbcType;
 
 import java.util.List;
 import com.shu.leave.vo.SingleLeaveStepVo;
-import com.shu.leave.vo.SingleLeaveVo;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.SelectKey;
-
-import javax.print.DocFlavor;
-import java.util.Date;
 
 @Mapper
 public interface LeaveMapper extends BaseMapper<Leave> {
@@ -153,7 +149,7 @@ public interface LeaveMapper extends BaseMapper<Leave> {
     List<Leave> selectByUserDeptAndUnfinishedHR(String department);
 
     /**
-     * 按部门条件查询: 查询某一部门下需要校领导审核，但是尚未完成的全部请假记录（根据school_status字段）
+     * 部门条件查询: 查询某一部门下需要校领导审核，但是尚未完成的全部请假记录（根据school_status字段）
      * @param department
      * @return 返回请假列表
      */
@@ -235,12 +231,6 @@ public interface LeaveMapper extends BaseMapper<Leave> {
     SingleLeaveStepVo electSingleLeaveStepFour(@Param("role") String role, @Param("id") Long id);
 
     SingleLeaveStepVo electSingleLeaveStepFive(@Param("role") String role, @Param("id") Long id);
-
-    //SingleLeaveStepVo electSingleLeaveStepOne(@Param("role") String role,@Param("id") long id);
-    //SingleLeaveStepVo electSingleLeaveStepTwo(@Param("role") String role,@Param("id") long id);
-    //SingleLeaveStepVo electSingleLeaveStepThree(@Param("role") String role,@Param("id") long id);
-    //SingleLeaveStepVo electSingleLeaveStepFour(@Param("role") String role,@Param("id") long id);
-    //SingleLeaveStepVo electSingleLeaveStepFive(@Param("role") String role,@Param("id") long id);
 
     /**
      * liugai

@@ -36,13 +36,13 @@ public interface LeaveHrAuditMapper extends BaseMapper<LeaveHrAudit> {
             "set status='0',hr_status='3',school_status='0',gmt_modified=#{time,jdbcType=TIMESTAMP}",
             "where id=#{id,jdbcType=BIGINT}"
     })
-    void hrOfficerAudity(Long id,Date time);
+    void hrOfficerAudityy(Long id,Date time);
     @Update({
             "update leave",
             "set status='2',hr_status='1',school_status='2',gmt_modified=#{time,jdbcType=TIMESTAMP}",
             "where id=#{id,jdbcType=BIGINT}"
     })
-    void hrOfficerAuditn(Long id,Date time);
+    void hrOfficerAuditnn(Long id,Date time);
 
     /*
     人事处负责人审核通过与否对应得到leave表的修改
@@ -52,11 +52,11 @@ public interface LeaveHrAuditMapper extends BaseMapper<LeaveHrAudit> {
             "set status='0',hr_status='1',school_status='0',gmt_modified=#{time,jdbcType=TIMESTAMP}",
             "where id=#{id,jdbcType=BIGINT}"
     })
-    void hrLeaderAudity(Long id,Date time);
+    void hrLeaderAudityy(Long id,Date time);
     @Update({
             "update leave",
             "set status='2',hr_status='1',school_status='2',gmt_modified=#{time,jdbcType=TIMESTAMP}",
             "where id=#{id,jdbcType=BIGINT}"
     })
-    void hrLeaderAuditn(Long id,Date time);
+    void hrLeaderAuditnn(Long id,Date time);
 }

@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> findAllUser() {
-        return userMapper.selectAll();
+        return userMapper.findAll();
     }
 
     @Transactional
@@ -61,13 +61,19 @@ public class UserServiceImpl implements UserService {
         Page<User> page = new Page<>(1, 10);
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("is_deleted", "0");
+        queryWrapper.orderByDesc("id");
         IPage<User> iPage =userMapper.selectPage(page, queryWrapper);
         return iPage;
     }
 
     @Override
     public User findUserById(Long id) {
-        return userMapper.selectById(id);
+        return userMapper.findById(id);
+    }
+
+    @Override
+    public User findUserByUserid(String userId) {
+        return userMapper.findByUserid(userId);
     }
 
     @Override
