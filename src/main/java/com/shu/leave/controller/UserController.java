@@ -77,11 +77,13 @@ public class UserController {
     @ApiOperation(value = "根据主键查询用户", notes = "显示某一用户的详细信息")
     @ApiOperationSupport(order = 4)
     @GetMapping("findUserById")
+
     //@ApiImplicitParams({@ApiImplicitParam(name = "token", value = "token", required = true, paramType = "header")})
     //@AuthToken
-    public ResultEntity findUserById(@RequestParam("id") String userid) {
-        Long userId = Long.valueOf(userid);
-        return BasicResponseUtils.success(userService.findUserById(userId));
+    public ResultEntity findUserById(@RequestParam("id") String key_id){
+        // 进行前端传入数据的类型转换
+        Long id = Long.valueOf(key_id);
+        return BasicResponseUtils.success(userService.findUserById(id));
     }
 
     @ApiOperation(value = "根据工号查询用户", notes = "显示某一用户的详细信息")
@@ -90,7 +92,7 @@ public class UserController {
     //@ApiImplicitParams({@ApiImplicitParam(name = "token", value = "token", required = true, paramType = "header")})
     //@AuthToken
     public ResultEntity findUserByUserid(@RequestParam("userid") String userId) {
-        return BasicResponseUtils.success(userService.findUserByUserid(userId));
+        return BasicResponseUtils.success(userService.findUserByUserId(userId));
     }
 
     @ApiOperation(value = "修改用户信息", notes = "要求完整输入修改后的用户信息 [id, userid, username, yuanxi, ptype, pstatus, gender]")

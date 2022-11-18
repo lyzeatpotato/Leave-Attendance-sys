@@ -68,7 +68,7 @@ public interface UserMapper extends BaseMapper<User> {
     @Update({
             "update user_info",
             "set is_deleted=1",
-            "where id = #{id,jdbcType=BIGINT}"
+            "where id = #{id,jdbcType=BIGINT} "
     })
     int deleteLogicallyById(Long id);
 
@@ -86,7 +86,7 @@ public interface UserMapper extends BaseMapper<User> {
             "pstatus = #{pStatus,jdbcType=VARCHAR},",
             "gender = #{gender,jdbcType=VARCHAR},",
             "role = #{role,jdbcType=CHAR}",
-            "where id = #{id,jdbcType=BIGINT}"
+            "where id = #{id,jdbcType=BIGINT} and is_deleted = 0 "
     })
     int updateUserById(User id);
 
@@ -98,7 +98,7 @@ public interface UserMapper extends BaseMapper<User> {
     @Select({
             "select",
             "id, userid, username, yuanxi, ptype, pstatus, gender, role, is_deleted, gmt_create, gmt_modified",
-            "from user_info where is_deleted = 0"
+            "from user_info where is_deleted = 0 AND role <> 0"
     })
     @Results(id = "userInfoMapper", value = {
             @Result(column="id", property="id", jdbcType= JdbcType.BIGINT, id=true),
@@ -124,7 +124,7 @@ public interface UserMapper extends BaseMapper<User> {
             "select",
             "id, userid, username, yuanxi, ptype, pstatus, gender, role, is_deleted, gmt_create, gmt_modified",
             "from user_info",
-            "where id = #{id,jdbcType=BIGINT}"
+            "where id = #{id,jdbcType=BIGINT} AND is_deleted = 0"
     })
     @ResultMap(value = "userInfoMapper")
     User findById(Long id);
@@ -139,9 +139,8 @@ public interface UserMapper extends BaseMapper<User> {
             "select",
             "id, userid, username, yuanxi, ptype, pstatus, gender, role, is_deleted, gmt_create, gmt_modified",
             "from user_info",
-            "where userid = #{userid,jdbcType=BIGINT}"
+            "where userid = #{userid,jdbcType=BIGINT} and is_deleted = 0 "
     })
     @ResultMap(value = "userInfoMapper")
     User findByUserid(String userid);
-
 }

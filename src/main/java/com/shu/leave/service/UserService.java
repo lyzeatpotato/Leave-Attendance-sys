@@ -43,11 +43,11 @@ public interface UserService {
     User findUserById(Long id);
 
     /**
-     * 根据userId查询用户
+     * 根据工号（user_id）查询用户
      * @param userId
-     * @return 用户个人信息
+     * @return id对应的用户信息
      */
-    User findUserByUserid(String userId);
+    User findUserByUserId(String userId);
 
     /**
      * 根据id查询用户

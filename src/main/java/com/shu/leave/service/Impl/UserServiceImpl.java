@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findUserByUserid(String userId) {
+    public User findUserByUserId(String userId) {
         return userMapper.findByUserid(userId);
     }
 
