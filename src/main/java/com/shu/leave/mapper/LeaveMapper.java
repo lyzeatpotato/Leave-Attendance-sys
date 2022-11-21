@@ -555,14 +555,14 @@ public interface LeaveMapper extends BaseMapper<Leave> {
      * @Author liyuanzhe
      * @param page
      * @param department
-     * @return 权限为“部门科员”用户可查看的“本部门-待审核”请假信息
+     * @return 权限为“部门科员”用户可查看的“本部门-待审核-部门科员尚未审核”请假信息
      */
     @Select("SELECT leave.id, leave.userid, leave.leave_type, leave.leave_start_time, leave.leave_end_time, " +
             "leave.leave_reason, leave.leave_material, leave.status, leave.department_status, " +
             "leave.hr_status, leave.school_status, leave.is_deleted, leave.gmt_create, leave.gmt_modified " +
             "FROM leave, user_info " +
-            "WHERE (leave.userid = user_info.id and leave.status = 0 and leave.is_deleted = 0" +
-            "and user_info.yuanxi = #{department, jdbcType=VARCHAR})" +
+            "WHERE (leave.userid = user_info.id and leave.status = 0 and leave.is_deleted = 0 " +
+            "and user_info.yuanxi = #{department, jdbcType=VARCHAR}) " +
             "ORDER BY leave.id DESC"
     )
     @ResultMap("leaveDeptRelatedMapper")
@@ -579,12 +579,63 @@ public interface LeaveMapper extends BaseMapper<Leave> {
             "leave.leave_reason, leave.leave_material, leave.status, leave.department_status, " +
             "leave.hr_status, leave.school_status, leave.is_deleted, leave.gmt_create, leave.gmt_modified " +
             "FROM leave, user_info " +
-            "WHERE (leave.userid = user_info.id and leave.status = 0 and leave.is_deleted = 0" +
-            "and user_info.yuanxi = #{department, jdbcType=VARCHAR})" +
+            "WHERE (leave.userid = user_info.id and leave.status = 0 and leave.is_deleted = 0 " +
+            "and user_info.yuanxi = #{department, jdbcType=VARCHAR}) " +
             "ORDER BY leave.id DESC"
     )
     @ResultMap("leaveDeptRelatedMapper")
     Page<Leave> selectPageByDeptLeader(Page<Leave> page, String department);
 
+    /**
+     * 分页查询“人事处干事”初始加载的全校请假信息
+     * @Author liyuanzhe
+     * @param page
+     * @return 权限为“人事处干事”用户可查看的“部门审核已完成-待审核”请假信息
+     */
+    @Select("SELECT leave.id, leave.userid, leave.leave_type, leave.leave_start_time, leave.leave_end_time, " +
+            "leave.leave_reason, leave.leave_material, leave.status, leave.department_status, " +
+            "leave.hr_status, leave.school_status, leave.is_deleted, leave.gmt_create, leave.gmt_modified " +
+            "FROM leave, user_info " +
+            "WHERE (leave.userid = user_info.id and leave.status = 0 and leave.is_deleted = 0" +
+            "and leave.department_status = 1 and leave.hr_status != 2)" +
+            "ORDER BY leave.id DESC"
+    )
+    @ResultMap("leaveDeptRelatedMapper")
+    Page<Leave> selectPageByHrOfficer(Page<Leave> page);
+
+    /**
+     * 分页查询“人事处领导”初始加载的全校请假信息
+     * @Author liyuanzhe
+     * @param page
+     * @return 权限为“人事处领导”用户可查看的“部门审核已完成-待审核”请假信息
+     */
+    @Select("SELECT leave.id, leave.userid, leave.leave_type, leave.leave_start_time, leave.leave_end_time, " +
+            "leave.leave_reason, leave.leave_material, leave.status, leave.department_status, " +
+            "leave.hr_status, leave.school_status, leave.is_deleted, leave.gmt_create, leave.gmt_modified " +
+            "FROM leave, user_info " +
+            "WHERE (leave.userid = user_info.id and leave.status = 0 and leave.is_deleted = 0" +
+            "and leave.department_status = 1 and leave.hr_status != 2)" +
+            "ORDER BY leave.id DESC"
+    )
+    @ResultMap("leaveDeptRelatedMapper")
+    Page<Leave> selectPageByHrLeader(Page<Leave> page);
+
+    /**
+     * 分页查询“校领导”初始加载的全校请假信息
+     * @Author liyuanzhe
+     * @param page
+     * @return 权限为“人事处领导”校领导“本部门-人事处审核已完成-待审核”请假信息
+     */
+    @Select("SELECT leave.id, leave.userid, leave.leave_type, leave.leave_start_time, leave.leave_end_time, " +
+            "leave.leave_reason, leave.leave_material, leave.status, leave.department_status, " +
+            "leave.hr_status, leave.school_status, leave.is_deleted, leave.gmt_create, leave.gmt_modified " +
+            "FROM leave, user_info " +
+            "WHERE (leave.userid = user_info.id and leave.status = 0 and leave.is_deleted = 0" +
+            "and leave.hr_status = 1  and leave.school_status != 2)" +
+            "and user_info.yuanxi = #{department, jdbcType=VARCHAR}) " +
+            "ORDER BY leave.id DESC"
+    )
+    @ResultMap("leaveDeptRelatedMapper")
+    Page<Leave> selectPageBySchool(Page<Leave> page, String department);
 
 }

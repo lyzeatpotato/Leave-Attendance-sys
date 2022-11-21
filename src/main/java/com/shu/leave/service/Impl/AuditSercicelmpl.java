@@ -193,15 +193,16 @@ public class AuditSercicelmpl implements AuditService {
             }
             case "3":
                 // 权限为人事处干事，则当前用户可看到全校”部门审核已完成-审核状态为待审核“的全部请假信息
-                resPage = null;
+                resPage = leaveMapper.selectPageByHrOfficer(page);
                 break;
             case "4":
                 // 权限为人事处负责人，则当前用户可看到全校”部门审核已完成-审核状态为待审核“的全部请假信息
-                resPage = null;
+                resPage = leaveMapper.selectPageByHrLeader(page);
                 break;
             default: {
                 // 权限为校领导，则当前用户可看到”本人所负责的部门下“审核状态为待审核状态的全部请假信息
-                resPage = null;
+                String department = currentUser.getYuanXi();
+                resPage = leaveMapper.selectPageBySchool(page, department);
                 break;
             }
         }
