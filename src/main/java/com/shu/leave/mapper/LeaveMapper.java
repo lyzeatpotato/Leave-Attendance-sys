@@ -1,6 +1,7 @@
 package com.shu.leave.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.shu.leave.entity.Leave;
 import com.shu.leave.entity.User;
 import org.apache.ibatis.annotations.*;
@@ -548,6 +549,42 @@ public interface LeaveMapper extends BaseMapper<Leave> {
             )
     })
     List<Leave> selectByUserDeptCheck(String department);
+
+    /**
+     * 分页查询“部门科员”初始加载的全部本部门请假信息
+     * @Author liyuanzhe
+     * @param page
+     * @param department
+     * @return 权限为“部门科员”用户可查看的“本部门-待审核”请假信息
+     */
+    @Select("SELECT leave.id, leave.userid, leave.leave_type, leave.leave_start_time, leave.leave_end_time, " +
+            "leave.leave_reason, leave.leave_material, leave.status, leave.department_status, " +
+            "leave.hr_status, leave.school_status, leave.is_deleted, leave.gmt_create, leave.gmt_modified " +
+            "FROM leave, user_info " +
+            "WHERE (leave.userid = user_info.id and leave.status = 0 and leave.is_deleted = 0" +
+            "and user_info.yuanxi = #{department, jdbcType=VARCHAR})" +
+            "ORDER BY leave.id DESC"
+    )
+    @ResultMap("leaveDeptRelatedMapper")
+    Page<Leave> selectPageByDeptOfficer(Page<Leave> page, String department);
+
+    /**
+     * 分页查询“部门领导”初始加载的全部本部门请假信息
+     * @Author liyuanzhe
+     * @param page
+     * @param department
+     * @return 权限为“部门领导”用户可查看的“本部门-待审核”请假信息
+     */
+    @Select("SELECT leave.id, leave.userid, leave.leave_type, leave.leave_start_time, leave.leave_end_time, " +
+            "leave.leave_reason, leave.leave_material, leave.status, leave.department_status, " +
+            "leave.hr_status, leave.school_status, leave.is_deleted, leave.gmt_create, leave.gmt_modified " +
+            "FROM leave, user_info " +
+            "WHERE (leave.userid = user_info.id and leave.status = 0 and leave.is_deleted = 0" +
+            "and user_info.yuanxi = #{department, jdbcType=VARCHAR})" +
+            "ORDER BY leave.id DESC"
+    )
+    @ResultMap("leaveDeptRelatedMapper")
+    Page<Leave> selectPageByDeptLeader(Page<Leave> page, String department);
 
 
 }

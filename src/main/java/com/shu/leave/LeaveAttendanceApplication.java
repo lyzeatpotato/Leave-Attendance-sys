@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 @MapperScan("com.shu.leave.mapper")
-public class LeaveAttendanceApplication {
+public class  LeaveAttendanceApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(LeaveAttendanceApplication.class, args);
