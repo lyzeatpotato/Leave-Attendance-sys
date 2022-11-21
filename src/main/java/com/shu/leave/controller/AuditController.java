@@ -32,13 +32,24 @@ public class AuditController {
         return BasicResponseUtils.success(auditService.singleLeaveAudit(role,userid,Id,result,recommend));
     }
 
-    @ApiOperation(value = "分页展示审核页请假列表信息", notes = "根据传入用户工号显示对应权限看到的请假详情信息")
+    @ApiOperation(value = "审核页默认请假列表接口", notes = "根据传入用户工号显示对应权限看到的请假详情信息")
     @ApiOperationSupport(order = 2)
     @GetMapping("getAuditLoadingDataByUserid")
     public ResultEntity getAuditLoadingDataByUserid(@RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
                                                     @RequestParam("userid") String userId){
         Page<Leave> page = new Page<>(pageNum, 10);         // 当前页为传入的参数，默认每页显示10条数据
         return BasicResponseUtils.success(auditService.getAuditDataListByUserid(page, userId));
+    }
+
+    @ApiOperation(value = "审核页上方条件查询接口", notes = "根据顶部查询条件（工号、姓名、部门以及状态）进行查询")
+    @ApiOperationSupport(order = 3)
+    @GetMapping("getAuditSelected")
+    public ResultEntity getAuditSelected(@RequestParam(value = "pageNum", defaultValue = "1") int pageNum, @RequestParam("userid") String userId,
+                                         @RequestParam("selectuserid") String selectUserId, @RequestParam("username") String username,
+                                         @RequestParam("department") String dept, @RequestParam("status") String status){
+        Page<Leave> page = new Page<>(pageNum, 10);         // 当前页为传入的参数，默认每页显示10条数据
+        String[] params = new String[] {selectUserId, username, dept, status};
+        return BasicResponseUtils.success(auditService.getAuditSelected(page, userId, params));
     }
 
 }

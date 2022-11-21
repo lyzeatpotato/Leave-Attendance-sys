@@ -19,4 +19,13 @@ public interface AuditService {
      * @return 当前登录用户权限所对应的请假信息列表
      */
     Page<Leave> getAuditDataListByUserid(Page<Leave> page, String userId);
+
+    /**
+     * 根据传入的条件数组进行复杂查询
+     * @param page
+     * @param userId
+     * @param params
+     * @return 返回符合条件的数据并分页展示
+     */
+    Page<Leave> getAuditSelected(Page<Leave> page, String userId, String[] params);
 }
