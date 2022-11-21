@@ -100,6 +100,11 @@ public class HistoryServiceImpl implements HistoryService {
             default:
                 leaveTypeJDBC = "shijia_days";
         }
-        return historyMapper.selectByTypeYear(userPrimaryKey, leaveTypeJDBC, year);
+        try {
+            int days = historyMapper.selectByTypeYear(userPrimaryKey, leaveTypeJDBC, year);
+            return days;
+        } catch (Exception e) {
+            return 0;
+        }
     }
 }
