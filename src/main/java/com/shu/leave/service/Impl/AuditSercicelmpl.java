@@ -182,7 +182,6 @@ public class AuditSercicelmpl implements AuditService {
                 // 权限为各部门干事，则当前用户可看到本部门审核状态为待审核状态的全部请假信息
                 String department = currentUser.getYuanXi();
                 resPage = leaveMapper.selectPageByDeptOfficer(page, department);// 注：这里不适用mybatis-plus的条件构造器，由于涉及多表联查所以重写自定义的分页查询方法
-
                 break;
             }
             case "2": {
