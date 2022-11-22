@@ -67,7 +67,7 @@ public class CalenderServiceImpl implements CalenderService {
 
     @Override
     public int deleteCalender(Long id)  {
-        return calenderMapper.deleteLogicallyById(id);
+        return calenderMapper.deleteById(id);
     }
 
 

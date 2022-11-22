@@ -1,6 +1,9 @@
 package com.shu.leave.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.shu.leave.annotation.AuthToken;
+import com.shu.leave.entity.Leave;
+import com.shu.leave.entity.User;
 import com.shu.leave.enums.ResponseCodeEnums;
 import com.shu.leave.common.ResultEntity;
 import com.shu.leave.service.UserService;
@@ -115,8 +118,9 @@ public class UserController {
     @GetMapping("findAllUserPagination")
     //@ApiImplicitParams({@ApiImplicitParam(name = "token", value = "token", required = true, paramType = "header")})
     //@AuthToken
-    public ResultEntity findAllUserPagination() {
-        return BasicResponseUtils.success(userService.findAllUserFormPagination());
+    public ResultEntity findAllUserPagination(@RequestParam(value = "pageNum", defaultValue = "1") int pageNum) {
+        Page<User> page = new Page(pageNum, 10);
+        return BasicResponseUtils.success(userService.findAllUserFormPagination(page));
     }
 
 

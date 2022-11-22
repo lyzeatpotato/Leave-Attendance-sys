@@ -57,8 +57,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public IPage findAllUserFormPagination() {
-        Page<User> page = new Page<>(1, 10);
+    public IPage findAllUserFormPagination(Page<User> page) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("is_deleted", "0");
         queryWrapper.orderByDesc("id");
