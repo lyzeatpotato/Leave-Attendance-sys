@@ -56,6 +56,17 @@ public interface CalenderMapper extends BaseMapper<Calender> {
     int deleteLogicallyById(Long id);
 
     /**
+     * 根据主键完全删除假期数据
+     * @param id
+     * @return 被逻辑删除的假期数据id
+     */
+    @Delete({
+            "delete from calender",
+            "where id = #{id,jdbcType=BIGINT}"
+    })
+    int deleteById(Long id);
+
+    /**
      * 查询全部校历信息
      *
      * @return 全部用户信息列表

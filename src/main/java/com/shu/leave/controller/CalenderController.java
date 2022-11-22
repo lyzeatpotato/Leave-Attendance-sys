@@ -47,7 +47,7 @@ public class CalenderController {
         return BasicResponseUtils.success(calenderService.updateCalenderForm(params));
     }
 
-    @ApiOperation(value = "逻辑删除一条校历假期数据", notes = "要求给出要删除的id ")
+    @ApiOperation(value = "删除一条校历假期数据", notes = "要求给出要删除的id ")
     @ApiOperationSupport(order = 3)
     @GetMapping("deleteCalender")
     public ResultEntity deleteCalender(@RequestParam("id") String id) throws ParseException {
@@ -89,7 +89,7 @@ public class CalenderController {
         return BasicResponseUtils.success(calenderAdjustService.updateCalenderAdjust(params));
     }
 
-    @ApiOperation(value = "逻辑删除调休数据", notes = "要求给出要删除的id ")
+    @ApiOperation(value = "逻辑删除一条请假调休数据", notes = "要求给出要删除的id ")
     @ApiOperationSupport(order = 8)
     @GetMapping("deleteCalenderAdjust")
     public ResultEntity deleteCalenderAdjust(@RequestParam("id") String id) throws ParseException {

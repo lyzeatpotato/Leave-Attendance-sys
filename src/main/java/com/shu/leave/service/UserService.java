@@ -1,6 +1,7 @@
 package com.shu.leave.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.shu.leave.entity.User;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +34,7 @@ public interface UserService {
      * 分页查询全部用户
      * @return 用户信息列表
      */
-    public IPage findAllUserFormPagination();
+    public IPage findAllUserFormPagination(Page<User> page);
 
     /**
      * 根据id查询用户
