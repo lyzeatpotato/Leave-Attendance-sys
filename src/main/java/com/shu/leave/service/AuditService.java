@@ -6,6 +6,8 @@ import com.shu.leave.entity.Leave;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
+
 
 @Service
 public interface AuditService {
@@ -28,4 +30,13 @@ public interface AuditService {
      * @return 返回符合条件的数据并分页展示
      */
     Page<Leave> getAuditSelected(Page<Leave> page, String userId, String[] params);
+
+    /**
+     * 返回某一请假信息对应已完成的审核信息（未完成的显示为"无需此步骤"）
+     * @author liyuanzhe
+     * @date 2022/11/24 13:37
+     * @param leaveId
+     * @return Map<Object> 根据共需几步审核返回成一个Map字段
+     */
+    Map<String, Object> getCurrentAuditMsgById(Long leaveId);
 }

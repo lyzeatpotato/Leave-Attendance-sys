@@ -62,4 +62,35 @@ public interface LeaveDepartmentAuditMapper {
             "where id=#{id,jdbcType=BIGINT}"
     })
     void dpLeaderAuditnn(Long id,Date time);
+
+    /**
+     * 根据请假表主键查询部门审核详情
+     * @author liyuanzhe
+     * @date 2022/11/24 14:01
+     * @param formId
+     * @return LeaveDepartmentAudit对象
+     */
+    @Select({
+            "select id,formid,dp_officer_id,dp_officer_result,dp_officer_recommend,dp_officer_time,dp_officer_status,dp_leader_id,dp_leader_result,dp_leader_recommend,dp_leader_time,dp_leader_status,is_deleted,gmt_create,gmt_modified",
+            "from leave_department_audit",
+            "where formid=#{formId,jdbcType=BIGINT} and is_deleted=0"
+    })
+    @Results(id = "deptResultMapper", value = {
+            @Result(column = "id", property = "id", jdbcType = JdbcType.BIGINT, id = true),
+            @Result(column = "formid", property = "formId", jdbcType = JdbcType.BIGINT),
+            @Result(column = "dp_officer_id", property = "dpOfficerId", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "dp_officer_result", property = "dpOfficerResult", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "dp_officer_recommend", property = "dpOfficerRecommend", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "dp_officer_time", property = "dpOfficerTime", jdbcType = JdbcType.TIMESTAMP),
+            @Result(column = "dp_officer_status", property = "dpOfficerStatus", jdbcType = JdbcType.CHAR),
+            @Result(column = "dp_leader_id", property = "dpLeaderId", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "dp_leader_result", property = "dpLeaderResult", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "dp_leader_recommend", property = "dpLeaderRecommend", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "dp_leader_time", property = "dpLeaderTime", jdbcType = JdbcType.TIMESTAMP),
+            @Result(column = "dp_leader_status", property = "dpLeaderStatus", jdbcType = JdbcType.CHAR),
+            @Result(column = "is_deleted", property = "isDeleted", jdbcType = JdbcType.CHAR),
+            @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.TIMESTAMP),
+            @Result(column = "gmt_modified", property = "gmtModified", jdbcType = JdbcType.TIMESTAMP),
+    })
+    LeaveDepartmentAudit findDeptAuditMsgByFormId(Long formId);
 }

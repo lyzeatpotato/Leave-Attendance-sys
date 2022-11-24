@@ -631,7 +631,7 @@ public interface LeaveMapper extends BaseMapper<Leave> {
             "leave.hr_status, leave.school_status, leave.is_deleted, leave.gmt_create, leave.gmt_modified " +
             "FROM leave, user_info " +
             "WHERE (leave.userid = user_info.id and leave.status = 0 and leave.is_deleted = 0" +
-            "and leave.hr_status = 1  and leave.school_status != 2)" +
+            "and leave.hr_status = 1  and leave.school_status != 2" +
             "and user_info.yuanxi = #{department, jdbcType=VARCHAR}) " +
             "ORDER BY leave.id DESC"
     )
@@ -712,7 +712,7 @@ public interface LeaveMapper extends BaseMapper<Leave> {
             "leave.hr_status, leave.school_status, leave.is_deleted, leave.gmt_create, leave.gmt_modified ",
             "FROM leave, user_info ",
             "WHERE (leave.userid = user_info.id and leave.status = 0 and leave.is_deleted = 0",
-            "and leave.department_status = 1 and leave.hr_status != 2)",
+            "and leave.department_status = 1 and leave.hr_status != 2",
             "<when test='userid!=null'>",
             "AND user_info.userid = #{userid}",
             "</when>",
@@ -744,7 +744,7 @@ public interface LeaveMapper extends BaseMapper<Leave> {
             "leave.hr_status, leave.school_status, leave.is_deleted, leave.gmt_create, leave.gmt_modified ",
             "FROM leave, user_info ",
             "WHERE (leave.userid = user_info.id and leave.status = 0 and leave.is_deleted = 0",
-            "and leave.department_status = 1 and leave.hr_status != 2)",
+            "and leave.department_status = 1 and leave.hr_status != 2",
             "<when test='userid!=null'>",
             "AND user_info.userid = #{userid}",
             "</when>",
@@ -776,8 +776,8 @@ public interface LeaveMapper extends BaseMapper<Leave> {
             "leave.hr_status, leave.school_status, leave.is_deleted, leave.gmt_create, leave.gmt_modified ",
             "FROM leave, user_info ",
             "WHERE (leave.userid = user_info.id and leave.status = 0 and leave.is_deleted = 0",
-            "and leave.hr_status = 1  and leave.school_status != 2)",
-            "and user_info.yuanxi = #{department, jdbcType=VARCHAR}) ",
+            "and leave.hr_status = 1  and leave.school_status != 2",
+            "and user_info.yuanxi = #{department, jdbcType=VARCHAR} ",
             "<when test='userid!=null'>",
             "AND user_info.userid = #{userid}",
             "</when>",
