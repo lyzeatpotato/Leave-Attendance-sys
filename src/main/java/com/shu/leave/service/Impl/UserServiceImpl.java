@@ -65,6 +65,17 @@ public class UserServiceImpl implements UserService {
         return iPage;
     }
 
+    @Transactional
+    @Override
+    public IPage findAdminUserFormPagination(Page<User> page) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("is_deleted", "0");
+        queryWrapper.orderByDesc("id");
+        queryWrapper.ne("role", "0");
+        IPage<User> iPage =userMapper.selectPage(page, queryWrapper);
+        return iPage;
+    }
+
     @Override
     public User findUserById(Long id) {
         return userMapper.findById(id);
