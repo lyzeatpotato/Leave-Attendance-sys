@@ -631,7 +631,7 @@ public interface LeaveMapper extends BaseMapper<Leave> {
             "leave.hr_status, leave.school_status, leave.is_deleted, leave.gmt_create, leave.gmt_modified " +
             "FROM leave, user_info " +
             "WHERE (leave.userid = user_info.id and leave.status = 0 and leave.is_deleted = 0" +
-            "and leave.hr_status = 1  and leave.school_status != 2)" +
+            "and leave.hr_status = 1  and leave.school_status != 2" +
             "and user_info.yuanxi = #{department, jdbcType=VARCHAR}) " +
             "ORDER BY leave.id DESC"
     )
@@ -639,11 +639,14 @@ public interface LeaveMapper extends BaseMapper<Leave> {
     Page<Leave> selectPageBySchool(Page<Leave> page, String department);
 
     /**
-     * 多条件复杂分页查询“部门科员”
-     * @Author liyuanzhe
+     * 多条件复杂分页查询“部门科员”用户的数据
+     * @author liyuanzhe
+     * @date 2022/11/22 9:51
      * @param page
      * @param department
-     * @return 权限为“部门科员”用户可查看的“本部门-待审核-部门科员尚未审核”请假信息
+     * @param userId
+     * @param userName
+     * @return Page<Leave> 权限为“部门科员”用户可查看的“本部门-待审核-部门科员尚未审核”请假信息，可根据“工号/姓名”查询
      */
     @Select({"<script>",
             "SELECT leave.id, leave.userid, leave.leave_type, leave.leave_start_time, leave.leave_end_time, ",
@@ -665,11 +668,14 @@ public interface LeaveMapper extends BaseMapper<Leave> {
     Page<Leave> selectPageByDeptOfficerWrappered(Page<Leave> page, String department, @Param("userid") String userId,@Param("username") String userName);
 
     /**
-     * 多条件复杂分页查询“部门科员”
-     * @Author liyuanzhe
+     * 多条件复杂分页查询“部门负责人”用户的数据
+     * @author liyuanzhe
+     * @date 2022/11/22 9:52
      * @param page
      * @param department
-     * @return 权限为“部门科员”用户可查看的“本部门-待审核-部门科员尚未审核”请假信息
+     * @param userId
+     * @param userName
+     * @return Page<Leave> 权限为“部门负责人”用户可查看的“本部门-待审核-部门科员尚未审核”请假信息，可根据“工号/姓名”查询
      */
     @Select({"<script>",
             "SELECT leave.id, leave.userid, leave.leave_type, leave.leave_start_time, leave.leave_end_time, ",
@@ -691,11 +697,14 @@ public interface LeaveMapper extends BaseMapper<Leave> {
     Page<Leave> selectPageByDeptLeaderWrappered(Page<Leave> page, String department, @Param("userid") String userId,@Param("username") String userName);
 
     /**
-     * 多条件复杂分页查询“部门科员”
-     * @Author liyuanzhe
+     * 多条件复杂分页查询“人事处干事”用户的数据
+     * @author liyuanzhe
+     * @date 2022/11/22 9:53
      * @param page
+     * @param userId
+     * @param userName
      * @param department
-     * @return 权限为“部门科员”用户可查看的“本部门-待审核-部门科员尚未审核”请假信息
+     * @return Page<Leave> 权限为“人事处干事”用户可查看的“部门审核已完成-待审核”请假信息，可根据“工号/姓名/部门”查询
      */
     @Select({"<script>",
             "SELECT leave.id, leave.userid, leave.leave_type, leave.leave_start_time, leave.leave_end_time, ",
@@ -703,7 +712,7 @@ public interface LeaveMapper extends BaseMapper<Leave> {
             "leave.hr_status, leave.school_status, leave.is_deleted, leave.gmt_create, leave.gmt_modified ",
             "FROM leave, user_info ",
             "WHERE (leave.userid = user_info.id and leave.status = 0 and leave.is_deleted = 0",
-            "and leave.department_status = 1 and leave.hr_status != 2)",
+            "and leave.department_status = 1 and leave.hr_status != 2",
             "<when test='userid!=null'>",
             "AND user_info.userid = #{userid}",
             "</when>",
@@ -720,11 +729,14 @@ public interface LeaveMapper extends BaseMapper<Leave> {
     Page<Leave> selectPageByHrOfficerWrappered(Page<Leave> page, @Param("userid") String userId, @Param("username") String userName, @Param("department") String department);
 
     /**
-     * 多条件复杂分页查询“部门科员”
-     * @Author liyuanzhe
+     * 多条件复杂分页查询“人事处领导”用户的数据
+     * @author liyuanzhe
+     * @date 2022/11/22 9:57
      * @param page
+     * @param userId
+     * @param userName
      * @param department
-     * @return 权限为“部门科员”用户可查看的“本部门-待审核-部门科员尚未审核”请假信息
+     * @return Page<Leave> 权限为“人事处领导”用户可查看的“部门审核已完成-待审核”请假信息，可根据“工号/姓名/部门”查询
      */
     @Select({"<script>",
             "SELECT leave.id, leave.userid, leave.leave_type, leave.leave_start_time, leave.leave_end_time, ",
@@ -732,7 +744,7 @@ public interface LeaveMapper extends BaseMapper<Leave> {
             "leave.hr_status, leave.school_status, leave.is_deleted, leave.gmt_create, leave.gmt_modified ",
             "FROM leave, user_info ",
             "WHERE (leave.userid = user_info.id and leave.status = 0 and leave.is_deleted = 0",
-            "and leave.department_status = 1 and leave.hr_status != 2)",
+            "and leave.department_status = 1 and leave.hr_status != 2",
             "<when test='userid!=null'>",
             "AND user_info.userid = #{userid}",
             "</when>",
@@ -748,21 +760,24 @@ public interface LeaveMapper extends BaseMapper<Leave> {
     @ResultMap("leaveDeptRelatedMapper")
     Page<Leave> selectPageByHrLeaderWrappered(Page<Leave> page, @Param("userid") String userId, @Param("username") String userName, @Param("department") String department);
 
-    /**
-     * 多条件复杂分页查询“部门科员”
-     * @Author liyuanzhe
-     * @param page
-     * @param department
-     * @return 权限为“部门科员”用户可查看的“本部门-待审核-部门科员尚未审核”请假信息
-     */
+   /**
+    * 多条件复杂分页查询“校领导”用户的数据
+    * @author liyuanzhe
+    * @date 2022/11/22 9:58
+    * @param page
+    * @param department
+    * @param userId
+    * @param userName
+    * @return Page<Leave> 权限为“校领导”用户可查看的“本部门-人事处审核已完成-待审核”请假信息
+    */
     @Select({"<script>",
             "SELECT leave.id, leave.userid, leave.leave_type, leave.leave_start_time, leave.leave_end_time, ",
             "leave.leave_reason, leave.leave_material, leave.status, leave.department_status, ",
             "leave.hr_status, leave.school_status, leave.is_deleted, leave.gmt_create, leave.gmt_modified ",
             "FROM leave, user_info ",
             "WHERE (leave.userid = user_info.id and leave.status = 0 and leave.is_deleted = 0",
-            "and leave.hr_status = 1  and leave.school_status != 2)",
-            "and user_info.yuanxi = #{department, jdbcType=VARCHAR}) ",
+            "and leave.hr_status = 1  and leave.school_status != 2",
+            "and user_info.yuanxi = #{department, jdbcType=VARCHAR} ",
             "<when test='userid!=null'>",
             "AND user_info.userid = #{userid}",
             "</when>",
