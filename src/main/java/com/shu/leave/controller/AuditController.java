@@ -52,4 +52,11 @@ public class AuditController {
         return BasicResponseUtils.success(auditService.getAuditSelected(page, userId, params));
     }
 
+    @ApiOperation(value = "获取请假审核信息", notes = "根据请假审核进度返回当前审核详情信息")
+    @ApiOperationSupport(order = 4)
+    @GetMapping("getCurrentAuditMsg")
+    public ResultEntity getCurrentAuditMsg(@RequestParam("leave_id") Long leaveId){
+        return BasicResponseUtils.success(auditService.getCurrentAuditMsgById(leaveId));
+    }
+
 }

@@ -4,6 +4,7 @@ package com.shu.leave.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.shu.leave.entity.LeaveHrAudit;
 import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.type.JdbcType;
 
 import java.util.Date;
 
@@ -59,4 +60,36 @@ public interface LeaveHrAuditMapper extends BaseMapper<LeaveHrAudit> {
             "where id=#{id,jdbcType=BIGINT}"
     })
     void hrLeaderAuditnn(Long id,Date time);
+
+    /**
+     * 根据请假表主键查询人事处审核详情
+     * @author liyuanzhe
+     * @date 2022/11/24 14:01
+     * @param formId
+     * @return LeaveDepartmentAudit对象
+     */
+    @Select({
+            "select id,formid,hr_officer_id,hr_officer_result,hr_officer_recommend,hr_officer_time,hr_officer_status,",
+            "hr_leader_id,hr_leader_result,hr_leader_recommend,hr_leader_time,hr_leader_status,is_deleted,gmt_create,gmt_modified",
+            "from leave_hr_audit",
+            "where formid=#{formId,jdbcType=BIGINT} and is_deleted=0"
+    })
+    @Results(id = "hrResultMapper", value = {
+            @Result(column = "id", property = "id", jdbcType = JdbcType.BIGINT, id = true),
+            @Result(column = "formid", property = "formId", jdbcType = JdbcType.BIGINT),
+            @Result(column = "hr_officer_id", property = "hrOfficerId", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "hr_officer_result", property = "hrOfficerResult", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "hr_officer_recommend", property = "hrOfficerRecommend", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "hr_officer_time", property = "hrOfficerTime", jdbcType = JdbcType.TIMESTAMP),
+            @Result(column = "hr_officer_status", property = "hrOfficerStatus", jdbcType = JdbcType.CHAR),
+            @Result(column = "hr_leader_id", property = "hrLeaderId", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "hr_leader_result", property = "hrLeaderResult", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "hr_leader_recommend", property = "hrLeaderRecommend", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "hr_leader_time", property = "hrLeaderTime", jdbcType = JdbcType.TIMESTAMP),
+            @Result(column = "hr_leader_status", property = "hrLeaderStatus", jdbcType = JdbcType.CHAR),
+            @Result(column = "is_deleted", property = "isDeleted", jdbcType = JdbcType.CHAR),
+            @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.TIMESTAMP),
+            @Result(column = "gmt_modified", property = "gmtModified", jdbcType = JdbcType.TIMESTAMP),
+    })
+    LeaveHrAudit findHrAuditMsgByFormId(Long formId);
 }
