@@ -113,7 +113,7 @@ public class UserController {
         return BasicResponseUtils.success(userService.updateUser(param));
     }
 
-    @ApiOperation(value = "分页查询全部用户", notes = "分页显示全体未被逻辑删除的用户信息")
+    @ApiOperation(value = "分页查询全部用户", notes = "分页显示全体用户信息")
     @ApiOperationSupport(order = 6)
     @GetMapping("findAllUserPagination")
     //@ApiImplicitParams({@ApiImplicitParam(name = "token", value = "token", required = true, paramType = "header")})
@@ -123,5 +123,14 @@ public class UserController {
         return BasicResponseUtils.success(userService.findAllUserFormPagination(page));
     }
 
+    @ApiOperation(value = "分页查询权限不为0的用户", notes = "分页显示权限不为0的用户信息")
+    @ApiOperationSupport(order = 7)
+    @GetMapping("findAdminUserPagination")
+    //@ApiImplicitParams({@ApiImplicitParam(name = "token", value = "token", required = true, paramType = "header")})
+    //@AuthToken
+    public ResultEntity findAdminUserPagination(@RequestParam(value = "pageNum", defaultValue = "1") int pageNum) {
+        Page<User> page = new Page(pageNum, 10);
+        return BasicResponseUtils.success(userService.findAdminUserFormPagination(page));
+    }
 
 }

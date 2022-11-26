@@ -37,6 +37,12 @@ public interface UserService {
     public IPage findAllUserFormPagination(Page<User> page);
 
     /**
+     * 分页查询全部用户
+     * @return 用户信息列表
+     */
+    public IPage findAdminUserFormPagination(Page<User> page);
+
+    /**
      * 根据id查询用户
      * @param id
      * @return id对应的用户信息
