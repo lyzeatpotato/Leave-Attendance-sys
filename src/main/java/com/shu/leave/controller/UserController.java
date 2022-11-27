@@ -119,7 +119,7 @@ public class UserController {
     //@ApiImplicitParams({@ApiImplicitParam(name = "token", value = "token", required = true, paramType = "header")})
     //@AuthToken
     public ResultEntity findAllUserPagination(@RequestParam(value = "pageNum", defaultValue = "1") int pageNum) {
-        Page<User> page = new Page(pageNum, 10);
+        Page<User> page = new Page(pageNum, 6);
         return BasicResponseUtils.success(userService.findAllUserFormPagination(page));
     }
 
@@ -129,7 +129,7 @@ public class UserController {
     //@ApiImplicitParams({@ApiImplicitParam(name = "token", value = "token", required = true, paramType = "header")})
     //@AuthToken
     public ResultEntity findAdminUserPagination(@RequestParam(value = "pageNum", defaultValue = "1") int pageNum) {
-        Page<User> page = new Page(pageNum, 10);
+        Page<User> page = new Page(pageNum, 6);
         return BasicResponseUtils.success(userService.findAdminUserFormPagination(page));
     }
 
