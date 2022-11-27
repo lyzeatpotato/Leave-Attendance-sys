@@ -39,16 +39,16 @@ public class LeaveLimitTimeController {
     @ApiOperationSupport(order = 11)
     @GetMapping("findAllLimitTimeByRoleId")
     public ResultEntity findAllLimitTimeBySystem(@RequestParam("role_id")String roleId){
-//        if (Long.parseLong(roleId)==2) {
-//            List<LeaveAuditLimitTime> leaveLimitTimesList= limitTimeService.findAllLimitTimeByRoleId(roleId);
-//            leaveLimitTimesList.addAll(limitTimeService.findAllLimitTimeByRoleId(Integer.toString(3)));
-//            return BasicResponseUtils.success(leaveLimitTimesList);
-//        }
-//        if (Long.parseLong(roleId)==4) {
-//            List<LeaveAuditLimitTime> leaveLimitTimesList= limitTimeService.findAllLimitTimeByRoleId(roleId);
-//            leaveLimitTimesList.addAll(limitTimeService.findAllLimitTimeByRoleId(Integer.toString(5)));
-//            return BasicResponseUtils.success(leaveLimitTimesList);
-//        }
+        if (Long.parseLong(roleId)==2) {
+            List<LeaveAuditLimitTime> leaveLimitTimesList= limitTimeService.findAllLimitTimeByRoleId(roleId);
+            leaveLimitTimesList.addAll(limitTimeService.findAllLimitTimeByRoleId(Integer.toString(3)));
+            return BasicResponseUtils.success(leaveLimitTimesList);
+        }
+        if (Long.parseLong(roleId)==4) {
+            List<LeaveAuditLimitTime> leaveLimitTimesList= limitTimeService.findAllLimitTimeByRoleId(roleId);
+            leaveLimitTimesList.addAll(limitTimeService.findAllLimitTimeByRoleId(Integer.toString(5)));
+            return BasicResponseUtils.success(leaveLimitTimesList);
+        }
         return BasicResponseUtils.success(limitTimeService.findAllLimitTimeByRoleId(roleId));
     }
 
