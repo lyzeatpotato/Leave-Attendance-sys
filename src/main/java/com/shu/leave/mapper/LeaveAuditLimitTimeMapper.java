@@ -23,7 +23,7 @@ public interface LeaveAuditLimitTimeMapper {
      * 按照role_id来查询各项请假事项的最长时限
      * @return 对应时限列表
      */
-    @Select("select id, type, limit_time from leave_audit_limit_time where role_id = #{roleid,jdbcType=VARCHAR}")
+    @Select("select id, role_id, type, limit_time from leave_audit_limit_time where role_id = #{roleid,jdbcType=VARCHAR}")
     List<LeaveAuditLimitTime> selectAllByRoleId(Long roleid);
 
     /**

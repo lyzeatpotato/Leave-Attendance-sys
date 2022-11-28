@@ -87,6 +87,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public IPage findUserPageByUserId(Page<User> page, Long userId) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("is_deleted", "0");
+        queryWrapper.orderByDesc("id");
+        queryWrapper.eq("userid", userId);
+        IPage<User> iPage =userMapper.selectPage(page, queryWrapper);
+        return iPage;
+    }
+
+    @Override
     public int updateUser(String[] params ) {
         User user = new User();
         user.setId(Long.parseLong(params[0]));

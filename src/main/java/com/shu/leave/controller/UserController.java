@@ -22,6 +22,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.ParseException;
 
 @Api(tags = "1.用户相关")
 @ApiSupport(order = 1)
@@ -98,6 +99,17 @@ public class UserController {
         return BasicResponseUtils.success(userService.findUserByUserId(userId));
     }
 
+    @ApiOperation(value = "分页地根据工号查询用户", notes = "显示某一用户的详细信息")
+    @ApiOperationSupport(order = 5)
+    @GetMapping("findUserPageByUserid")
+    //@ApiImplicitParams({@ApiImplicitParam(name = "token", value = "token", required = true, paramType = "header")})
+    //@AuthToken
+    public ResultEntity findUserPageByUserid(@RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
+                                             @RequestParam("userid") String userId) throws ParseException {
+        Page<User> page = new Page(pageNum, 6);
+        return BasicResponseUtils.success(userService.findUserPageByUserId(page,Long.parseLong(userId)));
+    }
+    
     @ApiOperation(value = "修改用户信息", notes = "要求完整输入修改后的用户信息 [id, userid, username, yuanxi, ptype, pstatus, gender]")
     @ApiOperationSupport(order = 5)
     @GetMapping("updateUser")
