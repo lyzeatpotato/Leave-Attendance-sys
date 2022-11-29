@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -96,6 +97,21 @@ public class UserServiceImpl implements UserService {
         return iPage;
     }
 
+    @Override
+    public IPage findUserPageByRoleList(Page<User> page, String roleList){
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        List<String> list = new ArrayList<String>();
+        for(int i = 0; i < roleList.length() ; i++){
+            String ss = roleList.substring(i,i+1);
+            list.add(ss);
+        }
+        queryWrapper.in("role",list);
+        queryWrapper.eq("is_deleted", "0");
+        queryWrapper.orderByDesc("id");
+
+        IPage<User> iPage =userMapper.selectPage(page, queryWrapper);
+        return iPage;
+    }
     @Override
     public int updateUser(String[] params ) {
         User user = new User();

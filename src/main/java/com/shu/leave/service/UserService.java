@@ -64,6 +64,13 @@ public interface UserService {
     IPage findUserPageByUserId(Page<User> page, Long userId);
 
     /**
+     * 根据选中的权限id（roleList）分页地筛选用户
+     * @param roleList
+     * @return id对应的用户信息
+     */
+    IPage findUserPageByRoleList(Page<User> page, String roleList);
+
+    /**
      * 根据id查询用户
      * @param params -> [id, userid, username, yuanxi, ptype, pstatus, gender]
      * @return id对应的用户信息
