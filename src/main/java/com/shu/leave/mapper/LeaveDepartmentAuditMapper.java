@@ -7,9 +7,9 @@ import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.type.JdbcType;
 
 import java.util.Date;
-//extends BaseMapper<LeaveDepartmentAudit>
+
 @Mapper
-public interface LeaveDepartmentAuditMapper {
+public interface LeaveDepartmentAuditMapper extends BaseMapper<LeaveDepartmentAudit> {
     //部门人事审核
     @Insert({
             "insert into leave_department_audit",

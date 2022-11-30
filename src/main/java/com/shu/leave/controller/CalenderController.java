@@ -15,6 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Api(tags = "4.校历假期数据表")
 @ApiSupport(order = 4)
@@ -94,6 +98,17 @@ public class CalenderController {
     @GetMapping("deleteCalenderAdjust")
     public ResultEntity deleteCalenderAdjust(@RequestParam("id") String id) throws ParseException {
         return BasicResponseUtils.success(calenderAdjustService.deleteCalenderAdjust(Long.parseLong(id)));
+    }
+
+    @ApiOperation(value = "教学周识别", notes = "判断所输入的日期为哪一学期的第几周")
+    @ApiOperationSupport(order = 9)
+    @GetMapping("checkTeachingDate")
+    public ResultEntity checkTeachingDate(@RequestParam("checking_date") String checkingDate) throws ParseException {
+        Map<String, String> resMap = new HashMap<>();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date inputDate = simpleDateFormat.parse(checkingDate);
+        resMap.put("dateIndex", calenderService.getCurrentExcateDate(inputDate));
+        return BasicResponseUtils.success(resMap);
     }
 
 

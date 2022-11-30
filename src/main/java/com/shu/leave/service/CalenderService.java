@@ -63,4 +63,13 @@ public interface CalenderService {
      * @return 需要顺延的寒暑假总天数
      */
     int totalExtendDiscribtionVocation(Date leaveStartDate, Date leaveEndDate, String description);
+
+    /**
+     * 返回当前日期是第几学期的第几个教学周，如不在教学周内则显示”非教学周“
+     * @author liyuanzhe
+     * @date 2022/11/29 18:37
+     * @param checkingDate
+     * @return
+     */
+    String getCurrentExcateDate(Date checkingDate);
 }

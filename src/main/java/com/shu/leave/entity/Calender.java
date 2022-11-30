@@ -22,7 +22,7 @@ public class Calender {
     private Long adminId;
 
     // 年度信息
-    @TableField(value = "year")
+    @TableField(value = "year", exist = false)
     private String year;
 
     // 校历假期名称

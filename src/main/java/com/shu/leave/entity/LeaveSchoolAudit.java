@@ -1,7 +1,9 @@
 package com.shu.leave.entity;
 
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
@@ -11,10 +13,13 @@ import java.util.Date;
 @Data
 @TableName("leave_school_audit")
 public class LeaveSchoolAudit {
+
     //主键，自增，唯一标识id
+    @TableId(value = "id",type = IdType.AUTO)
     private Long id;
 
     //连接请假表单，表单id
+    @TableField(value = "formid")
     private Long formId;
 
     //校领导工号

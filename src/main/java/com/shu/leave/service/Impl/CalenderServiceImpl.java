@@ -1,5 +1,6 @@
 package com.shu.leave.service.Impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.shu.leave.entity.Calender;
@@ -13,6 +14,7 @@ import javax.annotation.Resource;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -176,5 +178,61 @@ public class CalenderServiceImpl implements CalenderService {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    @Override
+    public String getCurrentExcateDate(Date checkingDate) {
+        String resultStr;   // 统一结果返回值
+        // 首先判断当前日期是否处在教学周内
+        QueryWrapper<Calender> queryWrapper0 = new QueryWrapper<>();
+        queryWrapper0.le("holiday_start_date", checkingDate);
+        queryWrapper0.ge("holiday_end_date", checkingDate);
+        queryWrapper0.eq("description", "寒暑假");
+        Calender calender1 = calenderMapper.selectOne(queryWrapper0);
+        if (calender1 == null) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setFirstDayOfWeek(Calendar.MONDAY);
+            calendar.setTime(checkingDate);
+            Integer weekNumbe = calendar.get(Calendar.WEEK_OF_YEAR);
+            System.out.println("当前为本年度" + weekNumbe + "周");
+            // 前往数据库中查询，看当前日期落在哪一个教学周内
+            QueryWrapper<Calender> queryWrapper = new QueryWrapper<>();
+            queryWrapper.le("holiday_start_date", checkingDate);
+            queryWrapper.ge("holiday_end_date", checkingDate);
+            queryWrapper.eq("description", "教学周");
+            Calender calender = null;
+            int resWeek;
+            try {
+                calender = calenderMapper.selectOne(queryWrapper);
+                Date holidayStartDate = calender.getHolidayStartDate();
+                if (!calender.getHolidayName().equals("冬季学期")) {
+                    calendar.setTime(holidayStartDate);
+                    Integer startTimeWeekNum = calendar.get(Calendar.WEEK_OF_YEAR);
+                    System.out.println("学期开始日期为本年度" + startTimeWeekNum + "周");
+                    resWeek = weekNumbe - startTimeWeekNum + 1;
+                } else {
+                    // 冬季学期需要额外减去寒假（寒假不计入教学周）
+                    QueryWrapper<Calender> queryWrapperHoliday = new QueryWrapper<>();
+                    queryWrapperHoliday.eq("holiday_name", "寒假");
+                    Calender calenderHoliday = calenderMapper.selectOne(queryWrapperHoliday);       // 找出本年度寒假的时间
+                    int dayDiffer;
+                    if (checkingDate.compareTo(calenderHoliday.getHolidayEndDate()) != -1) {
+                        // 若当前日期落在寒假结束日期以后
+                        int hanjiaDiffer = UnitedUtils.getDayDiffer(calenderHoliday.getHolidayStartDate(), calenderHoliday.getHolidayEndDate());
+                        dayDiffer = UnitedUtils.getDayDiffer(holidayStartDate, checkingDate) - hanjiaDiffer;
+                    } else {
+                        dayDiffer = UnitedUtils.getDayDiffer(holidayStartDate, checkingDate);
+                    }
+                    resWeek = dayDiffer / 7 + 1;
+                }
+                resultStr = calender.getHolidayName() + "第" + String.valueOf(resWeek) + "周";
+            } catch (Exception e) {
+                resultStr = "非校历定义的日期";
+                e.printStackTrace();
+            }
+        } else {
+            resultStr = "非教学周";
+        }
+        return resultStr;
     }
 }

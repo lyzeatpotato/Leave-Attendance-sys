@@ -562,11 +562,11 @@ public interface LeaveMapper extends BaseMapper<Leave> {
             "leave.hr_status, leave.school_status, leave.is_deleted, leave.gmt_create, leave.gmt_modified " +
             "FROM leave, user_info " +
             "WHERE (leave.userid = user_info.id and leave.status = 0 and leave.is_deleted = 0 " +
-            "and user_info.yuanxi = #{department, jdbcType=VARCHAR}) " +
+            "and user_info.yuanxi = #{department, jdbcType=VARCHAR} and leave.userid != #{userId, jdbcType=BIGINT}) " +
             "ORDER BY leave.id DESC"
     )
     @ResultMap("leaveDeptRelatedMapper")
-    Page<Leave> selectPageByDeptOfficer(Page<Leave> page, String department);
+    Page<Leave> selectPageByDeptOfficer(Page<Leave> page, String department, Long userId);
 
     /**
      * 分页查询“部门领导”初始加载的全部本部门请假信息
@@ -580,11 +580,11 @@ public interface LeaveMapper extends BaseMapper<Leave> {
             "leave.hr_status, leave.school_status, leave.is_deleted, leave.gmt_create, leave.gmt_modified " +
             "FROM leave, user_info " +
             "WHERE (leave.userid = user_info.id and leave.status = 0 and leave.is_deleted = 0 " +
-            "and user_info.yuanxi = #{department, jdbcType=VARCHAR}) " +
+            "and user_info.yuanxi = #{department, jdbcType=VARCHAR} and leave.userid != #{userId, jdbcType=BIGINT}) " +
             "ORDER BY leave.id DESC"
     )
     @ResultMap("leaveDeptRelatedMapper")
-    Page<Leave> selectPageByDeptLeader(Page<Leave> page, String department);
+    Page<Leave> selectPageByDeptLeader(Page<Leave> page, String department, Long userId);
 
     /**
      * 分页查询“人事处干事”初始加载的全校请假信息
@@ -597,11 +597,11 @@ public interface LeaveMapper extends BaseMapper<Leave> {
             "leave.hr_status, leave.school_status, leave.is_deleted, leave.gmt_create, leave.gmt_modified " +
             "FROM leave, user_info " +
             "WHERE (leave.userid = user_info.id and leave.status = 0 and leave.is_deleted = 0" +
-            "and leave.department_status = 1 and leave.hr_status != 2)" +
+            "and leave.department_status = 1 and leave.hr_status != 2 and leave.userid != #{userId, jdbcType=BIGINT})" +
             "ORDER BY leave.id DESC"
     )
     @ResultMap("leaveDeptRelatedMapper")
-    Page<Leave> selectPageByHrOfficer(Page<Leave> page);
+    Page<Leave> selectPageByHrOfficer(Page<Leave> page, Long userId);
 
     /**
      * 分页查询“人事处领导”初始加载的全校请假信息
@@ -614,11 +614,11 @@ public interface LeaveMapper extends BaseMapper<Leave> {
             "leave.hr_status, leave.school_status, leave.is_deleted, leave.gmt_create, leave.gmt_modified " +
             "FROM leave, user_info " +
             "WHERE (leave.userid = user_info.id and leave.status = 0 and leave.is_deleted = 0" +
-            "and leave.department_status = 1 and leave.hr_status != 2)" +
+            "and leave.department_status = 1 and leave.hr_status != 2 and leave.userid != #{userId, jdbcType=BIGINT})" +
             "ORDER BY leave.id DESC"
     )
     @ResultMap("leaveDeptRelatedMapper")
-    Page<Leave> selectPageByHrLeader(Page<Leave> page);
+    Page<Leave> selectPageByHrLeader(Page<Leave> page, Long userId);
 
     /**
      * 分页查询“校领导”初始加载的全校请假信息
@@ -632,11 +632,11 @@ public interface LeaveMapper extends BaseMapper<Leave> {
             "FROM leave, user_info " +
             "WHERE (leave.userid = user_info.id and leave.status = 0 and leave.is_deleted = 0" +
             "and leave.hr_status = 1  and leave.school_status != 2" +
-            "and user_info.yuanxi = #{department, jdbcType=VARCHAR}) " +
+            "and user_info.yuanxi = #{department, jdbcType=VARCHAR} and leave.userid != #{userId, jdbcType=BIGINT}) " +
             "ORDER BY leave.id DESC"
     )
     @ResultMap("leaveDeptRelatedMapper")
-    Page<Leave> selectPageBySchool(Page<Leave> page, String department);
+    Page<Leave> selectPageBySchool(Page<Leave> page, String department, Long userId);
 
     /**
      * 多条件复杂分页查询“部门科员”用户的数据
