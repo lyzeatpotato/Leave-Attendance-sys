@@ -207,6 +207,7 @@ public class LeaveServiceImpl implements LeaveService {
      * @param leaveEndTime 结束时间
      * @return
      */
+    @Override
     public int[] judgeAuditFlow(String userId, String leaveType, Date leaveStartTime, Date leaveEndTime) throws ParseException {
         int[] audies = new int[3];
         //部门审核均需

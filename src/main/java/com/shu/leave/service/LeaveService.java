@@ -22,6 +22,16 @@ public interface LeaveService {
      */
     int addLeaveForm(String[] params) throws ParseException;
 
+    /**返回审核状态列表
+     * @author xieyuying
+     * @param userId 用户id
+     * @param leaveType 请假类型
+     * @param leaveStartTime 起始时间
+     * @param leaveEndTime 结束时间
+     * @return
+     */
+    int[] judgeAuditFlow(String userId, String leaveType, Date leaveStartTime, Date leaveEndTime) throws ParseException;
+
     /**
      * 查询全部请假申请表
      * @return 请假申请表列表
