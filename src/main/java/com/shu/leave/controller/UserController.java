@@ -1,8 +1,6 @@
 package com.shu.leave.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.shu.leave.annotation.AuthToken;
-import com.shu.leave.entity.Leave;
 import com.shu.leave.entity.User;
 import com.shu.leave.enums.ResponseCodeEnums;
 import com.shu.leave.common.ResultEntity;
@@ -12,8 +10,6 @@ import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.shu.leave.utils.JwtUtils;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
