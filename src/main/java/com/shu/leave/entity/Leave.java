@@ -61,10 +61,11 @@ public class Leave {
     private String hrStatus;
 
     // 校领导审核状态
-    @TableField(value = "department_status")
+    @TableField(value = "school_status")
     private String schoolStatus;
 
     // 前端根据用户权限显示的请假表单状态（已完成/未完成/未流经）
+    @TableField(exist = false)
     private String showStatus;
 
     // 逻辑删除

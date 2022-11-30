@@ -5,12 +5,14 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.shu.leave.entity.*;
 import com.shu.leave.mapper.*;
 import com.shu.leave.service.AuditService;
+import jdk.nashorn.internal.ir.CallNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.sql.Timestamp;
+import java.sql.Wrapper;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Consumer;
@@ -38,65 +40,87 @@ public class AuditSercicelmpl implements AuditService {
     */
     @Override
     @Transactional
-    public int singleLeaveAudit(String role, String userid, Long id, String result, String recommend) {
-        //SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-        //String time = df.format(System.currentTimeMillis());
-        /* 时间转换逻辑：
-         * util.Date获取的时间能够精确到时分秒，但转换成sql.Date则只能保留日期
-         * 做法是使用sql.Date的子类：sql.Timestamp来做数据转换
-         */
+    public String singleLeaveAudit(String role, String userid, Long id, String result, String recommend) {
         Date date = new Date();
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Timestamp timeStamp = Timestamp.valueOf(df.format(date));
-        String time = df.format(timeStamp);
+        String commonRes = "审核异常，用户权限异常";
         switch (role) {
             case "1": {
+                Leave currentLeave = leaveMapper.findById(id);      // 获取当前正待审核的请假信息
+                // 部门初审：部门科员用户为第一步审核，向数据库执行写操作
                 LeaveDepartmentAudit leaveDepartmentAudit = new LeaveDepartmentAudit();
-                //System.out.println(leaveDepartmentAudit);
                 leaveDepartmentAudit.setFormId(id);
                 leaveDepartmentAudit.setDpOfficerId(userid);
                 leaveDepartmentAudit.setDpOfficerResult(result);
                 leaveDepartmentAudit.setDpOfficerRecommend(recommend);
                 leaveDepartmentAudit.setDpOfficerTime(timeStamp);
                 leaveDepartmentAudit.setDpOfficerStatus("1");
-                leaveDepartmentAudit.setDpLeaderId("无");
-                leaveDepartmentAudit.setDpLeaderResult("无");
-                leaveDepartmentAudit.setDpLeaderRecommend("无");
+                // 剩余字段暂时无人审核，写入默认值
+                leaveDepartmentAudit.setDpLeaderId("部门领导暂未审核");
+                leaveDepartmentAudit.setDpLeaderResult("部门领导暂未审核");
+                leaveDepartmentAudit.setDpLeaderRecommend("部门领导暂未审核");
                 leaveDepartmentAudit.setDpLeaderTime(timeStamp);
                 leaveDepartmentAudit.setDpLeaderStatus("0");
                 leaveDepartmentAudit.setIsDeleted("0");
                 leaveDepartmentAudit.setGmtCreate(timeStamp);
                 leaveDepartmentAudit.setGmtModified(timeStamp);
+                leaveDepartmentAuditMapper.insert(leaveDepartmentAudit);
+                commonRes = "部门科员审核提交成功";
 
-                leaveDepartmentAuditMapper.addLeaveDepartmentAudit(leaveDepartmentAudit);
-                System.out.println("123");
-                switch (result){
-                    case "通过":{
-                        leaveDepartmentAuditMapper.dpOfficerAudityy(id, timeStamp);
-                        break;
-                    }
-                    case "不通过":{
-                        leaveDepartmentAuditMapper.dpOfficerAuditnn(id,timeStamp);
-                        break;
-                    }
+                // 部门科员审核完毕后修改leave表中的状态字段
+                if (result.equals("通过")) {
+                    currentLeave.setDepartmentStatus("3");      // 部门科员审核完毕，已通过，等待后续审核
+                    leaveMapper.updateById(currentLeave);
+                } else if (result.equals("不通过")) {
+                    currentLeave.setStatus("2");        // 部门科员审核完毕，不通过，无需后续审核步骤，直接退回
+                    leaveMapper.updateById(currentLeave);
                 }
                 break;
             }
             case "2": {
-                leaveDepartmentAuditMapper.updateLeaveDepartmentAudit(userid,id,result,recommend,timeStamp);
-                switch (result){
-                    case "通过":{
-                        leaveDepartmentAuditMapper.dpLeaderAudityy(id, timeStamp);
-                        break;
+                Leave currentLeave = leaveMapper.findById(id);      // 获取当前正待审核的请假信息
+                // 部门复审：部门负责人用户为第二步审核，首先在数据库中查询，如有则修改，如无则报错“尚未流经至本用户审核”
+                try {
+                    QueryWrapper<LeaveDepartmentAudit> queryWrapper = new QueryWrapper<>();
+                    queryWrapper.eq("formid", id);
+                    LeaveDepartmentAudit leaveDepartmentAudit = leaveDepartmentAuditMapper.selectOne(queryWrapper);
+                    leaveDepartmentAudit.setDpLeaderId(userid);
+                    leaveDepartmentAudit.setDpLeaderResult(result);
+                    leaveDepartmentAudit.setDpLeaderRecommend(recommend);
+                    leaveDepartmentAudit.setDpLeaderTime(timeStamp);
+                    leaveDepartmentAudit.setDpLeaderStatus("1");
+                    leaveDepartmentAudit.setGmtModified(timeStamp);
+                    leaveDepartmentAuditMapper.update(leaveDepartmentAudit, queryWrapper);
+
+                    // 部门负责人审核完毕后修改leave表中的状态字段
+//                    QueryWrapper<Leave> leaveWrapper = new QueryWrapper<>();
+//                    queryWrapper.eq("id", id);
+                    if (result.equals("通过")) {
+                        if (currentLeave.getHrStatus().equals("2")) {
+                            // 说明当前请假单仅需“部门审核”，审核流程结束，修改status字段
+                            currentLeave.setStatus("1");
+                            currentLeave.setDepartmentStatus("1");
+                            leaveMapper.updateById(currentLeave);
+                        } else {
+                            // 说明当前请假单还需后续审核
+                            currentLeave.setDepartmentStatus("1");
+                            leaveMapper.updateById(currentLeave);
+                        }
+                    } else  if (result.equals("不通过")) {
+                        currentLeave.setStatus("2");      // 部门负责人审核完毕，不通过，无需后续审核步骤，直接退回
+                        leaveMapper.updateById(currentLeave);
                     }
-                    case "不通过":{
-                        leaveDepartmentAuditMapper.dpLeaderAuditnn(id,timeStamp);
-                        break;
-                    }
+                    commonRes = "部门负责人审核提交成功";
+                } catch (Exception e) {
+                    commonRes = "尚未流经至本用户审核";
+                    e.printStackTrace();
                 }
                 break;
             }
             case "3": {
+                Leave currentLeave = leaveMapper.findById(id);      // 获取当前正待审核的请假信息
+                // 人事处初审：部门负责人用户为第三步审核，向数据库执行写操作
                 LeaveHrAudit leaveHrAudit = new LeaveHrAudit();
                 leaveHrAudit.setFormId(id);
                 leaveHrAudit.setHrOfficerId(userid);
@@ -104,70 +128,96 @@ public class AuditSercicelmpl implements AuditService {
                 leaveHrAudit.setHrOfficerRecommend(recommend);
                 leaveHrAudit.setHrOfficerTime(timeStamp);
                 leaveHrAudit.setHrOfficerStatus("1");
-                leaveHrAudit.setHrLeaderId("无");
-                leaveHrAudit.setHrLeaderResult("无");
-                leaveHrAudit.setHrLeaderRecommend("无");
+                // 剩余字段暂时无人审核，写入默认值
+                leaveHrAudit.setHrLeaderId("人事处领导暂未审核");
+                leaveHrAudit.setHrLeaderResult("人事处领导暂未审核");
+                leaveHrAudit.setHrLeaderRecommend("人事处领导暂未审核");
                 leaveHrAudit.setHrLeaderTime(timeStamp);
                 leaveHrAudit.setHrLeaderStatus("0");
                 leaveHrAudit.setIsDeleted("0");
                 leaveHrAudit.setGmtCreate(timeStamp);
                 leaveHrAudit.setGmtModified(timeStamp);
-                leaveHrAuditMapper.addLeaveHrAudit(leaveHrAudit);
+                leaveHrAuditMapper.insert(leaveHrAudit);
+                commonRes = "人事处干事审核提交成功";
 
-                //leaveMapper.hrOfficerAudit(userid, id, result, recommend, time);
-                switch (result){
-                    case "通过":{
-                        leaveHrAuditMapper.hrOfficerAudityy(id, timeStamp);
-                        break;
-                    }
-                    case "不通过":{
-                        leaveHrAuditMapper.hrOfficerAuditnn(id, timeStamp);
-                        break;
-                    }
+                // 人事处干事审核完毕后修改leave表中的状态字段
+                if (result.equals("通过")) {
+                    currentLeave.setHrStatus("3");      // 人事处科员审核完毕，已通过，等待后续审核
+                    leaveMapper.updateById(currentLeave);
+                } else if (result.equals("不通过")) {
+                    currentLeave.setStatus("2");      // 人事处科员审核完毕，不通过，无需后续审核步骤，直接退回
+                    leaveMapper.updateById(currentLeave);
                 }
                 break;
             }
             case "4": {
-                leaveHrAuditMapper.updateLeaveHrAudit(userid, id, result, recommend, timeStamp);
-                switch (result){
-                    case "通过":{
-                        leaveHrAuditMapper.hrLeaderAudityy(id, timeStamp);
-                        break;
+                Leave currentLeave = leaveMapper.findById(id);      // 获取当前正待审核的请假信息
+                // 人事处复审：人事处负责人用户为第四步审核，首先在数据库中查询，如有则修改，如无则报错“尚未流经至本用户审核”
+                try {
+                    QueryWrapper<LeaveHrAudit> queryWrapper = new QueryWrapper<>();
+                    queryWrapper.eq("formid", id);
+                    LeaveHrAudit leaveHrAudit = leaveHrAuditMapper.selectOne(queryWrapper);
+                    leaveHrAudit.setHrLeaderId(userid);
+                    leaveHrAudit.setHrLeaderResult(result);
+                    leaveHrAudit.setHrLeaderRecommend(recommend);
+                    leaveHrAudit.setHrLeaderTime(timeStamp);
+                    leaveHrAudit.setHrLeaderStatus("0");
+                    leaveHrAudit.setGmtModified(timeStamp);
+                    leaveHrAuditMapper.update(leaveHrAudit, queryWrapper);
+
+                    // 人事处负责人审核完毕后修改leave表中的状态字段
+                    if (result.equals("通过")) {
+                        if (currentLeave.getSchoolStatus().equals("2")) {
+                            // 说明当前请假单仅需“部门审核”和“人事处审核”，审核流程结束，修改status字段
+                            currentLeave.setStatus("1");
+                            currentLeave.setHrStatus("1");
+                            leaveMapper.updateById(currentLeave);
+                        } else {
+                            // 说明当前请假单还需后续审核
+                            currentLeave.setHrStatus("1");
+                            leaveMapper.updateById(currentLeave);
+                        }
+                    } else  if (result.equals("不通过")) {
+                        currentLeave.setStatus("2");      // 人事处负责人审核完毕，不通过，无需后续审核步骤，直接退回
+                        leaveMapper.updateById(currentLeave);
                     }
-                    case "不通过":{
-                        leaveHrAuditMapper.hrLeaderAuditnn(id, timeStamp);
-                        break;
-                    }
+                    commonRes = "人事处负责人审核提交成功";
+                } catch (Exception e) {
+                    commonRes = "尚未流经至本用户审核";
+                    e.printStackTrace();
                 }
                 break;
             }
             case "5": {
-                LeaveSchoolAudit leaveSchoolAudit = new LeaveSchoolAudit();
-                leaveSchoolAudit.setFormId(id);
-                leaveSchoolAudit.setScLeaderId(userid);
-                leaveSchoolAudit.setScLeaderResult(result);
-                leaveSchoolAudit.setScLeaderRecommend(recommend);
-                leaveSchoolAudit.setScLeaderTime(timeStamp);
-                leaveSchoolAudit.setScLeaderStatus("1");
-                leaveSchoolAudit.setIsDeleted("0");
-                leaveSchoolAudit.setGmtCreate(timeStamp);
-                leaveSchoolAudit.setGmtModified(timeStamp);
-                leaveSchoolAuditMapper.addSchoolAudit(leaveSchoolAudit);
+                Leave currentLeave = leaveMapper.findById(id);      // 获取当前正待审核的请假信息
+                // 校领导审核：校领导用户为第五步审核，执行写入操作
+                LeaveSchoolAudit schoolAudit = new LeaveSchoolAudit();
+                schoolAudit.setFormId(id);
+                schoolAudit.setScLeaderId(userid);
+                schoolAudit.setScLeaderResult(result);
+                schoolAudit.setScLeaderRecommend(recommend);
+                schoolAudit.setScLeaderTime(timeStamp);
+                schoolAudit.setScLeaderStatus("1");
+                schoolAudit.setIsDeleted("0");
+                schoolAudit.setGmtCreate(timeStamp);
+                schoolAudit.setGmtModified(timeStamp);
+                leaveSchoolAuditMapper.insert(schoolAudit);
+                commonRes = "校领导审核提交成功";
 
-                switch (result){
-                    case "通过":{
-                        leaveSchoolAuditMapper.scLeaderAudityy(id, timeStamp);
-                        break;
-                    }
-                    case "不通过":{
-                        leaveSchoolAuditMapper.scLeaderAuditnn(id, timeStamp);
-                        break;
-                    }
+                // 校领导审核完毕后修改leave表中的状态字段
+                if (result.equals("通过")) {
+                    currentLeave.setSchoolStatus("1");
+                    currentLeave.setStatus("1");
+                    leaveMapper.updateById(currentLeave);
+                } else if (result.equals("不通过")) {
+                    currentLeave.setSchoolStatus("0");
+                    currentLeave.setStatus("2");      // 校领导审核完毕，不通过，无需后续审核步骤，直接退回
+                    leaveMapper.updateById(currentLeave);
                 }
                 break;
             }
         }
-        return 1;
+        return commonRes;
     }
 
     @Override
@@ -181,7 +231,7 @@ public class AuditSercicelmpl implements AuditService {
             case "1": {
                 // 权限为各部门干事，则当前用户可看到本部门审核状态为待审核状态的全部请假信息
                 String department = currentUser.getYuanXi();
-                resPage = leaveMapper.selectPageByDeptOfficer(page, department);// 注：这里不适用mybatis-plus的条件构造器，由于涉及多表联查所以重写自定义的分页查询方法
+                resPage = leaveMapper.selectPageByDeptOfficer(page, department, currentUser.getId());// 注：这里不适用mybatis-plus的条件构造器，由于涉及多表联查所以重写自定义的分页查询方法
                 List<Leave> records = resPage.getRecords();
                 for (int i = 0; i < records.size(); i++) {
                     String departmentStatus = records.get(i).getDepartmentStatus();
@@ -196,7 +246,7 @@ public class AuditSercicelmpl implements AuditService {
             case "2": {
                 // 权限为各部门负责人，则当前用户可看到本部门审核状态为待审核状态的全部请假信息
                 String department = currentUser.getYuanXi();
-                resPage = leaveMapper.selectPageByDeptLeader(page, department);
+                resPage = leaveMapper.selectPageByDeptLeader(page, department, currentUser.getId());
                 List<Leave> deptLeaderRecords = resPage.getRecords();
                 for (int i = 0; i < deptLeaderRecords.size(); i++) {
                     String departmentStatus = deptLeaderRecords.get(i).getDepartmentStatus();
@@ -212,7 +262,7 @@ public class AuditSercicelmpl implements AuditService {
             }
             case "3":
                 // 权限为人事处干事，则当前用户可看到全校”部门审核已完成-审核状态为待审核“的全部请假信息
-                resPage = leaveMapper.selectPageByHrOfficer(page);
+                resPage = leaveMapper.selectPageByHrOfficer(page, currentUser.getId());
                 List<Leave> hrRecords = resPage.getRecords();
                 for (int i = 0; i < hrRecords.size(); i++) {
                     String hrStatus = hrRecords.get(i).getHrStatus();
@@ -225,7 +275,7 @@ public class AuditSercicelmpl implements AuditService {
                 break;
             case "4":
                 // 权限为人事处负责人，则当前用户可看到全校”部门审核已完成-审核状态为待审核“的全部请假信息
-                resPage = leaveMapper.selectPageByHrLeader(page);
+                resPage = leaveMapper.selectPageByHrLeader(page, currentUser.getId());
                 List<Leave> hrLeaderRecords = resPage.getRecords();
                 for (int i = 0; i < hrLeaderRecords.size(); i++) {
                     String hrStatus = hrLeaderRecords.get(i).getHrStatus();
@@ -241,11 +291,11 @@ public class AuditSercicelmpl implements AuditService {
             default: {
                 // 权限为校领导，则当前用户可看到”本人所负责的部门下“审核状态为待审核状态的全部请假信息
                 String department = currentUser.getYuanXi();
-                resPage = leaveMapper.selectPageBySchool(page, department);
+                resPage = leaveMapper.selectPageBySchool(page, department, currentUser.getId());
                 List<Leave> schoolRecords = resPage.getRecords();
                 for (int i = 0; i < schoolRecords.size(); i++) {
                     String schoolStatus = schoolRecords.get(i).getSchoolStatus();
-                    if (schoolStatus.equals("1")) {
+                    if (schoolStatus.equals("0")) {
                         schoolRecords.get(i).setShowStatus("待审核");
                     }
                 }
@@ -593,7 +643,7 @@ public class AuditSercicelmpl implements AuditService {
             case "5": {     // school
                 for (int i = 0; i < inputList.size(); i++) {
                     String schoolStatus = inputList.get(i).getSchoolStatus();
-                    if (schoolStatus.equals("1")) {
+                    if (schoolStatus.equals("0")) {
                         inputList.get(i).setShowStatus("待审核");
                     }
                 }

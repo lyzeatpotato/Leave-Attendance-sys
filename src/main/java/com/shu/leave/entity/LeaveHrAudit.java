@@ -19,6 +19,7 @@ public class LeaveHrAudit {
     private Long id;
 
     //连接请假表单，表单id
+    @TableField(value = "formid")
     private Long formId;
 
     //人事处人事干事工号

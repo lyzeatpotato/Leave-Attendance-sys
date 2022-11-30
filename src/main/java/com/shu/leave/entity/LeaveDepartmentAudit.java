@@ -14,10 +14,11 @@ import java.util.Date;
 @TableName("leave_department_audit")
 public class    LeaveDepartmentAudit {
     //主键，自增，唯一标识id
-    //@TableId(value = "id",type = IdType.AUTO)
+    @TableId(value = "id",type = IdType.AUTO)
     private Long id;
 
     //连接请假表单，表单id
+    @TableField(value = "formid")
     private Long formId;
 
     //部门人事干事工号
