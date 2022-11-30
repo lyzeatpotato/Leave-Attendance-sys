@@ -22,8 +22,8 @@ public class Leave {
     @TableField(value = "userid")
     private Long userId;
 
-
     //用户详细信息
+    @TableField(exist = false)
     private User user;
 
     // 请假类型

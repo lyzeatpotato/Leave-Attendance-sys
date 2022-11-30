@@ -17,6 +17,14 @@ public interface RevokeService {
     Map<String, String> addRevokeRecord(String[] params) throws ParseException;
 
     /**
+     * 撤销一条销假申请记录
+     * @author liyuanzhe
+     * @param revokeId
+     * @return 返回撤销后的状态逻辑
+     */
+    Map<String, String> undoRevoke(Long revokeId);
+
+    /**
      * 根据userid查询当前用户的全部销假记录
      * @author liyuanzhe
      * @param userId

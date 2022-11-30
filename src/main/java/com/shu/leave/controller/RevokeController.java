@@ -41,4 +41,18 @@ public class RevokeController {
         String[] params = new String[] {formId, revokeReportTime, revokeSubmitTime, userId};
         return BasicResponseUtils.success(revokeService.addRevokeRecord(params));
     }
+
+    @ApiOperation(value = "撤销销假申请")
+    @ApiOperationSupport(order = 2, author = "lyz")
+    @PostMapping("undoRevoke")
+    public ResultEntity undoRevoke(@RequestParam("revoke_form_id") Long revokeId) {
+        return BasicResponseUtils.success(revokeService.undoRevoke(revokeId));
+    }
+
+    @ApiOperation(value = "根据工号获取个人销假列表", notes = "传入个人工号")
+    @ApiOperationSupport(order = 3, author = "lyz")
+    @PostMapping("getRevokeListByUserId")
+    public ResultEntity getRevokeListByUserId(@RequestParam("user_id") String userId) {
+        return BasicResponseUtils.success(revokeService.getRevokeListByUserId(userId));
+    }
 }

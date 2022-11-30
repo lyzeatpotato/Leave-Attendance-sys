@@ -1,9 +1,6 @@
 package com.shu.leave.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
@@ -17,7 +14,7 @@ import java.util.Date;
  */
 
 @Data
-@TableName("revoke")
+@TableName("tb_revoke")
 public class Revoke {
 
     // 主键 自增 唯一标识id
@@ -27,6 +24,10 @@ public class Revoke {
     // 外键 连接请假申请表-表单id
     @TableField(value = "formid")
     private Long formId;
+
+    // 请假信息详情
+    @TableField(exist = false)
+    private Leave leave;
 
     // 返岗报道日期
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
@@ -52,6 +53,7 @@ public class Revoke {
 
     // 逻辑删除
     @TableField(value = "is_deleted")
+    @TableLogic(delval = "0")
     private String isDeleted;
 
     // 创建时间

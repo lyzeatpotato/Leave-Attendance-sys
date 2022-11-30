@@ -1,7 +1,9 @@
 package com.shu.leave.service.Impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.shu.leave.entity.Leave;
 import com.shu.leave.entity.Revoke;
+import com.shu.leave.entity.User;
 import com.shu.leave.mapper.LeaveMapper;
 import com.shu.leave.mapper.RevokeMapper;
 import com.shu.leave.mapper.UserMapper;
@@ -62,6 +64,7 @@ public class RevokeServiceImpl implements RevokeService {
             revoke.setRevokeReportTime(df.parse(params[1]));
             revoke.setRevokeSubmitTime(df.parse(params[2]));
             Date nowDate = new Date();
+            revoke.setStatus("0");
             revoke.setIsDeleted("0");
             revoke.setGmtCreate(nowDate);
             revoke.setGmtModified(nowDate);
@@ -76,15 +79,15 @@ public class RevokeServiceImpl implements RevokeService {
                     count ++;
                 }
             }
-            if (count == 2) {
-                revoke.setDepartmentStatus("0");
-                revoke.setHrStatus("0");
-            } else {
+            if (count == 1) {
                 revoke.setDepartmentStatus("0");
                 revoke.setHrStatus("2");
+            } else {
+                revoke.setDepartmentStatus("0");
+                revoke.setHrStatus("0");
             }
 
-            int affectLines = revokeMapper.insert(revoke);
+            int affectLines = revokeMapper.insert(revoke);      // 向数据库执行写入操作
             if (affectLines == 1) {
                 resultStr = "添加销假记录成功";
             } else {
@@ -96,8 +99,26 @@ public class RevokeServiceImpl implements RevokeService {
     }
 
     @Override
+    public Map<String, String> undoRevoke(Long revokeId) {
+        QueryWrapper<Revoke> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", revokeId);
+        Revoke revoke = revokeMapper.selectOne(queryWrapper);
+        revoke.setStatus("3");      // 修改状态为“已撤销”
+        int affectedLines = revokeMapper.updateById(revoke);
+        HashMap<String, String> resMap = new HashMap<>();
+        if (affectedLines == 1) {
+            resMap.put("result", "销假申请撤销成功");
+        } else {
+            resMap.put("result", "销假申请撤销失败");
+        }
+        return resMap;
+    }
+
+    @Override
     public List<Revoke> getRevokeListByUserId(String userId) {
+        User currentUser = userMapper.findByUserid(userId);
         // 根据用户工号查询出请假申请表中以审核完成并已经提交销假申请的数据
-        return null;
+        List<Revoke> allRevokeListByUserId = revokeMapper.findAllRevokeListByUserId(currentUser.getId());
+        return allRevokeListByUserId;
     }
 }
