@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.shu.leave.entity.Calender;
 import org.springframework.stereotype.Service;
 
+import javax.xml.crypto.Data;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
@@ -63,6 +64,17 @@ public interface CalenderService {
      * @return 需要顺延的寒暑假总天数
      */
     int totalExtendDiscribtionVocation(Date leaveStartDate, Date leaveEndDate, String description);
+
+    /**
+     * 获取实际的请假天数
+     * @author liyuanzhe
+     * @date 2022/12/5 12:24
+     * @param leaveStartDate
+     * @param leaveEndDate
+     * @param leaveType
+     * @return 对应请假类型的请假天数
+     */
+    int realLeaveDayDiffer(Date leaveStartDate, Date leaveEndDate, String leaveType) throws ParseException;
 
     /**
      * 返回当前日期是第几学期的第几个教学周，如不在教学周内则显示”非教学周“

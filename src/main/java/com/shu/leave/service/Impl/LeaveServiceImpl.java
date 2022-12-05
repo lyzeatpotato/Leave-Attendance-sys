@@ -63,26 +63,7 @@ public class LeaveServiceImpl implements LeaveService {
          *      2.事假、丧假遇到公休日和法定节假日顺延；
          *      3.婚假、产假、生育假与配偶陪产假遇寒暑假和法定节假日顺延。
          */
-
-        int dayDiffer = 0;
-        if (leaveType.equals("事假") || leaveType.equals("丧假")) {
-            // 事假、丧假 判别公休日和法定节假日
-            int holidayExtends = calenderService.totalExtendHolidays(startDate, endDate);   // 遇到法定节假日需要顺延的天数
-            if (holidayExtends != -1) {     // =>此处判断不等于-1是确认用户选择的请假范围未被某一个假期范围所包含，如被包含则不记录请假时长(dayDiffer=0)
-                // 请假天数=当前申请天数-遇到公休/法定节假日顺延的天数
-                dayDiffer = UnitedUtils.getDayDiffer(startDate, endDate) - holidayExtends;
-            }
-        } else if (leaveType.equals("婚假") || leaveType.equals("产假") || leaveType.equals("陪产假")) {
-            // 婚假、产假、陪产假 判别法定节假日和寒暑假
-            int holidayExtends = calenderService.totalExtendHolidays(startDate, endDate);   // 遇到法定节假日需要顺延的天数
-            int vocationExtends = calenderService.totalExtendVocation(startDate, endDate);  // 遇到寒暑假需要顺延的天数
-            if (holidayExtends != -1 && vocationExtends != -1) {
-                // 请假天数=当前申请天数-遇到法定节假日/寒暑假顺延的天数
-                dayDiffer = UnitedUtils.getDayDiffer(startDate, endDate) - holidayExtends - vocationExtends;
-            }
-        } else {
-            dayDiffer = UnitedUtils.getDayDiffer(startDate, endDate);
-        }
+        int dayDiffer = calenderService.realLeaveDayDiffer(startDate, endDate, leaveType);
         leaveForm.setLeaveReason(params[4]);
         leaveForm.setLeaveMaterial(params[5]);
         leaveForm.setStatus("0");

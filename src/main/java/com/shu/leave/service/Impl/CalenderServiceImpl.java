@@ -23,6 +23,8 @@ public class CalenderServiceImpl implements CalenderService {
 
     @Resource
     CalenderMapper calenderMapper;
+    @Resource
+    CalenderService calenderService;
 
     @Override
     public int addCalenderForm(String[] params) throws ParseException {
@@ -178,6 +180,36 @@ public class CalenderServiceImpl implements CalenderService {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    @Override
+    public int realLeaveDayDiffer(Date leaveStartDate, Date leaveEndDate, String leaveType) throws ParseException {
+        /**
+         * 根据请假类型判断假期是否需要顺延，并根据校历信息对请假起止时间进行修改（暂未考虑补休）
+         * 规则：1.病假遇寒暑假、公休日和法定节假日不顺延；
+         *      2.事假、丧假遇到公休日和法定节假日顺延；
+         *      3.婚假、产假、生育假与配偶陪产假遇寒暑假和法定节假日顺延。
+         */
+        int dayDiffer = 0;
+        if (leaveType.equals("事假") || leaveType.equals("丧假")) {
+            // 事假、丧假 判别公休日和法定节假日
+            int holidayExtends = calenderService.totalExtendHolidays(leaveStartDate, leaveEndDate);   // 遇到法定节假日需要顺延的天数
+            if (holidayExtends != -1) {     // =>此处判断不等于-1是确认用户选择的请假范围未被某一个假期范围所包含，如被包含则不记录请假时长(dayDiffer=0)
+                // 请假天数=当前申请天数-遇到公休/法定节假日顺延的天数
+                dayDiffer = UnitedUtils.getDayDiffer(leaveStartDate, leaveEndDate) - holidayExtends;
+            }
+        } else if (leaveType.equals("婚假") || leaveType.equals("产假") || leaveType.equals("陪产假")) {
+            // 婚假、产假、陪产假 判别法定节假日和寒暑假
+            int holidayExtends = calenderService.totalExtendHolidays(leaveStartDate, leaveEndDate);   // 遇到法定节假日需要顺延的天数
+            int vocationExtends = calenderService.totalExtendVocation(leaveStartDate, leaveEndDate);  // 遇到寒暑假需要顺延的天数
+            if (holidayExtends != -1 && vocationExtends != -1) {
+                // 请假天数=当前申请天数-遇到法定节假日/寒暑假顺延的天数
+                dayDiffer = UnitedUtils.getDayDiffer(leaveStartDate, leaveEndDate) - holidayExtends - vocationExtends;
+            }
+        } else {
+            dayDiffer = UnitedUtils.getDayDiffer(leaveStartDate, leaveEndDate);
+        }
+        return dayDiffer;
     }
 
     @Override

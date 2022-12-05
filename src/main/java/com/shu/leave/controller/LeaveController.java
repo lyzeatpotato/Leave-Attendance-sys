@@ -24,7 +24,6 @@ public class LeaveController {
     @Resource
     LeaveService leaveService;
 
-
     @ApiOperation(value = "新增请假申请表信息", notes = "所需参数[userid, leave_type, leave_start_time, leave_end_time, leave_reason, leave_material]")
     @ApiOperationSupport(order = 1)
     @PostMapping("addLeaveForm")
@@ -66,21 +65,6 @@ public class LeaveController {
         Page<Leave> page = new Page(pageNum, 10);
         return BasicResponseUtils.success(leaveService.findLeaveFormByUserid(page, userid));
     }
-
-//    @ApiOperation(value = "查询部门下的请假表列表", notes = "传入对应部门和查询type：type=0,查询全部；type=1,查询部门下人事处尚未审核记录；type=2,查询部门下校领导尚未审核记录")
-//    @ApiOperationSupport(order = 6)
-//    @GetMapping("findLeaveFormByDept")
-//    public ResultEntity findLeaveFormByDept(@RequestParam("department") String department, @RequestParam("type") int type){
-//        if(type == 0){
-//            return BasicResponseUtils.success(leaveService.findLeaveFormByUserDept(department));
-//        }else if(type == 1){
-//            return BasicResponseUtils.success(leaveService.findLeaveFormByUserDeptAndUnfinishedHR(department));
-//        }else if(type == 2){
-//            return BasicResponseUtils.success(leaveService.findLeaveFormByUserDeptAndUnfinishedSchool(department));
-//        }else {
-//            return BasicResponseUtils.error(RANGE_ERROR);
-//        }
-//    }
 
     @ApiOperation(value = "查询部门下的请假表列表", notes = "传入对应部门")
     @ApiOperationSupport(order = 6)
@@ -181,25 +165,8 @@ public class LeaveController {
         return BasicResponseUtils.success(leaveService.findLeaveFormByUserDeptCheck(department));
     }
 
-
-//    @ApiOperation(value = "根据时间范围筛选某个用户请假列表", notes = "传入起止时间, 格式yyyy-MM-dd HH:mm:ss")
-//    @ApiOperationSupport(order = 21)
-//    @GetMapping("findLeaveFromTimePeriod")
-//    public ResultEntity findLeaveFromTimePeriod(@RequestParam("userId") Long userId,@RequestParam("startTime") String startTime, @RequestParam("endTime") String endTime){
-//        return BasicResponseUtils.success(leaveService.findLeaveFromTimePeriod(userId,startTime, endTime));
-//    }
-//
-//
-//    @ApiOperation(value = "根据审核状态筛选某个用户请假列表", notes = "-1:全部，0:未审核，1:已审核通过，2:已审核不通过，3:已撤销")
-//    @ApiOperationSupport(order = 22)
-//    @GetMapping("findLeaveFromAuditStatus")
-//    public ResultEntity findLeaveFromAuditStatus(@RequestParam("userId") Long userId, @RequestParam("status") int status){
-//        return BasicResponseUtils.success(leaveService.findLeaveFromAuditStatus(userId, status));
-//    }
-
-
     @ApiOperation(value = "根据时间范围和审核状态筛选某个用户请假列表", notes = "userId是工号，传入起止时间, 格式yyyy-MM-dd HH:mm:ss;status:-1:全部，0:未审核，1:已审核通过，2:已审核不通过，3:已撤销")
-    @ApiOperationSupport(order = 22)
+    @ApiOperationSupport(order = 21)
     @GetMapping("findLeaveFromTimePeriodAndAuditStatus")
     public ResultEntity findLeaveFromTimePeriodAndAuditStatus(@RequestParam("userId") String userId,@RequestParam("startTime") String startTime, @RequestParam("endTime") String endTime,@RequestParam("status") int status){
         return BasicResponseUtils.success(leaveService.findLeaveFromTimePeriodAndAuditStatus(userId,startTime, endTime, status));
