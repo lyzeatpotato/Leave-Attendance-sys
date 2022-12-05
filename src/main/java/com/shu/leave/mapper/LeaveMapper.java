@@ -37,9 +37,10 @@ public interface LeaveMapper extends BaseMapper<Leave> {
     int addLeave(Leave leave);
 
     /**
-     * 查询全部请假申请表
-     *
-     * @return 请假表单信息
+     * 查询全部请假信息表
+     * @author liyuanzhe
+     * @date 2022/12/1 10:51
+     * @return List<Leave>
      */
     @Select({
             "select id, userid, leave_type, leave_start_time, leave_end_time, leave_reason, leave_material,",

@@ -8,6 +8,7 @@ import com.shu.leave.service.CalenderService;
 import com.shu.leave.utils.BasicResponseUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -111,5 +112,16 @@ public class CalenderController {
         return BasicResponseUtils.success(resMap);
     }
 
+    @ApiOperation(value = "系统参考的实际请假天数", notes = "时间格式yyyy-MM-DD HH:MM:ss")
+    @ApiOperationSupport(order = 10)
+    @GetMapping("getReferenceLeaveDay")
+    public ResultEntity getReferenceLeaveDay(@ApiParam(name = "leave_start_time", value = "请假开始日期", required = true) @RequestParam String startTime,
+                                             @ApiParam(name = "leave_end_time", value = "请假结束日期", required = true) @RequestParam String endTime,
+                                             @ApiParam(name = "leave_type", value = "请假类型", required = true) @RequestParam String leaveType) throws ParseException {
+        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-DD HH:MM:ss");
+        Date sTime = sf.parse(startTime);
+        Date eTime = sf.parse(endTime);
+        return BasicResponseUtils.success(calenderService.realLeaveDayDiffer(sTime, eTime, leaveType));
+    }
 
 }
