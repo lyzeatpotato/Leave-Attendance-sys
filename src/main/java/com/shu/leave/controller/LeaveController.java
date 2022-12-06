@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.text.ParseException;
 
-@Api(tags = "2.请假申请表")
-@ApiSupport(order = 2)
+@Api(tags = "3.请假申请")
+@ApiSupport(order = 3)
 @RestController
 @RequestMapping("leave")
 public class LeaveController {

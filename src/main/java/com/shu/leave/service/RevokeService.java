@@ -1,5 +1,6 @@
 package com.shu.leave.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.shu.leave.entity.Revoke;
 
 import java.text.ParseException;
@@ -30,5 +31,23 @@ public interface RevokeService {
      * @param userId
      * @return 符合条件的销假记录信息
      */
-    List<Revoke> getRevokeListByUserId(String userId);
+    Page<Revoke> getRevokeListByUserId(Page<Revoke> page, String userId);
+
+    /**
+     * 根据销假表主键获取信息
+     * @author liyuanzhe
+     * @date 2022/12/5 18:39
+     * @param revokeId
+     * @return Revoke
+     */
+    Revoke getRevokeDetailById(Long revokeId);
+
+    /**
+     * 根据请假申请表主键查询是否存在对应的销假申请记录
+     * @author liyuanzhe
+     * @date 2022/12/6 18:56
+     * @param leaveId
+     * @return Map<Object>
+     */
+    Map<String, Object> findRevokeByLeaveId(Long leaveId);
 }

@@ -89,64 +89,6 @@ public interface CalenderMapper extends BaseMapper<Calender> {
     })
     List<Calender> selectAll();
 
-
-    /**
-     * 查询在给定起止时间范围内是否存在有calender中'法定节假日'的记录
-     * @param leaveStartTime
-     * @param leaveEndTime
-     * @return 返回符合条件的'法定节假日'列表
-     */
-    @Select({
-            "select id, adminid, holiday_name, holiday_start_date, holiday_end_date, description",
-            "from calender where (holiday_start_date between #{leaveStartTime,jdbcType=TIMESTAMP} and #{leaveEndTime,jdbcType=TIMESTAMP})",
-            "or (holiday_end_date between #{leaveStartTime,jdbcType=TIMESTAMP} and #{leaveEndTime,jdbcType=TIMESTAMP})",
-            "and description = '法定节假日' and is_deleted = 0"
-    })
-    List<Calender> selectHolidayByStartEndTimeInner(Date leaveStartTime, Date leaveEndTime);
-
-
-    /**
-     * 查询给定的时间范围是否包含在某条calender的'法定节假日'记录之中
-     * @param leaveStartTime
-     * @param leaveEndTime
-     * @return 返回符合条件的'法定节假日'列表
-     */
-    @Select({
-            "select id, adminid, holiday_name, holiday_start_date, holiday_end_date, description",
-            "from calender where (holiday_start_date <= #{leaveStartTime,jdbcType=TIMESTAMP})",
-            "and (holiday_end_date >= #{leaveEndTime,jdbcType=TIMESTAMP})",
-            "and description = '法定节假日' and is_deleted = 0"
-    })
-    List<Calender> selectHolidayByStartEndTimeContainer(Date leaveStartTime, Date leaveEndTime);
-
-    /**
-     * 查询在给定起止时间范围内是否存在有calender中'寒暑假'的记录
-     * @param leaveStartTime
-     * @param leaveEndTime
-     * @return 返回符合条件的'寒暑假'列表
-     */
-    @Select({
-            "select id, adminid, holiday_name, holiday_start_date, holiday_end_date, description",
-            "from calender where (holiday_start_date between #{leaveStartTime,jdbcType=TIMESTAMP} and #{leaveEndTime,jdbcType=TIMESTAMP})",
-            "or (holiday_end_date between #{leaveStartTime,jdbcType=TIMESTAMP} and #{leaveEndTime,jdbcType=TIMESTAMP})",
-            "and description = '寒暑假' and is_deleted = 0"
-    })
-    List<Calender> selectVocationByStartEndTimeInner(Date leaveStartTime, Date leaveEndTime);
-
-    /**
-     * 查询给定的时间范围是否包含在某条calender的'寒暑假'记录之中
-     * @param leaveStartTime
-     * @param leaveEndTime
-     * @return 返回符合条件的'寒暑假'列表
-     */
-    @Select({
-            "select id, adminid, holiday_name, holiday_start_date, holiday_end_date, description",
-            "from calender where (holiday_start_date <= #{leaveStartTime,jdbcType=TIMESTAMP})",
-            "and (holiday_end_date >= #{leaveEndTime,jdbcType=TIMESTAMP})",
-            "and description = '寒暑假' and is_deleted = 0"
-    })
-    List<Calender> selectVocationByStartEndTimeContainer(Date leaveStartTime, Date leaveEndTime);
-
     /**
      *author：王仕杰
      * 假期查询代码简化

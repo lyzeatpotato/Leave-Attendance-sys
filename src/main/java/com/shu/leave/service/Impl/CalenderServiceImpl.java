@@ -93,10 +93,21 @@ public class CalenderServiceImpl implements CalenderService {
          * 1.首先判断用户提交的请假起止时间范围内，是否有法定节假日
          * 2.如不存在数据，则进一步判断请假起止时间是否落在了某个法定节假日范围内
          */
-        List<Calender> calendersInScope = calenderMapper.selectHolidayByStartEndTimeInner(leaveStartDate, leaveEndDate);
+        QueryWrapper<Calender> innerQueryWrapper = new QueryWrapper<>();
+        innerQueryWrapper.between("holiday_start_date", leaveStartDate, leaveEndDate);
+        innerQueryWrapper.between("holiday_end_date", leaveEndDate, leaveEndDate);
+        innerQueryWrapper.eq("description", "法定节假日");
+        innerQueryWrapper.eq("is_deleted", 0);
+        List<Calender> calendersInScope = calenderMapper.selectList(innerQueryWrapper);
         if (calendersInScope.isEmpty()) {
             // 当前用户选择的请假起止时间不包含法定节假日
-            List<Calender> calendersConScope = calenderMapper.selectHolidayByStartEndTimeContainer(leaveStartDate, leaveEndDate);
+            QueryWrapper<Calender> conQueryWrapper = new QueryWrapper<>();
+            conQueryWrapper.le("holiday_start_date", leaveStartDate);
+            conQueryWrapper.ge("holiday_end_date", leaveEndDate);
+            conQueryWrapper.eq("description", "法定节假日");
+            conQueryWrapper.eq("is_deleted", 0);
+            List<Calender> calendersConScope = calenderMapper.selectList(conQueryWrapper);
+//            List<Calender> calendersConScope = calenderMapper.selectHolidayByStartEndTimeContainer(leaveStartDate, leaveEndDate);
             if (calendersConScope.isEmpty()) {
                 // 如也没有落在某个假期范围内，则说明不需要顺延
                 return 0;
@@ -125,10 +136,20 @@ public class CalenderServiceImpl implements CalenderService {
          * 1.首先判断用户提交的请假起止时间范围内，是否有寒暑假
          * 2.如不存在数据，则进一步判断请假起止时间是否落在了某个寒暑假范围内
          */
-        List<Calender> calendersInScope = calenderMapper.selectVocationByStartEndTimeInner(leaveStartDate, leaveEndDate);
+        QueryWrapper<Calender> inQueryWrapper = new QueryWrapper<>();
+        inQueryWrapper.between("holiday_start_date", leaveStartDate, leaveEndDate);
+        inQueryWrapper.between("holiday_end_date", leaveEndDate, leaveEndDate);
+        inQueryWrapper.eq("description", "寒暑假");
+        inQueryWrapper.eq("is_deleted", 0);
+        List<Calender> calendersInScope = calenderMapper.selectList(inQueryWrapper);
         if (calendersInScope.isEmpty()) {
-            // 当前用户选择的请假起止时间不包含法定节假日
-            List<Calender> calendersConScope = calenderMapper.selectVocationByStartEndTimeContainer(leaveStartDate, leaveEndDate);
+            // 当前用户选择的请假起止时间不包含寒暑假
+            QueryWrapper<Calender> conQueryWrapper = new QueryWrapper<>();
+            conQueryWrapper.le("holiday_start_date", leaveStartDate);
+            conQueryWrapper.ge("holiday_end_date", leaveEndDate);
+            conQueryWrapper.eq("description", "寒暑假");
+            conQueryWrapper.eq("is_deleted", 0);
+            List<Calender> calendersConScope = calenderMapper.selectList(conQueryWrapper);
             if (calendersConScope.isEmpty()) {
                 // 如也没有落在某个假期范围内，则说明不需要顺延
                 return 0;

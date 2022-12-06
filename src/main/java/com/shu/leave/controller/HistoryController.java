@@ -18,8 +18,8 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-@Api(tags = "3.教师月度考勤")
-@ApiSupport(order = 3)
+@Api(tags = "7.考勤相关")
+@ApiSupport(order = 7)
 @RestController
 @RequestMapping("history")
 public class HistoryController {

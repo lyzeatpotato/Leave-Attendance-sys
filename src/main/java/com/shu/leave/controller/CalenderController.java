@@ -21,8 +21,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-@Api(tags = "4.校历假期数据表")
-@ApiSupport(order = 4)
+@Api(tags = "8.校历维护")
+@ApiSupport(order = 8)
 @RestController
 @RequestMapping("calender")
 public class CalenderController {
@@ -113,12 +113,12 @@ public class CalenderController {
     }
 
     @ApiOperation(value = "系统参考的实际请假天数", notes = "时间格式yyyy-MM-DD HH:MM:ss")
-    @ApiOperationSupport(order = 10)
+    @ApiOperationSupport(order = 10, author = "lyz")
     @GetMapping("getReferenceLeaveDay")
-    public ResultEntity getReferenceLeaveDay(@ApiParam(name = "leave_start_time", value = "请假开始日期", required = true) @RequestParam String startTime,
-                                             @ApiParam(name = "leave_end_time", value = "请假结束日期", required = true) @RequestParam String endTime,
-                                             @ApiParam(name = "leave_type", value = "请假类型", required = true) @RequestParam String leaveType) throws ParseException {
-        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-DD HH:MM:ss");
+    public ResultEntity getReferenceLeaveDay(@ApiParam(name = "leave_start_time", value = "请假开始日期", required = true) @RequestParam("leave_start_time") String startTime,
+                                             @ApiParam(name = "leave_end_time", value = "请假结束日期", required = true) @RequestParam("leave_end_time") String endTime,
+                                             @ApiParam(name = "leave_type", value = "请假类型", required = true) @RequestParam("leave_type") String leaveType) throws ParseException {
+        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH");
         Date sTime = sf.parse(startTime);
         Date eTime = sf.parse(endTime);
         return BasicResponseUtils.success(calenderService.realLeaveDayDiffer(sTime, eTime, leaveType));

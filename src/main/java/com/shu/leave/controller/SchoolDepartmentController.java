@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
-@Api(tags = "7.校领导负责的部门")
-@ApiSupport(order = 7)
+@Api(tags = "10.校领导分管部门")
+@ApiSupport(order = 10)
 @RestController
 @RequestMapping("school_department")
 public class SchoolDepartmentController {
