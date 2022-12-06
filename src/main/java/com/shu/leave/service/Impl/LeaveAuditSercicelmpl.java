@@ -4,22 +4,18 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.shu.leave.entity.*;
 import com.shu.leave.mapper.*;
-import com.shu.leave.service.AuditService;
-import jdk.nashorn.internal.ir.CallNode;
+import com.shu.leave.service.LeaveAuditService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.sql.Timestamp;
-import java.sql.Wrapper;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.function.Consumer;
 
 
 @Service
-public class AuditSercicelmpl implements AuditService {
+public class LeaveAuditSercicelmpl implements LeaveAuditService {
     @Autowired
     LeaveDepartmentAuditMapper leaveDepartmentAuditMapper;
 

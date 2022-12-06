@@ -67,7 +67,6 @@ public interface LeaveMapper extends BaseMapper<Leave> {
 
     /**
      * 根据id查询请假申请表详细信息
-     *
      * @param id
      * @return id对应申请表的详细信息
      */
@@ -78,6 +77,19 @@ public interface LeaveMapper extends BaseMapper<Leave> {
     })
     @ResultMap(value = "leaveEasyMapper")
     Leave findById(Long id);
+
+    /**
+     * 根据id查询请假申请表详细信息
+     * @param id
+     * @return id对应申请表的详细信息
+     */
+    @Select({
+            "select id, userid, leave_type, leave_start_time, leave_end_time, leave_reason, leave_material,",
+            "status, department_status, hr_status, school_status, is_deleted, gmt_create, gmt_modified",
+            "from leave where id=#{id,jdbcType=BIGINT} and is_deleted=0"
+    })
+    @ResultMap(value = "leaveDeptRelatedMapper")
+    Leave findLeaveWithUserById(Long id);
 
     /**
      * 根据教师id查询其对应的请假申请表信息
@@ -580,7 +592,6 @@ public interface LeaveMapper extends BaseMapper<Leave> {
 
     /**
      * 分页查询“部门科员”初始加载的全部本部门请假信息
-     *
      * @param page
      * @param department
      * @return 权限为“部门科员”用户可查看的“本部门-待审核-部门科员尚未审核”请假信息

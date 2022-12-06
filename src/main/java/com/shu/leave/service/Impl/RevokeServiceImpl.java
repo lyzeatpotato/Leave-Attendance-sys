@@ -1,6 +1,7 @@
 package com.shu.leave.service.Impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.shu.leave.entity.Leave;
 import com.shu.leave.entity.Revoke;
 import com.shu.leave.entity.User;
@@ -104,6 +105,7 @@ public class RevokeServiceImpl implements RevokeService {
         queryWrapper.eq("id", revokeId);
         Revoke revoke = revokeMapper.selectOne(queryWrapper);
         revoke.setStatus("3");      // 修改状态为“已撤销”
+        revoke.setGmtModified(new Date());
         int affectedLines = revokeMapper.updateById(revoke);
         HashMap<String, String> resMap = new HashMap<>();
         if (affectedLines == 1) {
@@ -115,10 +117,40 @@ public class RevokeServiceImpl implements RevokeService {
     }
 
     @Override
-    public List<Revoke> getRevokeListByUserId(String userId) {
+    public Page<Revoke> getRevokeListByUserId(Page<Revoke> page, String userId) {
         User currentUser = userMapper.findByUserid(userId);
+        Page<Revoke> resPage ;
         // 根据用户工号查询出请假申请表中以审核完成并已经提交销假申请的数据
-        List<Revoke> allRevokeListByUserId = revokeMapper.findAllRevokeListByUserId(currentUser.getId());
-        return allRevokeListByUserId;
+        resPage = revokeMapper.findAllRevokeListByUserId(page, currentUser.getId());
+        return resPage;
+    }
+
+    @Override
+    public Revoke getRevokeDetailById(Long revokeId) {
+        return revokeMapper.findRevokeDetailById(revokeId);
+    }
+
+    @Override
+    public Map<String, Object> findRevokeByLeaveId(Long leaveId) {
+        Map<String, Object> resultMap = new HashMap<>();
+        QueryWrapper<Revoke> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("formid", leaveId);
+        int code = 0;
+        try {
+            Revoke revoke = revokeMapper.selectOne(queryWrapper);
+            code = 0;
+            if (revoke == null) {
+                resultMap.put("result", "当前请假申请暂无对应销假记录");
+            } else {
+                resultMap.put("result", revoke);
+                code = 1;
+            }
+        } catch (Exception e) {
+            resultMap.put("result", "销假表数据库存储有误，请查看是否存在同一条请假申请提交了多个销假记录");
+            code = 2;
+            e.printStackTrace();
+        }
+        resultMap.put("resultCode", code);
+        return resultMap;
     }
 }

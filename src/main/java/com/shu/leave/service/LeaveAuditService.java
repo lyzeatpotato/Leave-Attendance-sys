@@ -10,7 +10,7 @@ import java.util.Map;
 
 
 @Service
-public interface AuditService {
+public interface LeaveAuditService {
 
     /**
      * 不同权限的审核人员，提交审核结果时写入/修改数据库的逻辑

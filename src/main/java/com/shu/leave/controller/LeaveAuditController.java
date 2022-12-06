@@ -6,7 +6,7 @@ import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.shu.leave.common.ResultEntity;
 import com.shu.leave.entity.Leave;
-import com.shu.leave.service.AuditService;
+import com.shu.leave.service.LeaveAuditService;
 import com.shu.leave.utils.BasicResponseUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -15,15 +15,15 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
-@Api(tags = "8.请假审核")
-@ApiSupport(order = 8)
+@Api(tags = "5.请假审核")
+@ApiSupport(order = 5)
 @RestController
 @RequestMapping("audit")
-public class AuditController {
+public class LeaveAuditController {
     @Resource
-    AuditService auditService;
+    LeaveAuditService auditService;
 
-    @ApiOperation(value = "审核请假单", notes = "所需参数[role,userid,id,result,recommend]")
+    @ApiOperation(value = "新增请假审核信息", notes = "所需参数[role,userid,id,result,recommend]")
     @ApiOperationSupport(order = 1)
     @PostMapping("SingleleaveAudit")
     public ResultEntity SingleleaveAudit(@RequestParam("role") String role, @RequestParam("userid") String userid,

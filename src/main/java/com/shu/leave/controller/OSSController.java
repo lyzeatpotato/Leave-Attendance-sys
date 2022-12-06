@@ -26,8 +26,8 @@ import java.util.Map;
  * @date: 2022-11-2022/11/4
  * @description: 前端获取服务器数字签名接口
  */
-@Api(tags = "9.OSS对象存储")
-@ApiSupport(order = 9)
+@Api(tags = "11.云存储设置")
+@ApiSupport(order = 11)
 @RestController
 @RequestMapping("oss")
 public class OSSController {

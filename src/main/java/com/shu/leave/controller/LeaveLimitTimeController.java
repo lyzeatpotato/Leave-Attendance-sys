@@ -20,8 +20,8 @@ import java.util.List;
 /**
  * author:王仕杰
  */
-@Api(tags = "6.请假时间限制")
-@ApiSupport(order = 6)
+@Api(tags = "9.系统时限")
+@ApiSupport(order = 9)
 @RestController
 @RequestMapping("leave_audit_limit_time")
 public class LeaveLimitTimeController {
