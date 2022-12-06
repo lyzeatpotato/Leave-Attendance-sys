@@ -112,4 +112,68 @@ public interface RevokeMapper extends BaseMapper<Revoke> {
     })
     @ResultMap("RevokeComplexMapper")
     Page<Revoke> selectPageByHrAndSchoolUser(Page<Revoke> page, Long userId);
+
+    /**
+     * 复杂分页查询”部门审核用户“可根据”工号/姓名“选择查询本部门的销假信息
+     * @author liyuanzhe
+     * @date 2022/12/6 23:40
+     * @param page
+     * @param department
+     * @param userId
+     * @param userName
+     * @return Page<Revoke>
+     */
+    @Select({
+            "<script>",
+            "select tb_revoke.id,tb_revoke.formid,tb_revoke.revoke_submit_time,tb_revoke.revoke_report_time,",
+            "tb_revoke.status,tb_revoke.department_status,tb_revoke.hr_status,tb_revoke.is_deleted,tb_revoke.is_deleted,tb_revoke.gmt_create,tb_revoke.gmt_modified",
+            "from leave,tb_revoke,user_info",
+            "where (leave.id = tb_revoke.formid and leave.userid = user_info.id and ",
+            "tb_revoke.status = 0 and tb_revoke.is_deleted = 0 and",
+            "leave.userid != #{myUserId, jdbcType=BIGINT} and ",
+            "user_info.yuanxi = #{department, jdbcType=VARCHAR} ",
+            "<when test='userid!=null'>",
+            "AND user_info.userid = #{userid}",
+            "</when>",
+            "<when test='username!=null'>",
+            "AND user_info.username = #{username}",
+            "</when>)",
+            "ORDER BY tb_revoke.id DESC",
+            "</script>"
+    })
+    @ResultMap("RevokeComplexMapper")
+    Page<Revoke> selectPageByUserIdOrUserName(Page<Revoke> page, Long myUserId, String department, @Param("userid") String userId, @Param("username") String userName);
+
+    /**
+     * 复杂分页查询”人事处审核用户“可根据”工号/姓名/部门名称“选择查询全校的销假信息
+     * @author liyuanzhe
+     * @date 2022/12/6 23:46
+     * @param page
+     * @param userId
+     * @param userName
+     * @param department
+     * @return Page<Revoke>
+     */
+    @Select({
+            "<script>",
+            "select tb_revoke.id,tb_revoke.formid,tb_revoke.revoke_submit_time,tb_revoke.revoke_report_time,",
+            "tb_revoke.status,tb_revoke.department_status,tb_revoke.hr_status,tb_revoke.is_deleted,tb_revoke.is_deleted,tb_revoke.gmt_create,tb_revoke.gmt_modified",
+            "from leave,tb_revoke,user_info",
+            "where (leave.id = tb_revoke.formid and leave.userid = user_info.id and ",
+            "tb_revoke.status = 0 and tb_revoke.is_deleted = 0 and tb_revoke.department_status = 1 and ",
+            "tb_revoke.hr_status != 2 and leave.userid != #{myUserId, jdbcType=BIGINT}",
+            "<when test='userid!=null'>",
+            "AND user_info.userid = #{userid}",
+            "</when>",
+            "<when test='username!=null'>",
+            "AND user_info.username = #{username}",
+            "</when>",
+            "<when test='department!=null'>",
+            "AND user_info.yuanxi = #{department}",
+            "</when>)",
+            "ORDER BY tb_revoke.id DESC",
+            "</script>"
+    })
+    @ResultMap("RevokeComplexMapper")
+    Page<Revoke> selectPageByUserIdOrUserNameOrDept(Page<Revoke> page, Long myUserId, @Param("userid") String userId, @Param("username") String userName, @Param("department") String department);
 }

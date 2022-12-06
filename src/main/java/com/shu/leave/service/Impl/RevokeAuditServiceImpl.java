@@ -132,10 +132,43 @@ public class RevokeAuditServiceImpl implements RevokeAuditService {
             case "1": case"2": {
                 // 部门科员与部门负责人看到的界面是一致的
                 resPage = revokeMapper.selectPageByDeptUser(page, currentUser.getYuanXi(), currentUser.getId());
+                break;
             }
             default: {
                 // 人事处科员与人事处负责人与校领导都可以看到全校的数据
                 resPage = revokeMapper.selectPageByHrAndSchoolUser(page, currentUser.getId());
+                break;
+            }
+        }
+        return resPage;
+    }
+
+    @Override
+    public Page<Revoke> getRevokeAuditSelected(Page<Revoke> page, String userId, String[] params) {
+        User currentUser = userMapper.findByUserid(userId);     // 获取当前的用户信息
+        // 判断当前用户的权限
+        String currentUserRole = currentUser.getRole();
+        Page<Revoke> resPage;
+        switch (currentUserRole) {
+            case "1": case "2": {
+                // 部门审核人员用户：根据工号和用户姓名查询
+                for (int i = 0; i < params.length; i++) {
+                    if (params[i].equals("null")) {
+                        params[i] = null;
+                    }
+                }
+                resPage = revokeMapper.selectPageByUserIdOrUserName(page, currentUser.getId(), currentUser.getYuanXi(), params[0], params[1]);
+                break;
+            }
+            default: {
+                // 人事处审核人员用户：根据工号和用户姓名以及部门名称查询
+                for (int i = 0; i < params.length; i++) {
+                    if (params[i].equals("null")) {
+                        params[i] = null;
+                    }
+                }
+                resPage = revokeMapper.selectPageByUserIdOrUserNameOrDept(page, currentUser.getId(), params[0], params[1], params[2]);
+                break;
             }
         }
         return resPage;

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.shu.leave.common.ResultEntity;
+import com.shu.leave.entity.Leave;
 import com.shu.leave.entity.Revoke;
 import com.shu.leave.service.RevokeAuditService;
 import com.shu.leave.utils.BasicResponseUtils;
@@ -45,12 +46,24 @@ public class RevokeAuditController {
     @ApiOperation(value = "审核页默认请假列表接口", notes = "根据传入用户工号显示对应权限看到的请假详情信息")
     @ApiOperationSupport(order = 2, author = "lyz")
     @GetMapping("getAuditLoadingDataByUserId")
-    public ResultEntity getAuditLoadingDataByUserId(@RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
-                                                    @RequestParam("userid") String userId){
+    public ResultEntity getAuditLoadingDataByUserId(@ApiParam(name = "pageNum", value = "分页编号", required = true) @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
+                                                    @ApiParam(name = "userid", value = "当前登录用户工号", required = true) @RequestParam("userid") String userId){
         Page<Revoke> page = new Page<>(pageNum, 10);         // 当前页为传入的参数，默认每页显示10条数据
         return BasicResponseUtils.success(revokeAuditService.getAuditLoadingDataByUserId(page, userId));
     }
 
+    @ApiOperation(value = "销假审核页面多条件复杂查询", notes = "查询条件为空时前端传入字符串null")
+    @ApiOperationSupport(order = 3, author = "lyz")
+    @GetMapping("getRevokeAuditSelected")
+    public ResultEntity getRevokeAuditSelected(@ApiParam(name = "pageNum", value = "分页编号", required = true) @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
+                                               @ApiParam(name = "userid", value = "当前登录用户工号", required = true) @RequestParam("userid") String userId,
+                                               @ApiParam(name = "selectuserid", value = "查询条件的用户工号", required = true) @RequestParam("selectuserid") String selectUserId,
+                                               @ApiParam(name = "username", value = "查询条件的用户名", required = true) @RequestParam("username") String username,
+                                               @ApiParam(name = "department", value = "查询条件的部门名称", required = true) @RequestParam("department") String dept) {
+        Page<Revoke> page = new Page<>(pageNum, 10);         // 当前页为传入的参数，默认每页显示10条数据
+        String[] params = new String[] {selectUserId, username, dept};
+        return BasicResponseUtils.success(revokeAuditService.getRevokeAuditSelected(page, userId, params));
+    }
 
     @ApiOperation(value = "获取销假审核信息", notes = "根据销假审核进度返回当前审核详情信息")
     @ApiOperationSupport(order = 4, author = "lyz")

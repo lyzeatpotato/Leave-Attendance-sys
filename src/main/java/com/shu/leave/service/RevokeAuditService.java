@@ -1,6 +1,7 @@
 package com.shu.leave.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.shu.leave.entity.Leave;
 import com.shu.leave.entity.Revoke;
 
 import java.util.Map;
@@ -31,10 +32,21 @@ public interface RevokeAuditService {
     Page<Revoke> getAuditLoadingDataByUserId(Page<Revoke> page, String userId);
 
     /**
+     * 复杂查询销假审核页面的数据
+     * @author liyuanzhe
+     * @date 2022/12/6 23:31
+     * @param page
+     * @param userId
+     * @param params
+     * @return Page<Leave>
+     */
+    Page<Revoke> getRevokeAuditSelected(Page<Revoke> page, String userId, String[] params);
+
+    /**
      * 返回某一销假信息对应已完成的审核信息（未完成的显示为"无需此步骤"）
      * @author liyuanzhe
      * @date 2022/12/6 22:47
-     * @param leaveId
+     * @param revokeId
      * @return Map<Object>
      */
     Map<String, Object> getCurrentRevokeAuditMsgById(Long revokeId);
