@@ -38,6 +38,15 @@ public interface AdminService {
     Admin findAdminById(Long id);
 
     /**
+     * 根据工号查询管理员
+     * @author liyuanzhe
+     * @date 2022/12/8 17:51
+     * @param userId
+     * @return Admin
+     */
+    Admin findAdminByUserId(String userId);
+
+    /**
      * 根据id查询用户
      * @param params -> [id, userid, username]
      * @return id对应的用户信息
