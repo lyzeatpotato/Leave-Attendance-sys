@@ -1,5 +1,6 @@
 package com.shu.leave.service.Impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.shu.leave.entity.Admin;
@@ -55,6 +56,13 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public Admin findAdminById(Long id) {
         return adminMapper.selectById(id);
+    }
+
+    @Override
+    public Admin findAdminByUserId(String userId) {
+        QueryWrapper<Admin> adminQueryWrapper = new QueryWrapper<>();
+        adminQueryWrapper.eq("userid", userId);
+        return adminMapper.selectOne(adminQueryWrapper);
     }
 
     @Override
