@@ -20,7 +20,6 @@ public interface LeaveMapper extends BaseMapper<Leave> {
 
     /**
      * 新增一条请假申请表单数据（插入除id以外完整的用户信息）
-     *
      * @param leave
      * @return 新增请假申请表的主键id值
      */
@@ -620,7 +619,7 @@ public interface LeaveMapper extends BaseMapper<Leave> {
             "leave.leave_reason, leave.leave_material, leave.status, leave.department_status, " +
             "leave.hr_status, leave.school_status, leave.is_deleted, leave.gmt_create, leave.gmt_modified " +
             "FROM leave, user_info " +
-            "WHERE (leave.userid = user_info.id and leave.status = 0 and leave.is_deleted = 0 " +
+            "WHERE (leave.userid = user_info.id and leave.status = 0 and leave.department_status = 3 and leave.is_deleted = 0 " +
             "and user_info.yuanxi = #{department, jdbcType=VARCHAR} and leave.userid != #{userId, jdbcType=BIGINT}) " +
             "ORDER BY leave.id DESC"
     )
@@ -656,7 +655,7 @@ public interface LeaveMapper extends BaseMapper<Leave> {
             "leave.leave_reason, leave.leave_material, leave.status, leave.department_status, " +
             "leave.hr_status, leave.school_status, leave.is_deleted, leave.gmt_create, leave.gmt_modified " +
             "FROM leave, user_info " +
-            "WHERE (leave.userid = user_info.id and leave.status = 0 and leave.is_deleted = 0" +
+            "WHERE (leave.userid = user_info.id and leave.status = 0 and leave.hr_status = 3 and leave.is_deleted = 0" +
             "and leave.department_status = 1 and leave.hr_status != 2 and leave.userid != #{userId, jdbcType=BIGINT})" +
             "ORDER BY leave.id DESC"
     )
@@ -728,7 +727,7 @@ public interface LeaveMapper extends BaseMapper<Leave> {
             "leave.leave_reason, leave.leave_material, leave.status, leave.department_status, ",
             "leave.hr_status, leave.school_status, leave.is_deleted, leave.gmt_create, leave.gmt_modified ",
             "FROM leave, user_info ",
-            "WHERE (leave.userid = user_info.id and leave.status = 0 and leave.is_deleted = 0 ",
+            "WHERE (leave.userid = user_info.id and leave.status = 0 and leave.department_status = 3 and leave.is_deleted = 0 ",
             "and user_info.yuanxi = #{department, jdbcType=VARCHAR} ",
             "<when test='userid!=null'>",
             "AND user_info.userid = #{userid}",
@@ -791,7 +790,7 @@ public interface LeaveMapper extends BaseMapper<Leave> {
             "leave.leave_reason, leave.leave_material, leave.status, leave.department_status, ",
             "leave.hr_status, leave.school_status, leave.is_deleted, leave.gmt_create, leave.gmt_modified ",
             "FROM leave, user_info ",
-            "WHERE (leave.userid = user_info.id and leave.status = 0 and leave.is_deleted = 0",
+            "WHERE (leave.userid = user_info.id and leave.status = 0 and leave.hr_status = 3 and leave.is_deleted = 0",
             "and leave.department_status = 1 and leave.hr_status != 2",
             "<when test='userid!=null'>",
             "AND user_info.userid = #{userid}",

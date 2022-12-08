@@ -196,6 +196,9 @@ public class LeaveServiceImpl implements LeaveService {
         int days = UnitedUtils.getDayDiffer(leaveStartTime, leaveEndTime);
         audies[1] = judgeHRAudit(userId, leaveType, leaveStartTime, leaveEndTime);
         audies[2] = judgeSchoolAudit(userId, leaveType, leaveStartTime, leaveEndTime);
+        if (audies[1] == 2) {
+            audies[2] = 2;
+        }
         return audies;
     }
 
