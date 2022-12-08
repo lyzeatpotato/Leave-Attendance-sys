@@ -53,10 +53,14 @@ public class UserController {
         if (currentLoginAdmin != null) {
             response.addCookie(cookie);
             User currentLoginUser = userService.findUserByUserId(username);     // 获取当前登录的用户
-            resultMap.put("user", currentLoginUser);
-            resultMap.put("jwt_token", token);
-            resultMap.put("role", "admin");      // 权限为用户
-            return BasicResponseUtils.success(resultMap);
+            if (password.equals("123456")) {
+                resultMap.put("user", currentLoginUser);
+                resultMap.put("jwt_token", token);
+                resultMap.put("role", "admin");      // 权限为用户
+                return BasicResponseUtils.success(resultMap);
+            } else {
+                return BasicResponseUtils.error(ResponseCodeEnums.LOGIN_ERROR);
+            }
         } else {
             User currentLoginUser = userService.findUserByUserId(username);     // 获取当前登录的用户
             if (currentLoginUser != null && password.equals("123456")) {
@@ -127,7 +131,7 @@ public class UserController {
     //@ApiImplicitParams({@ApiImplicitParam(name = "token", value = "token", required = true, paramType = "header")})
     //@AuthToken
     public ResultEntity findUserPageByUserid(@RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
-                                             @RequestParam("userid") String userId) throws ParseException {
+                                             @RequestParam("userid") String userId) {
         Page<User> page = new Page(pageNum, 6);
         return BasicResponseUtils.success(userService.findUserPageByUserId(page,Long.parseLong(userId)));
     }
