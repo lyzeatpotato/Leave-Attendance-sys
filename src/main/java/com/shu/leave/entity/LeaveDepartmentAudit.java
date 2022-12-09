@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import lombok.Data;
 
 import java.util.Date;
@@ -24,6 +25,10 @@ public class    LeaveDepartmentAudit {
     //部门人事干事工号
     private String dpOfficerId;
 
+    // 部门人事干事姓名
+    @TableField(exist = false)
+    private String dpOfficerName;
+
     //部门人事干事初审结果(通过/不通过)
     private String dpOfficerResult;
 
@@ -38,6 +43,10 @@ public class    LeaveDepartmentAudit {
 
     //部门负责人工号
     private String dpLeaderId;
+
+    // 部门负责人姓名
+    @TableField(exist = false)
+    private String dpLeaderName;
 
     //部门负责人审核结果(通过/不通过)
     private String dpLeaderResult;

@@ -540,7 +540,6 @@ public class LeaveAuditSercicelmpl implements LeaveAuditService {
     public Map<String, Object> getCurrentAuditMsgById(Long leaveId) {
         // 首先根据主键查询出leave请假信息
         Leave currentLeave = leaveMapper.findById(leaveId);
-        String departmentStatus = currentLeave.getDepartmentStatus();
         String hrStatus = currentLeave.getHrStatus();
         String schoolStatus = currentLeave.getSchoolStatus();
         // 初始化统一的返回值类型
@@ -553,24 +552,37 @@ public class LeaveAuditSercicelmpl implements LeaveAuditService {
          * 4.判断是否还需要校领导审核->需要，执行5；不需要，返回最终结果
          * 5.查看是否已有校领导审核记录->有，返回最终结果；没有，说明校领导还未审核，ScObject为字符串"尚未进行校领导审核"，并返回最终结果
          */
-        LeaveDepartmentAudit deptAuditMsgByFormId = leaveDepartmentAuditMapper.findDeptAuditMsgByFormId(leaveId);
-        if (deptAuditMsgByFormId != null) {
-            resMap.put("departmentAuditMsg", deptAuditMsgByFormId);
+        LeaveDepartmentAudit departmentAudit = leaveDepartmentAuditMapper.findDeptAuditMsgByFormId(leaveId);
+        if (departmentAudit != null) {
+            String dpOfficerId = departmentAudit.getDpOfficerId();
+            departmentAudit.setDpOfficerName(userMapper.findByUserid(dpOfficerId).getUserName());
+            String dpLeaderId = departmentAudit.getDpLeaderId();
+            if (!dpLeaderId.equals("部门领导暂未审核")) {
+                departmentAudit.setDpLeaderName(userMapper.findByUserid(dpLeaderId).getUserName());
+            }
+            resMap.put("departmentAuditMsg", departmentAudit);
         } else {
             resMap.put("departmentAuditMsg", "尚未进行部门审核");
         }
         if (!hrStatus.equals("2")) {
-            LeaveHrAudit hrAuditMsgByFormId = leaveHrAuditMapper.findHrAuditMsgByFormId(leaveId);
-            if (hrAuditMsgByFormId != null) {
-                resMap.put("hrAuditMsg", hrAuditMsgByFormId);
+            LeaveHrAudit hrAudit = leaveHrAuditMapper.findHrAuditMsgByFormId(leaveId);
+            if (hrAudit != null) {
+                String hrOfficerId = hrAudit.getHrOfficerId();
+                hrAudit.setHrOfficerName(userMapper.findByUserid(hrOfficerId).getUserName());
+                String hrLeaderId = hrAudit.getHrLeaderId();
+                if (!hrLeaderId.equals("人事处领导暂未审核")) {
+                    hrAudit.setHrLeaderName(userMapper.findByUserid(hrLeaderId).getUserName());
+                }
+                resMap.put("hrAuditMsg", hrAudit);
             } else {
                 resMap.put("hrAuditMsg", "尚未进行人事处审核");
             }
         }
         if (!schoolStatus.equals("2")) {
-            LeaveSchoolAudit schoolAuditMsgByFormId = leaveSchoolAuditMapper.findSchoolAuditMsgByFormId(leaveId);
-            if (schoolAuditMsgByFormId != null) {
-                resMap.put("schoolAuditMsg", schoolAuditMsgByFormId);
+            LeaveSchoolAudit schoolAudit = leaveSchoolAuditMapper.findSchoolAuditMsgByFormId(leaveId);
+            if (schoolAudit != null) {
+                schoolAudit.setScLeaderName(userMapper.findByUserid(schoolAudit.getScLeaderId()).getUserName());
+                resMap.put("schoolAuditMsg", schoolAudit);
             } else {
                 resMap.put("schoolAuditMsg", "尚未进行校领导审核");
             }

@@ -194,6 +194,7 @@ public class RevokeAuditServiceImpl implements RevokeAuditService {
         try {
             RevokeDepartmentAudit revokeDepartmentAudit = revokeDepartmentAuditMapper.selectOne(auditQueryWrapper);
             if (revokeDepartmentAudit != null) {
+                revokeDepartmentAudit.setDpLeaderName(userMapper.findByUserid(revokeDepartmentAudit.getDpLeaderId()).getUserName());
                 resMap.put("departmentAuditMsg", revokeDepartmentAudit);
             } else {
                 resMap.put("departmentAuditMsg", "尚未进行部门审核");
@@ -203,6 +204,7 @@ public class RevokeAuditServiceImpl implements RevokeAuditService {
                 auditQueryWrapper.eq("revoke_formid", revokeId);
                 RevokeHrAudit revokeHrAudit = revokeHrAuditMapper.selectOne(hrAuditQueryWrapper);
                 if (revokeHrAudit != null) {
+                    revokeHrAudit.setHrLeaderName(userMapper.findByUserid(revokeHrAudit.getHrLeaderId()).getUserName());
                     resMap.put("hrAuditMsg", revokeHrAudit);
                 } else {
                     resMap.put("hrAuditMsg", "尚未进行人事处审核");

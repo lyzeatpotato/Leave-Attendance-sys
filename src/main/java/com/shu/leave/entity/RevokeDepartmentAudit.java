@@ -29,6 +29,10 @@ public class RevokeDepartmentAudit {
     @TableField(value = "dp_leader_id")
     private String dpLeaderId;
 
+    // 部门负责人姓名
+    @TableField(exist = false)
+    private String dpLeaderName;
+
     // 部门负责人审核结果（通过/不通过）
     @TableField(value = "dp_leader_result")
     private String dpLeaderResult;
