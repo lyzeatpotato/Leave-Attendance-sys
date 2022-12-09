@@ -15,7 +15,7 @@ import java.util.Date;
 public class LeaveSchoolAudit {
 
     //主键，自增，唯一标识id
-    @TableId(value = "id",type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     //连接请假表单，表单id
@@ -24,6 +24,10 @@ public class LeaveSchoolAudit {
 
     //校领导工号
     private String scLeaderId;
+
+    // 校领导xingm
+    @TableField(exist = false)
+    private String scLeaderName;
 
     //校领导审核结果(通过/不通过)
     private String scLeaderResult;
@@ -42,12 +46,12 @@ public class LeaveSchoolAudit {
     private String isDeleted;
 
     // 创建时间
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @TableField(value = "gmt_create")
     private Date gmtCreate;
 
     // 修改时间
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @TableField(value = "gmt_modified")
     private Date gmtModified;
 }

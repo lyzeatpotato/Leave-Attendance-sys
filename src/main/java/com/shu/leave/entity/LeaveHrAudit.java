@@ -25,6 +25,10 @@ public class LeaveHrAudit {
     //人事处人事干事工号
     private String hrOfficerId;
 
+    // 人事处人事干事姓名
+    @TableField(exist = false)
+    private String hrOfficerName;
+
     //人事处人事干事初审结果(通过/不通过)
     private String hrOfficerResult;
 
@@ -39,6 +43,10 @@ public class LeaveHrAudit {
 
     //人事处负责人工号
     private String hrLeaderId;
+
+    // 人事处负责人姓名
+    @TableField(exist = false)
+    private String hrLeaderName;
 
     //人事处负责人审核结果(通过/不通过)
     private String hrLeaderResult;
