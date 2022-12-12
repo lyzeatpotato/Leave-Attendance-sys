@@ -62,8 +62,8 @@ public class CalenderController {
     @ApiOperation(value = "查询全部校历数据", notes = "显示全部未被逻辑删除的用户信息 ")
     @ApiOperationSupport(order = 4)
     @GetMapping("findAllCalender")
-    public ResultEntity findAllCalenderForm()  {
-        return BasicResponseUtils.success(calenderService.findAllCalender());
+    public ResultEntity findAllCalenderForm(@RequestParam("year") String year)  {
+        return BasicResponseUtils.success(calenderService.findAllCalender(year));
     }
 
     @ApiOperation(value = "调休查询", notes = "根据所给的假期id显示对应假期的调休安排 ")

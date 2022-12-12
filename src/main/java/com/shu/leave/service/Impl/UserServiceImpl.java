@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
     public IPage findAllUserFormPagination(Page<User> page) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("is_deleted", "0");
-        queryWrapper.orderByDesc("id");
+        queryWrapper.orderByAsc("id");
         IPage<User> iPage =userMapper.selectPage(page, queryWrapper);
         return iPage;
     }
@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService {
     public IPage findAdminUserFormPagination(Page<User> page) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("is_deleted", "0");
-        queryWrapper.orderByDesc("id");
+        queryWrapper.orderByAsc("id");
         queryWrapper.ne("role", "0");
         IPage<User> iPage =userMapper.selectPage(page, queryWrapper);
         return iPage;
@@ -91,7 +91,7 @@ public class UserServiceImpl implements UserService {
     public IPage findUserPageByUserId(Page<User> page, Long userId) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("is_deleted", "0");
-        queryWrapper.orderByDesc("id");
+        queryWrapper.orderByAsc("id");
         queryWrapper.eq("userid", userId);
         IPage<User> iPage =userMapper.selectPage(page, queryWrapper);
         return iPage;
@@ -107,7 +107,7 @@ public class UserServiceImpl implements UserService {
         }
         queryWrapper.in("role",list);
         queryWrapper.eq("is_deleted", "0");
-        queryWrapper.orderByDesc("id");
+        queryWrapper.orderByAsc("id");
 
         IPage<User> iPage =userMapper.selectPage(page, queryWrapper);
         return iPage;

@@ -42,7 +42,8 @@ public class UserController {
     @PostMapping("login")
     public ResultEntity userLogin(@ApiIgnore HttpServletResponse response,
                                   @ApiParam(name = "username", value = "登录用户的工号", required = true) @RequestParam("username") String username,
-                                  @ApiParam(name = "password", value = "登录用户的密码(123456)", required = true) @RequestParam("password") String password) throws IOException {
+                                  @ApiParam(name = "password", value = "登录用户的密码(123456)", required
+                                          = true) @RequestParam("password") String password) throws IOException {
         // 后续判定条件为:统一身份认证成功,根据返回的access_token与用户工号进行判别. 此处设置为假登录
         Map<String, Object> resultMap = new HashMap<>();
         Admin currentLoginAdmin = adminService.findAdminByUserId(username);
