@@ -39,7 +39,7 @@ public interface CalenderService {
      * 查询全部校历数据
      * @return 未被逻辑删除的校历数据
      */
-    List<Calender> findAllCalender();
+    List<Calender> findAllCalender(String year);
 
     /**
      * 统计当前用户提交的请假申请中，所包含的法定节假日总天数

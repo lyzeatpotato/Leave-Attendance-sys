@@ -74,7 +74,7 @@ public interface CalenderMapper extends BaseMapper<Calender> {
     @Select({
             "select",
             "id, adminid, holiday_name, holiday_start_date, holiday_end_date, description",
-            "from calender where is_deleted = 0"
+            "from calender where is_deleted = 0 and year(holiday_start_date)=#{year,jdbcType=BIGINT}"
     })
     @Results({
             @Result(column="id", property="id", jdbcType= JdbcType.BIGINT, id=true),
@@ -87,7 +87,7 @@ public interface CalenderMapper extends BaseMapper<Calender> {
 //            @Result(column="gmt_create", property="gmtCreate", jdbcType=JdbcType.TIMESTAMP),
 //            @Result(column="gmt_modified", property="gmtModified", jdbcType=JdbcType.TIMESTAMP),
     })
-    List<Calender> selectAll();
+    List<Calender> selectAll(Long year);
 
     /**
      *author：王仕杰

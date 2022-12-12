@@ -82,8 +82,8 @@ public class CalenderServiceImpl implements CalenderService {
 //        return iPage;
 //    }
     @Override
-    public List<Calender> findAllCalender() {
-        return calenderMapper.selectAll();
+    public List<Calender> findAllCalender(String year) {
+        return calenderMapper.selectAll(Long.valueOf(year));
     }
 
     @Override
