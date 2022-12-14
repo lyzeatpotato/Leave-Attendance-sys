@@ -3,6 +3,7 @@ package com.shu.leave.service;
 import com.shu.leave.entity.History;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -39,4 +40,16 @@ public interface HistoryService {
      * @return 年度请假类型的总天数
      */
     int sumHistoryLeaveType(String userId, String year, String leaveType);
+
+
+    /**
+     * 返回部门下某年某月的缺勤日期列表
+     * @author liyuanzhe
+     * @date 2022/12/14 3:23
+     * @param year
+     * @param month
+     * @param dept
+     * @return List<Date>
+     */
+    List<Date> getMonthDeptAbsenceDate(String year, String month, String dept);
 }

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.shu.leave.entity.Calender;
+import com.shu.leave.entity.History;
 import com.shu.leave.entity.User;
 import com.shu.leave.mapper.CalenderMapper;
 import com.shu.leave.service.CalenderService;
@@ -70,12 +71,12 @@ public class CalenderServiceImpl implements CalenderService {
     }
 
     @Override
-    public int deleteCalender(Long id)  {
+    public int deleteCalender(Long id) {
         return calenderMapper.deleteById(id);
     }
 
 
-//    public IPage findAllCalender() {
+    //    public IPage findAllCalender() {
 //        Page<Calender> page = new Page<>(0, 10);    // 分页查询对象，从索引0开始，每页显示10条
 //        page = (Page<Calender>)calenderMapper.selectAll();
 //        IPage iPage = calenderMapper.selectPage(page, null);    // 此处使用Mybatis-plus中提供的selectPage方法
@@ -117,7 +118,7 @@ public class CalenderServiceImpl implements CalenderService {
         } else {
             Date holidayStartDate = calendersInScope.get(0).getHolidayStartDate();
             Date holidayEndDate = calendersInScope.get(0).getHolidayEndDate();
-            Date[] dates = new Date[] {holidayStartDate, holidayEndDate, leaveStartDate, leaveEndDate};
+            Date[] dates = new Date[]{holidayStartDate, holidayEndDate, leaveStartDate, leaveEndDate};
             Date[] sortedDateArray = UnitedUtils.getSortedDateArray(dates);
             int extendDays = 0;     // 需要延长的假期天数
             try {
@@ -159,7 +160,7 @@ public class CalenderServiceImpl implements CalenderService {
         } else {
             Date holidayStartDate = calendersInScope.get(0).getHolidayStartDate();
             Date holidayEndDate = calendersInScope.get(0).getHolidayEndDate();
-            Date[] dates = new Date[] {holidayStartDate, holidayEndDate, leaveStartDate, leaveEndDate};
+            Date[] dates = new Date[]{holidayStartDate, holidayEndDate, leaveStartDate, leaveEndDate};
             Date[] sortedDateArray = UnitedUtils.getSortedDateArray(dates);
             int extendDays = 0;     // 需要延长的假期天数
             try {
@@ -191,7 +192,7 @@ public class CalenderServiceImpl implements CalenderService {
         } else {
             Date holidayStartDate = calendersInScope.get(0).getHolidayStartDate();
             Date holidayEndDate = calendersInScope.get(0).getHolidayEndDate();
-            Date[] dates = new Date[] {holidayStartDate, holidayEndDate, leaveStartDate, leaveEndDate};
+            Date[] dates = new Date[]{holidayStartDate, holidayEndDate, leaveStartDate, leaveEndDate};
             Date[] sortedDateArray = UnitedUtils.getSortedDateArray(dates);
             int extendDays = 0;     // 需要延长的假期天数
             try {
