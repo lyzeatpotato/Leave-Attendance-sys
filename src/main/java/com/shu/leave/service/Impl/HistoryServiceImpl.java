@@ -1,23 +1,33 @@
 package com.shu.leave.service.Impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.shu.leave.entity.History;
+import com.shu.leave.entity.Leave;
 import com.shu.leave.mapper.HistoryMapper;
+import com.shu.leave.mapper.LeaveMapper;
 import com.shu.leave.mapper.UserMapper;
 import com.shu.leave.service.HistoryService;
+import com.shu.leave.utils.UnitedUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class HistoryServiceImpl implements HistoryService {
 
     @Resource
     UserMapper userMapper;
+
+    @Resource
+    LeaveMapper leaveMapper;
 
     @Resource
     HistoryMapper historyMapper;
@@ -106,5 +116,47 @@ public class HistoryServiceImpl implements HistoryService {
         } catch (Exception e) {
             return 0;
         }
+    }
+
+    @Override
+    public List<Date> getMonthDeptAbsenceDate(String year, String month, String dept) {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        //String startDay = df.format(new Date());
+        //Calendar calendar = Calendar.getInstance();
+        //calendar.set(Integer.parseInt(startDay.substring(0, 4)), Integer.parseInt(startDay.substring(5, 7)) - 1, 1);
+        //String firstDayOfMonth = new SimpleDateFormat("yyyy-MM-dd ").format(calendar.getTime());
+        //System.out.println("第一天：" + firstDayOfMonth);
+        ////这里将日期值减去一天，从而获取到要求的月份最后一天
+        //calendar.add(Calendar.DATE, -1);
+        //String lastDayOfMonth = new SimpleDateFormat("yyyy-MM-dd ").format(calendar.getTime());
+        //System.out.println("最后一天：" + lastDayOfMonth);
+        String firstDayOfMonth = UnitedUtils.getFirstDayOfMonth(Integer.parseInt(year), Integer.parseInt(month));
+        System.out.println("第一天：" + firstDayOfMonth);
+        String lastDayOfMonth = UnitedUtils.getLastDayOfMonth(Integer.parseInt(year), Integer.parseInt(month));
+        System.out.println("最后一天：" + lastDayOfMonth);
+
+        QueryWrapper<History> historyQueryWrapper = new QueryWrapper<>();
+        historyQueryWrapper.eq("year", year);
+        historyQueryWrapper.eq("month", month);
+        historyQueryWrapper.eq("department", dept);
+        List<History> histories = historyMapper.selectList(historyQueryWrapper);
+        List<Long> userIds = histories.stream().map(o -> o.getUserId()).collect(Collectors.toList());       // 获取查询出的用户的id
+        QueryWrapper<Leave> leaveQueryWrapper = new QueryWrapper<>();
+        if (userIds.size() != 0) {
+            leaveQueryWrapper.in("userid", userIds);
+        }
+        leaveQueryWrapper.eq("status", "1");    // 筛选请假信息为已完成了审核的请假记录
+        leaveQueryWrapper.ge("leave_start_time", firstDayOfMonth);
+        leaveQueryWrapper.le("leave_end_time", lastDayOfMonth);
+
+        List<Leave> leaves = leaveMapper.selectList(leaveQueryWrapper);
+        List<Date> resultDateList = leaves.stream().map(leave -> {
+            try {
+                return df.parse(df.format(leave.getLeaveStartTime()));
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+        }).collect(Collectors.toList());
+        return resultDateList;
     }
 }

@@ -29,6 +29,10 @@ public class History {
     @TableField(value = "month")
     private String month;
 
+    // 用户部门信息
+    @TableField(value = "department")
+    private String department;
+
     // 本月累计事假总天数
     @TableField(value = "shijia_days")
     private Integer shijiaDays;

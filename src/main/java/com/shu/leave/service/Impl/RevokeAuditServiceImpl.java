@@ -201,7 +201,7 @@ public class RevokeAuditServiceImpl implements RevokeAuditService {
             }
             if (!hrStatus.equals("2")) {
                 QueryWrapper<RevokeHrAudit> hrAuditQueryWrapper = new QueryWrapper<>();
-                auditQueryWrapper.eq("revoke_formid", revokeId);
+                hrAuditQueryWrapper.eq("revoke_formid", revokeId);
                 RevokeHrAudit revokeHrAudit = revokeHrAuditMapper.selectOne(hrAuditQueryWrapper);
                 if (revokeHrAudit != null) {
                     revokeHrAudit.setHrLeaderName(userMapper.findByUserid(revokeHrAudit.getHrLeaderId()).getUserName());
