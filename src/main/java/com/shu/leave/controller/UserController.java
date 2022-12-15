@@ -15,16 +15,19 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
-
+import org.apache.log4j.Logger;
 @Api(tags = "1.用户相关")
 @ApiSupport(order = 1)
 @RestController
@@ -37,6 +40,7 @@ public class UserController {
     @Resource
     AdminService adminService;
 
+    private static Logger logger = Logger.getLogger(UserController.class);
     @ApiOperation(value = "用户登录", notes = "username为root, password为123456。登录成功返回一个随即生成的token。")
     @ApiOperationSupport(order = 1, author = "lyz")
     @PostMapping("login")
@@ -102,6 +106,12 @@ public class UserController {
     //@ApiImplicitParams({@ApiImplicitParam(name = "token", value = "token", required = true, paramType = "header")})
     //@AuthToken
     public ResultEntity findAllUser() {
+        ServletRequestAttributes sra = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (sra == null) {
+            return null;
+        }
+        String request = sra.toString();
+        logger.info("查询全部用户！"+request);
         return BasicResponseUtils.success(userService.findAllUser());
     }
 
