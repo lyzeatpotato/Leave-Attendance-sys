@@ -1,10 +1,14 @@
 package com.shu.leave.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.shu.leave.entity.History;
+import com.shu.leave.entity.Leave;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public interface HistoryService {
@@ -51,5 +55,54 @@ public interface HistoryService {
      * @param dept
      * @return List<Date>
      */
-    List<Date> getMonthDeptAbsenceDate(String year, String month, String dept);
+    Map<String, Object> getMonthDeptAbsenceDate(String year, String month, String dept);
+
+    /**
+     * 获取各部门下请假类型的数量
+     * @author liyuanzhe
+     * @date 2022/12/14 18:28
+     * @param dept
+     * @return Map<Integer>
+     */
+    Map[] getDeptHistoryLeaveTypeCount(String dept);
+
+    /**
+     * 获取各部门下各请假类型累计天数
+     * @author liyuanzhe
+     * @date 2022/12/14 21:11
+     * @param dept
+     * @return int[]
+     */
+    int[] getDeptHistoryLeaveDays(String dept) throws ParseException;
+
+    /**
+     * 获取各部门下员工请假年累计次数排名
+     * @author liyuanzhe
+     * @date 2022/12/14 21:34
+     * @param year
+     * @param dept
+     * @return Map<Object>
+     */
+    Map<String, Object> getDeptMemberFrequencyList(String year, String dept);
+
+    /**
+     * 部门审核人员返回对应全部历史请假记录
+     * @author liyuanzhe
+     * @date 2022/12/14 23:34
+     * @param page
+     * @param dept
+     * @return Page<Leave>
+     */
+    Page<Leave> getHistoryLoadingList(Page<Leave> page, String dept);
+
+    /**
+     * 筛选部门请假起止时间包含选定时间的历史请假记录
+     * @author liyuanzhe
+     * @date 2022/12/15 16:00
+     * @param page
+     * @param dept
+     * @param nowDate
+     * @return Page<Leave>
+     */
+    Page<Leave> getHistoryRecordByOneDate(Page<Leave> page, String dept, Date nowDate);
 }

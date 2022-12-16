@@ -17,4 +17,9 @@ public class SchoolDepartmentServiceImpl implements SchoolDepartmentService {
         return schoolDepartmentMapper.selectBySchoolLeaderId(school_leader_id);
     }
 
+    @Override
+    public List<SchoolDepartment> getAllSchoolDeptMsg() {
+        return schoolDepartmentMapper.selectAllSchoolDept();
+    }
+
 }

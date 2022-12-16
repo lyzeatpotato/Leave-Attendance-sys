@@ -2,8 +2,10 @@ package com.shu.leave.utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @ClassName: UnitedUtils
@@ -139,6 +141,24 @@ public class UnitedUtils {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         return sdf.format(cal.getTime());
     }
+
+    /**
+     * 为list列表降重
+     * @author liyuanzhe
+     * @date 2022/12/14 22:06
+     * @param list
+     */
+    public static void removeDuplicate(List<String> list) {
+        List<String> result = new ArrayList<String>(list.size());
+        for (String str : list) {
+            if (!result.contains(str)) {
+                result.add(str);
+            }
+        }
+        list.clear();
+        list.addAll(result);
+    }
+
 
 
 }

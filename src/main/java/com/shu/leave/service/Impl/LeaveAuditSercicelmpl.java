@@ -532,7 +532,6 @@ public class LeaveAuditSercicelmpl implements LeaveAuditService {
                 break;
             }
         }
-
         return resPage;
     }
 

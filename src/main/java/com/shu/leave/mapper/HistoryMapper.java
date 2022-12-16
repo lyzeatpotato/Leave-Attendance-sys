@@ -1,10 +1,14 @@
 package com.shu.leave.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.shu.leave.entity.History;
+import com.shu.leave.entity.Leave;
+import com.shu.leave.entity.User;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.type.JdbcType;
 
+import java.util.Date;
 import java.util.List;
 
 @Mapper
@@ -83,4 +87,61 @@ public interface HistoryMapper extends BaseMapper<History> {
             "where userid=#{userId,jdbcType=BIGINT} and year=#{year,jdbcType=VARCHAR}"
     })
     int selectByTypeYear(Long userId, String leaveType, String year);
+
+    /**
+     * 按部门查询: 查询某一部门下的全部请假记录
+     * @param department
+     * @return 返回请假列表
+     */
+    @Select({
+            "SELECT leave.id, leave.userid, leave.leave_type, leave.leave_start_time, leave.leave_end_time, ",
+            "leave.leave_reason, leave.leave_material, leave.status, leave.department_status, ",
+            "leave.hr_status, leave.school_status, leave.is_deleted, leave.gmt_create, leave.gmt_modified ",
+            "FROM leave, user_info ",
+            "WHERE leave.userid = user_info.id and leave.status = 1",
+            "and user_info.yuanxi = #{department, jdbcType=VARCHAR}",
+            "ORDER BY leave.id DESC",
+    })
+    @Results(id = "leaveDeptRelatedMapper", value = {
+            @Result(column = "id", property = "id", jdbcType = JdbcType.BIGINT, id = true),
+            @Result(column = "userid", property = "userId", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "leave_type", property = "leaveType", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "leave_start_time", property = "leaveStartTime", jdbcType = JdbcType.TIMESTAMP),
+            @Result(column = "leave_end_time", property = "leaveEndTime", jdbcType = JdbcType.TIMESTAMP),
+            @Result(column = "leave_reason", property = "leaveReason", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "leave_material", property = "leaveMaterial", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "status", property = "status", jdbcType = JdbcType.CHAR),
+            @Result(column = "department_status", property = "departmentStatus", jdbcType = JdbcType.CHAR),
+            @Result(column = "hr_status", property = "hrStatus", jdbcType = JdbcType.CHAR),
+            @Result(column = "school_status", property = "schoolStatus", jdbcType = JdbcType.CHAR),
+            @Result(column = "is_deleted", property = "isDeleted", jdbcType = JdbcType.CHAR),
+            @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.TIMESTAMP),
+            @Result(column = "gmt_modified", property = "gmtModified", jdbcType = JdbcType.TIMESTAMP),
+            @Result(
+                    column = "userid", property = "user", javaType = User.class,
+                    one = @One(select = "com.shu.leave.mapper.UserMapper.selectById")
+            )
+    })
+    Page<Leave> selectPaginByUserDept(Page<Leave> page, String department);
+
+    /**
+     * 分页查询请假起止时间包含指定日期的请假数据
+     * @author liyuanzhe
+     * @date 2022/12/15 16:02
+     * @param page
+     * @param department
+     * @return Page<Leave>
+     */
+    @Select({
+            "SELECT leave.id, leave.userid, leave.leave_type, leave.leave_start_time, leave.leave_end_time, ",
+            "leave.leave_reason, leave.leave_material, leave.status, leave.department_status, ",
+            "leave.hr_status, leave.school_status, leave.is_deleted, leave.gmt_create, leave.gmt_modified ",
+            "FROM leave, user_info ",
+            "WHERE leave.userid = user_info.id and leave.status = 1",
+            "and user_info.yuanxi = #{department, jdbcType=VARCHAR} ",
+            "and leave.leave_start_time <= #{nowDate, jdbcType=TIMESTAMP} and leave.leave_end_time >= #{nowDate, jdbcType=TIMESTAMP}",
+            "ORDER BY leave.id DESC",
+    })
+    @ResultMap("leaveDeptRelatedMapper")
+    Page<Leave> selectPaginByNowDateDept(Page<Leave> page, String department, Date nowDate);
 }
