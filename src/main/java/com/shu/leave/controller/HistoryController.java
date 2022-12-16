@@ -1,8 +1,10 @@
 package com.shu.leave.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.shu.leave.common.ResultEntity;
+import com.shu.leave.entity.Leave;
 import com.shu.leave.service.CalenderService;
 import com.shu.leave.service.HistoryService;
 import com.shu.leave.utils.BasicResponseUtils;
@@ -81,5 +83,48 @@ public class HistoryController {
                                                 @ApiParam(name = "month", value = "月度信息", required = true) @RequestParam("month") String month,
                                                 @ApiParam(name = "dept", value = "部门信息", required = true) @RequestParam("dept") String dept) {
         return BasicResponseUtils.success(historyService.getMonthDeptAbsenceDate(year, month, dept));
+    }
+
+    @ApiOperation(value = "部门管理：请假类型饼状图", notes = "返回某部门下的历史各请假类型的数量")
+    @ApiOperationSupport(order = 7, author = "lyz")
+    @GetMapping("getDeptHistoryLeaveTypeCount")
+    public ResultEntity getDeptHistoryLeaveTypeCount(@ApiParam(name = "dept", value = "部门信息", required = true) @RequestParam("dept") String dept) {
+        return BasicResponseUtils.success(historyService.getDeptHistoryLeaveTypeCount(dept));
+    }
+
+    @ApiOperation(value = "部门管理：请假时长条状图", notes = "返回某部门下历史各请假类型的总时长")
+    @ApiOperationSupport(order = 8, author = "lyz")
+    @GetMapping("getDeptHistoryLeaveDays")
+    public ResultEntity getDeptHistoryLeaveDays(@ApiParam(name = "dept", value = "部门信息", required = true) @RequestParam("dept") String dept) throws ParseException {
+        return BasicResponseUtils.success(historyService.getDeptHistoryLeaveDays(dept));
+    }
+
+    @ApiOperation(value = "部门管理：请假频率条状图", notes = "返回某部门下员工请假频率降序排序列表")
+    @ApiOperationSupport(order = 9, author = "lyz")
+    @GetMapping("getDeptMemberFrequencyList")
+    public ResultEntity getDeptMemberFrequencyList(@ApiParam(name = "year", value = "年度信息", required = true) @RequestParam("year") String year,
+                                                   @ApiParam(name = "dept", value = "部门信息", required = true) @RequestParam("dept") String dept) {
+        return BasicResponseUtils.success(historyService.getDeptMemberFrequencyList(year, dept));
+    }
+
+    @ApiOperation(value = "部门管理：默认部门加载", notes = "返回某部门下全部历史请假记录")
+    @ApiOperationSupport(order = 10, author = "lyz")
+    @GetMapping("getHistoryLoadingList")
+    public ResultEntity getHistoryLoadingList(@ApiParam(name = "pageNum", value = "分页索引", required = true)  @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
+                                              @ApiParam(name = "dept", value = "部门信息", required = true) @RequestParam("dept") String dept){
+        Page<Leave> page = new Page<>(pageNum, 10);         // 当前页为传入的参数，默认每页显示10条数据
+        return BasicResponseUtils.success(historyService.getHistoryLoadingList(page, dept));
+    }
+
+    @ApiOperation(value = "部门管理：日历时间筛选", notes = "返回选定时间下请假时间包含该日的请假记录")
+    @ApiOperationSupport(order = 11, author = "lyz")
+    @GetMapping("getHistoryRecordByOneDate")
+    public ResultEntity getHistoryRecordByOneDate(@ApiParam(name = "pageNum", value = "分页索引", required = true)  @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
+                                                  @ApiParam(name = "dept", value = "部门信息", required = true) @RequestParam("dept") String dept,
+                                                  @ApiParam(name = "nowDate", value = "选中的日期", required = true) @RequestParam("nowDate") String nowDate) throws ParseException {
+        Page<Leave> page = new Page<>(pageNum, 10);         // 当前页为传入的参数，默认每页显示10条数据
+        SimpleDateFormat sp = new SimpleDateFormat("yyyy-MM-dd");
+        Date selectedDate = sp.parse(nowDate);
+        return BasicResponseUtils.success(historyService.getHistoryRecordByOneDate(page, dept, selectedDate));
     }
 }

@@ -121,7 +121,6 @@ public interface LeaveMapper extends BaseMapper<Leave> {
 
     /**
      * 按部门查询: 查询某一部门下的全部请假记录
-     *
      * @param department
      * @return 返回请假列表
      */
@@ -129,7 +128,7 @@ public interface LeaveMapper extends BaseMapper<Leave> {
             "leave.leave_reason, leave.leave_material, leave.status, leave.department_status, " +
             "leave.hr_status, leave.school_status, leave.is_deleted, leave.gmt_create, leave.gmt_modified " +
             "FROM leave, user_info " +
-            "WHERE leave.userid = user_info.id " +
+            "WHERE leave.userid = user_info.id and leave.status = 1" +
             "and user_info.yuanxi = #{department, jdbcType=VARCHAR}")
     @Results(id = "leaveDeptRelatedMapper", value = {
             @Result(column = "id", property = "id", jdbcType = JdbcType.BIGINT, id = true),
